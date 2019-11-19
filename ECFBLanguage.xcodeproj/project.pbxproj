@@ -80,6 +80,7 @@
 		B0084F012384476500393BAA = {
 			isa = PBXGroup;
 			children = (
+				B029F56D2384586700F91F27 /* README.md */,
 				B0084F0C2384476500393BAA /* ECFBLanguage */,
 				B0084F0B2384476500393BAA /* Products */,
 			);
@@ -102,7 +103,6 @@
 				B029F56523844E7900F91F27 /* assembly.asm */,
 				B029F56723844F3800F91F27 /* tokenizer.lex */,
 				B029F56C2384540A00F91F27 /* test.h */,
-				B029F56D2384586700F91F27 /* README.md */,
 			);
 			path = ECFBLanguage;
 			sourceTree = "<group>";
