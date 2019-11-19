@@ -63,6 +63,7 @@
 		B029F5692384503C00F91F27 /* tokenizer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tokenizer.c; sourceTree = "<group>"; };
 		B029F56B2384518C00F91F27 /* tokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tokenizer.h; sourceTree = "<group>"; };
 		B029F56C2384540A00F91F27 /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
+		B029F56D2384586700F91F27 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +102,7 @@
 				B029F56523844E7900F91F27 /* assembly.asm */,
 				B029F56723844F3800F91F27 /* tokenizer.lex */,
 				B029F56C2384540A00F91F27 /* test.h */,
+				B029F56D2384586700F91F27 /* README.md */,
 			);
 			path = ECFBLanguage;
 			sourceTree = "<group>";
