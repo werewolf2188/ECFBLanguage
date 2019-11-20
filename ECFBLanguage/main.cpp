@@ -7,13 +7,13 @@
 //
 
 #include <iostream>
-#include "test.h"
+#include "flex_bridge.h"
 
 extern "C" int sum(int x, int y);
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    test();
-    std::cout << "The number is " << sum(5, 6) << ".\n";
+    analyze_tokens();
+//    std::cout << "The number is " << sum(5, 6) << ".\n";
     return 0;
 }

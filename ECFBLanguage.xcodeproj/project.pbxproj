@@ -10,7 +10,7 @@
 		B0084F0E2384476500393BAA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0084F0D2384476500393BAA /* main.cpp */; };
 		B029F56623844E7900F91F27 /* assembly.asm in Sources */ = {isa = PBXBuildFile; fileRef = B029F56523844E7900F91F27 /* assembly.asm */; };
 		B029F56823844FB100F91F27 /* tokenizer.lex in Sources */ = {isa = PBXBuildFile; fileRef = B029F56723844F3800F91F27 /* tokenizer.lex */; };
-		B029F56A2384503C00F91F27 /* tokenizer.c in Sources */ = {isa = PBXBuildFile; fileRef = B029F5692384503C00F91F27 /* tokenizer.c */; };
+		B029F56A2384503C00F91F27 /* tokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B029F5692384503C00F91F27 /* tokenizer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -36,10 +36,10 @@
 			);
 			isEditable = 1;
 			outputFiles = (
-				"$(SRCROOT)/$(PROJECT_NAME)/${INPUT_FILE_BASE}.c",
+				"$(SRCROOT)/$(PROJECT_NAME)/${INPUT_FILE_BASE}.cpp",
 				"$(SRCROOT)/$(PROJECT_NAME)/${INPUT_FILE_BASE}.h",
 			);
-			script = "# Type a script or drag a script file from your workspace to insert its path.\n#echo ${SCRIPT_OUTPUT_FILE_0}\n/usr/bin/flex -o ${SCRIPT_OUTPUT_FILE_0} --noline --header-file=${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}\n\nmv $PWD/${INPUT_FILE_BASE}.h ${SCRIPT_OUTPUT_FILE_1} \n";
+			script = "# Type a script or drag a script file from your workspace to insert its path.\n#echo ${SCRIPT_OUTPUT_FILE_0}\n/usr/bin/flex -o ${SCRIPT_OUTPUT_FILE_0} --noline  --header-file=${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}\n\nmv $PWD/${INPUT_FILE_BASE}.h ${SCRIPT_OUTPUT_FILE_1} \n";
 		};
 /* End PBXBuildRule section */
 
@@ -60,9 +60,9 @@
 		B0084F0D2384476500393BAA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		B029F56523844E7900F91F27 /* assembly.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = assembly.asm; sourceTree = "<group>"; };
 		B029F56723844F3800F91F27 /* tokenizer.lex */ = {isa = PBXFileReference; lastKnownFileType = text; path = tokenizer.lex; sourceTree = "<group>"; };
-		B029F5692384503C00F91F27 /* tokenizer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tokenizer.c; sourceTree = "<group>"; };
+		B029F5692384503C00F91F27 /* tokenizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tokenizer.cpp; sourceTree = "<group>"; };
 		B029F56B2384518C00F91F27 /* tokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tokenizer.h; sourceTree = "<group>"; };
-		B029F56C2384540A00F91F27 /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
+		B029F56C2384540A00F91F27 /* flex_bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = flex_bridge.h; sourceTree = "<group>"; };
 		B029F56D2384586700F91F27 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,11 +98,11 @@
 			isa = PBXGroup;
 			children = (
 				B029F56B2384518C00F91F27 /* tokenizer.h */,
-				B029F5692384503C00F91F27 /* tokenizer.c */,
+				B029F5692384503C00F91F27 /* tokenizer.cpp */,
 				B0084F0D2384476500393BAA /* main.cpp */,
 				B029F56523844E7900F91F27 /* assembly.asm */,
 				B029F56723844F3800F91F27 /* tokenizer.lex */,
-				B029F56C2384540A00F91F27 /* test.h */,
+				B029F56C2384540A00F91F27 /* flex_bridge.h */,
 			);
 			path = ECFBLanguage;
 			sourceTree = "<group>";
@@ -169,7 +169,7 @@
 				B029F56823844FB100F91F27 /* tokenizer.lex in Sources */,
 				B0084F0E2384476500393BAA /* main.cpp in Sources */,
 				B029F56623844E7900F91F27 /* assembly.asm in Sources */,
-				B029F56A2384503C00F91F27 /* tokenizer.c in Sources */,
+				B029F56A2384503C00F91F27 /* tokenizer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

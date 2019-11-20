@@ -1,22 +1,40 @@
 %{
-int count = 0;
+#include <string>
+extern "C" int analyze_tokens();
 %}
   
-/*** Rule Section has three rules, first rule
-matches with capital letters, second rule
-matches with any character except newline and
-third rule does not take input after the enter***/
+/*** Rule Section ***/
 %%
-[A-Z] {printf("%s capital letter\n", yytext);
-       count++;}
-.     {printf("%s not a capital letter\n", yytext);}
-\n    {return 0;}
+[ \t\n]             ;// { return 0; }
+[\s]                ;
+[a-zA-Z][a-zA-Z]*   { printf("%s its an identifier\n", yytext); }
+[0-9]+              { printf("%s its an integer \n", yytext); }
+[0-9]+\.[0-9]+      { printf("%s its a double \n", yytext); }
+"="                 { printf("its an equals sign \n"); }
+"="                 { printf("its an assignment sign \n"); }
+"=="                { printf("its an equals sign \n"); }
+"!="                { printf("its a not equals sign \n"); }
+"<"                 { printf("its a less than sign \n"); }
+"<="                { printf("its a less or equals than sign \n"); }
+">"                 { printf("its a less than sign \n"); }
+">="                { printf("its a less or equals than sign \n"); }
+"("                 { printf("its an opening parenthesis \n"); }
+")"                 { printf("its a closing parenthesis \n"); }
+"{"                 { printf("its an opening key brackets \n"); }
+"}"                 { printf("its a closing key brackets \n"); }
+","                 { printf("its a comma \n"); }
+"."                 { printf("its a dot \n"); }
+"+"                 { printf("its a plus sign \n"); }
+"-"                 { printf("its a minus sign \n"); }
+"*"                 { printf("its a multiplication sign \n"); }
+"/"                 { printf("its a division sign \n"); }
+.                   { printf("This is not a correct token\n"); yyterminate(); }
+
 %%
   
-/*** Code Section prints the number of
-capital letter present in the given input***/
+/*** Code Section ***/
 int yywrap() { return 1; } 
-int test() {
+int analyze_tokens() {
   
 // Explanation:
 // yywrap() - wraps the above rule section
@@ -37,7 +55,5 @@ int test() {
   
     printf("Write any word \n");
     yylex();
-    printf("\nNumber of Captial letters "
-    "in the given input - %d\n", count); 
     return 0;
 }
