@@ -39,7 +39,7 @@
 				"$(SRCROOT)/$(PROJECT_NAME)/${INPUT_FILE_BASE}.c",
 				"$(SRCROOT)/$(PROJECT_NAME)/${INPUT_FILE_BASE}.h",
 			);
-			script = "# Type a script or drag a script file from your workspace to insert its path.\n#echo ${SCRIPT_OUTPUT_FILE_0}\n/usr/bin/flex -o ${SCRIPT_OUTPUT_FILE_0} --header-file=${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}\n\nmv $PWD/${INPUT_FILE_BASE}.h ${SCRIPT_OUTPUT_FILE_1} \n";
+			script = "# Type a script or drag a script file from your workspace to insert its path.\n#echo ${SCRIPT_OUTPUT_FILE_0}\n/usr/bin/flex -o ${SCRIPT_OUTPUT_FILE_0} --noline --header-file=${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}\n\nmv $PWD/${INPUT_FILE_BASE}.h ${SCRIPT_OUTPUT_FILE_1} \n";
 		};
 /* End PBXBuildRule section */
 
@@ -288,8 +288,9 @@
 		B0084F122384476500393BAA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8RTCU3FQ7J;
+				DEVELOPMENT_TEAM = F647UR2ZKE;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -298,8 +299,9 @@
 		B0084F132384476500393BAA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8RTCU3FQ7J;
+				DEVELOPMENT_TEAM = F647UR2ZKE;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

@@ -1,6 +1,5 @@
-#line 2 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.c"
 
-#line 4 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.c"
+#line 3 "/Users/werewolf2188/Proyectos/Mobile/ECFBLanguage/ECFBLanguage/tokenizer.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -446,14 +445,11 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.lex"
-#line 2 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.lex"
 int count = 0;
 /*** Rule Section has three rules, first rule
 matches with capital letters, second rule
 matches with any character except newline and
 third rule does not take input after the enter***/
-#line 457 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.c"
 
 #define INITIAL 0
 
@@ -635,10 +631,6 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 9 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.lex"
-
-#line 641 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.c"
-
 	if ( !(yy_init) )
 		{
 		(yy_init) = 1;
@@ -722,27 +714,22 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 10 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.lex"
 {printf("%s capital letter\n", yytext);
        count++;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 12 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.lex"
 {printf("%s not a capital letter\n", yytext);}
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 13 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.lex"
 {return 0;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 14 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.lex"
 ECHO;
 	YY_BREAK
-#line 746 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1739,10 +1726,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 14 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.lex"
-
-
-  
 /*** Code Section prints the number of
 capital letter present in the given input***/
 int yywrap() { return 1; } 
