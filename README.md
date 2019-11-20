@@ -32,3 +32,10 @@ I truly encourage the developer to run the command `flex --help` and see the dif
 ### Why are these tools needed.
 
 If the developer opens the project with Xcode, and goes to the build rules, it will see that there are multiple rules regarding files with extensions `.lex` and `.yacc`. These files will be translated into C++ code ultimately and they will be used in the compiler, but it's always easier to use tools for this kind of projects.
+
+
+https://www.geeksforgeeks.org/flex-fast-lexical-analyzer-generator/
+https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/
+https://llvm.org
+https://stackoverflow.com/questions/28203937/installing-llvm-libraries-along-with-xcode
+https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
