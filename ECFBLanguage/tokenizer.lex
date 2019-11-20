@@ -7,7 +7,7 @@ extern "C" int analyze_tokens();
 %%
 [ \t\n]             ;// { return 0; }
 [\s]                ;
-[a-zA-Z][a-zA-Z]*   { printf("%s its an identifier\n", yytext); }
+[a-zA-Z][a-zA-Z0-9\_]*   { printf("%s its an identifier\n", yytext); }
 [0-9]+              { printf("%s its an integer \n", yytext); }
 [0-9]+\.[0-9]+      { printf("%s its a double \n", yytext); }
 "="                 { printf("its an equals sign \n"); }
@@ -28,6 +28,7 @@ extern "C" int analyze_tokens();
 "-"                 { printf("its a minus sign \n"); }
 "*"                 { printf("its a multiplication sign \n"); }
 "/"                 { printf("its a division sign \n"); }
+"\""                { printf("its a quotes sign \n"); }
 .                   { printf("This is not a correct token\n"); yyterminate(); }
 
 %%
