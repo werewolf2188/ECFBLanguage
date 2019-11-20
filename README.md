@@ -15,9 +15,9 @@ For this project, the developers will need to have an IDE that allows to work wi
 
 ### Flex
 
-Flex is the tool that will be used to generate the lexical analyzer, meaning the parser for the tokens that can be inside our language. I won't get into specifics about what Flex, but if the developer is interest on knowing more about it, he/she can click in this [link](https://en.wikipedia.org/wiki/Flex_(lexical_analyser_generator)). For now, lets focus on how to install it. 
+Flex is the tool that will be used to generate the lexical analyzer, meaning the parser for the tokens that can be inside our language. I won't get into specifics about what Flex is, but rather if the developer is interest on knowing more about it, it can click this [link](https://en.wikipedia.org/wiki/Flex_(lexical_analyser_generator)). For now, lets focus on how to install it. 
 
-To install it in Mac, just run this commands (I'm guessing the developer already has [homebrew](https://brew.sh) inside its computer)
+To install it in Mac, just run this commands (I'm presumming the developer already has [homebrew](https://brew.sh) inside its computer)
 
 ```bash
 brew install flex
