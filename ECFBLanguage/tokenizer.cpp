@@ -1,5 +1,5 @@
 
-#line 3 "/Users/werewolf2188/Proyectos/Mobile/ECFBLanguage/ECFBLanguage/tokenizer.c"
+#line 3 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -360,8 +360,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 4
-#define YY_END_OF_BUFFER 5
+#define YY_NUM_RULES 26
+#define YY_END_OF_BUFFER 27
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -369,27 +369,30 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static yyconst flex_int16_t yy_accept[8] =
+static yyconst flex_int16_t yy_accept[34] =
     {   0,
-        0,    0,    5,    2,    3,    1,    0
+        0,    0,   27,   25,    1,    1,   25,   24,   14,   15,
+       22,   20,   18,   21,   19,   23,    4,   10,    6,   12,
+        3,    2,   16,   17,    9,    0,    4,   11,    8,   13,
+        3,    5,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    2,
+        1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    3,    3,    3,    3,    3,    3,
-        3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
-        3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    2,    4,    5,    1,    1,    1,    1,    1,    6,
+        7,    8,    9,   10,   11,   12,   13,   14,   14,   14,
+       14,   14,   14,   14,   14,   14,   14,    1,    1,   15,
+       16,   17,    1,    1,   18,   18,   18,   18,   18,   18,
+       18,   18,   18,   18,   18,   18,   18,   18,   18,   18,
+       18,   18,   18,   18,   18,   18,   18,   18,   18,   18,
+        1,    1,    1,    1,   19,    1,   18,   18,   18,   18,
 
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+       18,   18,   18,   18,   18,   18,   18,   18,   18,   18,
+       18,   18,   18,   18,   20,   18,   18,   18,   18,   18,
+       18,   18,   21,    1,   22,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -406,29 +409,47 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst flex_int32_t yy_meta[4] =
+static yyconst flex_int32_t yy_meta[23] =
     {   0,
-        1,    1,    1
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    2,    1,    1,    1,    2,    2,    2,
+        1,    1
     } ;
 
-static yyconst flex_int16_t yy_base[8] =
+static yyconst flex_int16_t yy_base[35] =
     {   0,
-        0,    0,    4,    5,    5,    5,    5
+        0,    0,   34,   35,   35,   35,   17,   35,   35,   35,
+       35,   35,   35,   35,   35,   35,   11,   16,   15,   14,
+        0,    0,   35,   35,   35,   15,   12,   35,   35,   35,
+        0,   14,   35,   25
     } ;
 
-static yyconst flex_int16_t yy_def[8] =
+static yyconst flex_int16_t yy_def[35] =
     {   0,
-        7,    1,    7,    7,    7,    7,    0
+       33,    1,   33,   33,   33,   33,   33,   33,   33,   33,
+       33,   33,   33,   33,   33,   33,   33,   33,   33,   33,
+       34,   34,   33,   33,   33,   33,   33,   33,   33,   33,
+       34,   33,    0,   33
     } ;
 
-static yyconst flex_int16_t yy_nxt[9] =
+static yyconst flex_int16_t yy_nxt[58] =
     {   0,
-        4,    5,    6,    7,    3,    7,    7,    7
+        4,    5,    6,    7,    8,    9,   10,   11,   12,   13,
+       14,   15,   16,   17,   18,   19,   20,   21,    4,   22,
+       23,   24,   26,   26,   27,   27,   31,   32,   32,   30,
+       29,   28,   25,   33,    3,   33,   33,   33,   33,   33,
+       33,   33,   33,   33,   33,   33,   33,   33,   33,   33,
+       33,   33,   33,   33,   33,   33,   33
     } ;
 
-static yyconst flex_int16_t yy_chk[9] =
+static yyconst flex_int16_t yy_chk[58] =
     {   0,
-        1,    1,    1,    3,    7,    7,    7,    7
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,   17,   27,   17,   27,   34,   32,   26,   20,
+       19,   18,    7,    3,   33,   33,   33,   33,   33,   33,
+       33,   33,   33,   33,   33,   33,   33,   33,   33,   33,
+       33,   33,   33,   33,   33,   33,   33
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -445,11 +466,9 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-int count = 0;
-/*** Rule Section has three rules, first rule
-matches with capital letters, second rule
-matches with any character except newline and
-third rule does not take input after the enter***/
+#include <string>
+extern "C" int analyze_tokens();
+/*** Rule Section ***/
 
 #define INITIAL 0
 
@@ -682,13 +701,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 8 )
+				if ( yy_current_state >= 34 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 5 );
+		while ( yy_base[yy_current_state] != 35 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -713,20 +732,107 @@ do_action:	/* This label is used only to access EOF actions. */
 			goto yy_find_action;
 
 case 1:
+/* rule 1 can match eol */
 YY_RULE_SETUP
-{printf("%s capital letter\n", yytext);
-       count++;}
+;// { return 0; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-{printf("%s not a capital letter\n", yytext);}
+;
 	YY_BREAK
 case 3:
-/* rule 3 can match eol */
 YY_RULE_SETUP
-{return 0;}
+{ printf("%s its an identifier\n", yytext); }
 	YY_BREAK
 case 4:
+YY_RULE_SETUP
+{ printf("%s its an integer \n", yytext); }
+	YY_BREAK
+case 5:
+YY_RULE_SETUP
+{ printf("%s its a double \n", yytext); }
+	YY_BREAK
+case 6:
+YY_RULE_SETUP
+{ printf("its an equals sign \n"); }
+	YY_BREAK
+case 7:
+YY_RULE_SETUP
+{ printf("its an assignment sign \n"); }
+	YY_BREAK
+case 8:
+YY_RULE_SETUP
+{ printf("its an equals sign \n"); }
+	YY_BREAK
+case 9:
+YY_RULE_SETUP
+{ printf("its a not equals sign \n"); }
+	YY_BREAK
+case 10:
+YY_RULE_SETUP
+{ printf("its a less than sign \n"); }
+	YY_BREAK
+case 11:
+YY_RULE_SETUP
+{ printf("its a less or equals than sign \n"); }
+	YY_BREAK
+case 12:
+YY_RULE_SETUP
+{ printf("its a less than sign \n"); }
+	YY_BREAK
+case 13:
+YY_RULE_SETUP
+{ printf("its a less or equals than sign \n"); }
+	YY_BREAK
+case 14:
+YY_RULE_SETUP
+{ printf("its an opening parenthesis \n"); }
+	YY_BREAK
+case 15:
+YY_RULE_SETUP
+{ printf("its a closing parenthesis \n"); }
+	YY_BREAK
+case 16:
+YY_RULE_SETUP
+{ printf("its an opening key brackets \n"); }
+	YY_BREAK
+case 17:
+YY_RULE_SETUP
+{ printf("its a closing key brackets \n"); }
+	YY_BREAK
+case 18:
+YY_RULE_SETUP
+{ printf("its a comma \n"); }
+	YY_BREAK
+case 19:
+YY_RULE_SETUP
+{ printf("its a dot \n"); }
+	YY_BREAK
+case 20:
+YY_RULE_SETUP
+{ printf("its a plus sign \n"); }
+	YY_BREAK
+case 21:
+YY_RULE_SETUP
+{ printf("its a minus sign \n"); }
+	YY_BREAK
+case 22:
+YY_RULE_SETUP
+{ printf("its a multiplication sign \n"); }
+	YY_BREAK
+case 23:
+YY_RULE_SETUP
+{ printf("its a division sign \n"); }
+	YY_BREAK
+case 24:
+YY_RULE_SETUP
+{ printf("its a quotes sign \n"); }
+	YY_BREAK
+case 25:
+YY_RULE_SETUP
+{ printf("This is not a correct token\n"); yyterminate(); }
+	YY_BREAK
+case 26:
 YY_RULE_SETUP
 ECHO;
 	YY_BREAK
@@ -1021,7 +1127,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 8 )
+			if ( yy_current_state >= 34 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1049,11 +1155,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 8 )
+		if ( yy_current_state >= 34 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 7);
+	yy_is_jam = (yy_current_state == 33);
 
 	return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1726,10 +1832,9 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-/*** Code Section prints the number of
-capital letter present in the given input***/
+/*** Code Section ***/
 int yywrap() { return 1; } 
-int test() {
+int analyze_tokens() {
   
 // Explanation:
 // yywrap() - wraps the above rule section
@@ -1750,8 +1855,6 @@ int test() {
   
     printf("Write any word \n");
     yylex();
-    printf("\nNumber of Captial letters "
-    "in the given input - %d\n", count); 
     return 0;
 }
 

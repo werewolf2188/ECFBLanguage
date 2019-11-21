@@ -7,13 +7,16 @@
 //
 
 #include <iostream>
-#include "test.h"
+#include <llvm/IR/Value.h>
+#include "flex_bridge.h"
 
 extern "C" int sum(int x, int y);
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    test();
-    std::cout << "The number is " << sum(5, 6) << ".\n";
+    llvm::Value* value = NULL;
+    analyze_tokens();
+    
+//    std::cout << "The number is " << sum(5, 6) << ".\n";
     return 0;
 }

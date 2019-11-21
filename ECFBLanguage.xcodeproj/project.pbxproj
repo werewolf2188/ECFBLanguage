@@ -10,7 +10,9 @@
 		B0084F0E2384476500393BAA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0084F0D2384476500393BAA /* main.cpp */; };
 		B029F56623844E7900F91F27 /* assembly.asm in Sources */ = {isa = PBXBuildFile; fileRef = B029F56523844E7900F91F27 /* assembly.asm */; };
 		B029F56823844FB100F91F27 /* tokenizer.lex in Sources */ = {isa = PBXBuildFile; fileRef = B029F56723844F3800F91F27 /* tokenizer.lex */; };
-		B029F56A2384503C00F91F27 /* tokenizer.c in Sources */ = {isa = PBXBuildFile; fileRef = B029F5692384503C00F91F27 /* tokenizer.c */; };
+		B029F56A2384503C00F91F27 /* tokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B029F5692384503C00F91F27 /* tokenizer.cpp */; };
+		B0CC1BD82385E0DF006339B7 /* parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0CC1BD72385E0DF006339B7 /* parser.cpp */; };
+		B0CC1BDA2385E315006339B7 /* parser.yacc in Sources */ = {isa = PBXBuildFile; fileRef = B0CC1BD52385DFCE006339B7 /* parser.yacc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -36,10 +38,23 @@
 			);
 			isEditable = 1;
 			outputFiles = (
-				"$(SRCROOT)/$(PROJECT_NAME)/${INPUT_FILE_BASE}.c",
+				"$(SRCROOT)/$(PROJECT_NAME)/${INPUT_FILE_BASE}.cpp",
 				"$(SRCROOT)/$(PROJECT_NAME)/${INPUT_FILE_BASE}.h",
 			);
-			script = "# Type a script or drag a script file from your workspace to insert its path.\n#echo ${SCRIPT_OUTPUT_FILE_0}\n/usr/bin/flex -o ${SCRIPT_OUTPUT_FILE_0} --noline --header-file=${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}\n\nmv $PWD/${INPUT_FILE_BASE}.h ${SCRIPT_OUTPUT_FILE_1} \n";
+			script = "# Type a script or drag a script file from your workspace to insert its path.\n#echo ${SCRIPT_OUTPUT_FILE_0}\n/usr/bin/flex -o ${SCRIPT_OUTPUT_FILE_0} --noline  --header-file=${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}\n\nmv $PWD/${INPUT_FILE_BASE}.h ${SCRIPT_OUTPUT_FILE_1} \n";
+		};
+		B0CC1BD92385E10D006339B7 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.yacc";
+			fileType = pattern.proxy;
+			inputFiles = (
+			);
+			isEditable = 1;
+			outputFiles = (
+				"$(SRCROOT)/$(PROJECT_NAME)/${INPUT_FILE_BASE}.cpp",
+			);
+			script = "# Type a script or drag a script file from your workspace to insert its path.\n/usr/bin/bison -d -o ${SCRIPT_OUTPUT_FILE_0} --no-lines ${INPUT_FILE_PATH}\n";
 		};
 /* End PBXBuildRule section */
 
@@ -60,10 +75,13 @@
 		B0084F0D2384476500393BAA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		B029F56523844E7900F91F27 /* assembly.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = assembly.asm; sourceTree = "<group>"; };
 		B029F56723844F3800F91F27 /* tokenizer.lex */ = {isa = PBXFileReference; lastKnownFileType = text; path = tokenizer.lex; sourceTree = "<group>"; };
-		B029F5692384503C00F91F27 /* tokenizer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tokenizer.c; sourceTree = "<group>"; };
+		B029F5692384503C00F91F27 /* tokenizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tokenizer.cpp; sourceTree = "<group>"; };
 		B029F56B2384518C00F91F27 /* tokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tokenizer.h; sourceTree = "<group>"; };
-		B029F56C2384540A00F91F27 /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
+		B029F56C2384540A00F91F27 /* flex_bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = flex_bridge.h; sourceTree = "<group>"; };
 		B029F56D2384586700F91F27 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B0CC1BD52385DFCE006339B7 /* parser.yacc */ = {isa = PBXFileReference; lastKnownFileType = text; path = parser.yacc; sourceTree = "<group>"; };
+		B0CC1BD62385E0DF006339B7 /* parser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = parser.hpp; sourceTree = "<group>"; };
+		B0CC1BD72385E0DF006339B7 /* parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parser.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,12 +115,15 @@
 		B0084F0C2384476500393BAA /* ECFBLanguage */ = {
 			isa = PBXGroup;
 			children = (
+				B0CC1BD72385E0DF006339B7 /* parser.cpp */,
+				B0CC1BD62385E0DF006339B7 /* parser.hpp */,
+				B0CC1BD52385DFCE006339B7 /* parser.yacc */,
 				B029F56B2384518C00F91F27 /* tokenizer.h */,
-				B029F5692384503C00F91F27 /* tokenizer.c */,
+				B029F5692384503C00F91F27 /* tokenizer.cpp */,
+				B029F56723844F3800F91F27 /* tokenizer.lex */,
 				B0084F0D2384476500393BAA /* main.cpp */,
 				B029F56523844E7900F91F27 /* assembly.asm */,
-				B029F56723844F3800F91F27 /* tokenizer.lex */,
-				B029F56C2384540A00F91F27 /* test.h */,
+				B029F56C2384540A00F91F27 /* flex_bridge.h */,
 			);
 			path = ECFBLanguage;
 			sourceTree = "<group>";
@@ -119,6 +140,7 @@
 				B0084F082384476500393BAA /* CopyFiles */,
 			);
 			buildRules = (
+				B0CC1BD92385E10D006339B7 /* PBXBuildRule */,
 				B0084F1523844B5B00393BAA /* PBXBuildRule */,
 				B0084F14238447A500393BAA /* PBXBuildRule */,
 			);
@@ -166,10 +188,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0CC1BDA2385E315006339B7 /* parser.yacc in Sources */,
+				B0CC1BD82385E0DF006339B7 /* parser.cpp in Sources */,
 				B029F56823844FB100F91F27 /* tokenizer.lex in Sources */,
 				B0084F0E2384476500393BAA /* main.cpp in Sources */,
 				B029F56623844E7900F91F27 /* assembly.asm in Sources */,
-				B029F56A2384503C00F91F27 /* tokenizer.c in Sources */,
+				B029F56A2384503C00F91F27 /* tokenizer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,10 +312,63 @@
 		B0084F122384476500393BAA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = F647UR2ZKE;
 				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-I/usr/local/Cellar/llvm/9.0.0_1/include",
+					"-std=c++11",
+					"-stdlib=libc++",
+					"-D__STDC_CONSTANT_MACROS",
+					"-D__STDC_FORMAT_MACROS",
+					"-D__STDC_LIMIT_MACROS",
+				);
+				OTHER_LDFLAGS = (
+					"-lLLVMX86Disassembler",
+					"-lLLVMX86AsmParser",
+					"-lLLVMX86CodeGen",
+					"-lLLVMGlobalISel",
+					"-lLLVMSelectionDAG",
+					"-lLLVMAsmPrinter",
+					"-lLLVMDebugInfoDWARF",
+					"-lLLVMCodeGen",
+					"-lLLVMTarget",
+					"-lLLVMScalarOpts",
+					"-lLLVMInstCombine",
+					"-lLLVMAggressiveInstCombine",
+					"-lLLVMTransformUtils",
+					"-lLLVMBitWriter",
+					"-lLLVMAnalysis",
+					"-lLLVMProfileData",
+					"-lLLVMX86Desc",
+					"-lLLVMObject",
+					"-lLLVMMCParser",
+					"-lLLVMBitReader",
+					"-lLLVMCore",
+					"-lLLVMRemarks",
+					"-lLLVMBitstreamReader",
+					"-lLLVMMCDisassembler",
+					"-lLLVMMC",
+					"-lLLVMDebugInfoCodeView",
+					"-lLLVMDebugInfoMSF",
+					"-lLLVMBinaryFormat",
+					"-lLLVMX86Utils",
+					"-lLLVMX86Info",
+					"-lLLVMSupport",
+					"-lLLVMDemangle",
+					"-lLLVMCore",
+					"-lLLVMRemarks",
+					"-lLLVMBinaryFormat",
+					"-lLLVMSupport",
+					"-lLLVMDemangle",
+					"-L/usr/local/Cellar/llvm/9.0.0_1/lib",
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -299,10 +376,63 @@
 		B0084F132384476500393BAA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = F647UR2ZKE;
 				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-I/usr/local/Cellar/llvm/9.0.0_1/include",
+					"-std=c++11",
+					"-stdlib=libc++",
+					"-D__STDC_CONSTANT_MACROS",
+					"-D__STDC_FORMAT_MACROS",
+					"-D__STDC_LIMIT_MACROS",
+				);
+				OTHER_LDFLAGS = (
+					"-lLLVMX86Disassembler",
+					"-lLLVMX86AsmParser",
+					"-lLLVMX86CodeGen",
+					"-lLLVMGlobalISel",
+					"-lLLVMSelectionDAG",
+					"-lLLVMAsmPrinter",
+					"-lLLVMDebugInfoDWARF",
+					"-lLLVMCodeGen",
+					"-lLLVMTarget",
+					"-lLLVMScalarOpts",
+					"-lLLVMInstCombine",
+					"-lLLVMAggressiveInstCombine",
+					"-lLLVMTransformUtils",
+					"-lLLVMBitWriter",
+					"-lLLVMAnalysis",
+					"-lLLVMProfileData",
+					"-lLLVMX86Desc",
+					"-lLLVMObject",
+					"-lLLVMMCParser",
+					"-lLLVMBitReader",
+					"-lLLVMCore",
+					"-lLLVMRemarks",
+					"-lLLVMBitstreamReader",
+					"-lLLVMMCDisassembler",
+					"-lLLVMMC",
+					"-lLLVMDebugInfoCodeView",
+					"-lLLVMDebugInfoMSF",
+					"-lLLVMBinaryFormat",
+					"-lLLVMX86Utils",
+					"-lLLVMX86Info",
+					"-lLLVMSupport",
+					"-lLLVMDemangle",
+					"-lLLVMCore",
+					"-lLLVMRemarks",
+					"-lLLVMBinaryFormat",
+					"-lLLVMSupport",
+					"-lLLVMDemangle",
+					"-L/usr/local/Cellar/llvm/9.0.0_1/lib",
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

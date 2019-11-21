@@ -9,5 +9,5 @@
 #ifndef test_h
 #define test_h
 
-extern "C" int test(void);
+extern "C" int analyze_tokens(void);
 #endif /* test_h */
