@@ -29,6 +29,8 @@ I truly encourage the developer to run the command `flex --help` and see the dif
 
 ### Bison
 
+### LLVM
+
 ### Why are these tools needed.
 
 If the developer opens the project with Xcode, and goes to the build rules, it will see that there are multiple rules regarding files with extensions `.lex` and `.yacc`. These files will be translated into C++ code ultimately and they will be used in the compiler, but it's always easier to use tools for this kind of projects.
