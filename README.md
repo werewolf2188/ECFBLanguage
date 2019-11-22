@@ -54,3 +54,7 @@ https://stackoverflow.com/questions/28203937/installing-llvm-libraries-along-wit
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
 https://github.com/lsegal/my_toy_compiler/blob/master/codegen.h
 https://aquamentus.com/flex_bison.html
+
+echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> ~/.zshrc
+export CPPFLAGS="-I/usr/local/opt/llvm/include"
+export LDFLAGS="-L/usr/local/opt/llvm/lib"
