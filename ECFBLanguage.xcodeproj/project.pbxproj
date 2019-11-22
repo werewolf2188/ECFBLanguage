@@ -82,6 +82,7 @@
 		B0CC1BD52385DFCE006339B7 /* parser.yacc */ = {isa = PBXFileReference; lastKnownFileType = text; path = parser.yacc; sourceTree = "<group>"; };
 		B0CC1BD62385E0DF006339B7 /* parser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = parser.hpp; sourceTree = "<group>"; };
 		B0CC1BD72385E0DF006339B7 /* parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parser.cpp; sourceTree = "<group>"; };
+		C2F667FB23878E06000FE2E2 /* semantics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = semantics.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +125,7 @@
 				B0084F0D2384476500393BAA /* main.cpp */,
 				B029F56523844E7900F91F27 /* assembly.asm */,
 				B029F56C2384540A00F91F27 /* flex_bridge.h */,
+				C2F667FB23878E06000FE2E2 /* semantics.hpp */,
 			);
 			path = ECFBLanguage;
 			sourceTree = "<group>";

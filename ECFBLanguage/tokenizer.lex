@@ -1,5 +1,9 @@
 %{
 #include <string>
+#include "semantics.hpp"
+#include "parser.hpp"
+#define SAVE_TOKEN yylval.string = new std::string(yytext, yyleng)
+#define TOKEN(t) (yylval.token = t)
 extern "C" int analyze_tokens();
 %}
   
@@ -7,33 +11,33 @@ extern "C" int analyze_tokens();
 %%
 [ \t\n]             ;// { return 0; }
 [\S]                ;
-[a-zA-Z][a-zA-Z0-9\_]*   { printf("%s its an identifier\n", yytext); }
-[0-9]+              { printf("%s its an integer \n", yytext); }
-[0-9]+\.[0-9]+      { printf("%s its a double \n", yytext); }
-"="                 { printf("its an equals sign \n"); }
-"="                 { printf("its an assignment sign \n"); }
-"=="                { printf("its an equals sign \n"); }
-"!="                { printf("its a not equals sign \n"); }
-"<"                 { printf("its a less than sign \n"); }
-"<="                { printf("its a less or equals than sign \n"); }
-">"                 { printf("its a less than sign \n"); }
-">="                { printf("its a less or equals than sign \n"); }
-"("                 { printf("its an opening parenthesis \n"); }
-")"                 { printf("its a closing parenthesis \n"); }
-"{"                 { printf("its an opening key brackets \n"); }
-"}"                 { printf("its a closing key brackets \n"); }
-","                 { printf("its a comma \n"); }
-"."                 { printf("its a dot \n"); }
-"+"                 { printf("its a plus sign \n"); }
-"-"                 { printf("its a minus sign \n"); }
-"*"                 { printf("its a multiplication sign \n"); }
-"/"                 { printf("its a division sign \n"); }
-\".*\"              { printf("its a string \n"); }
-.                   { printf("This is not a correct token\n"); yyterminate(); }
+[a-zA-Z][a-zA-Z0-9\_]*  { SAVE_TOKEN; return TIDENTIFIER; }
+[0-9]+                  { SAVE_TOKEN; return TINTEGER; }
+[0-9]+\.[0-9]+          { SAVE_TOKEN; return TDOUBLE; }
+"="                     { return TOKEN(TEQUAL); }
+"=="                    { return TOKEN(TCEQ); }
+"!="                    { return TOKEN(TCNE); }
+"<"                     { return TOKEN(TCLT); }
+"<="                    { return TOKEN(TCLE); }
+">"                     { return TOKEN(TCGT); }
+">="                    { return TOKEN(TCGE); }
+"("                     { return TOKEN(TLPAREN); }
+")"                     { return TOKEN(TRPAREN); }
+"{"                     { return TOKEN(TLBRACE); }
+"}"                     { return TOKEN(TRBRACE); }
+","                     { return TOKEN(TCOMMA); }
+"."                     { return TOKEN(TDOT); }
+"+"                     { return TOKEN(TPLUS); }
+"-"                     { return TOKEN(TMINUS); }
+"*"                     { return TOKEN(TMUL);  }
+"/"                     { return TOKEN(TDIV); }
+\".*\"                  { printf("its a string \n"); }
+.                       { printf("This is not a correct token\n"); yyterminate(); }
 
 %%
   
 /*** Code Section ***/
+/// Need to analyze why this has to be extern
 int yywrap() { return 1; } 
 int analyze_tokens() {
   

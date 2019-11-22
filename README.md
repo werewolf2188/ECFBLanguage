@@ -9,7 +9,7 @@ Of course, this project wasn't made completely without proper knowledge of the t
 
 ## 1. Requirements
 
-For this project, the developers will need to have an IDE that allows to work with C++, and that can connect other tools to the pipeline. These tools are for the creation of the C++ files that will be used to compile this command line tool. The tools in particular are Flex and Bison.
+For this project, the developers will need to have an IDE that allows to work with C++, and that can connect other tools to the pipeline. These tools are for the creation of the C++ files that will be used to compile this command line tool. The tools in particular are Flex, Bison and LLVM. The tools for creating the lexicon and grammar are Flex and Bison respectively. LLVM is a library that will help us to create the intermediate code to be compiled. We're not going to use assembly directly, but instead we will use a library to create code in another language than ECFB.
 
 > I should warn the developer, I'm using a Macbook and my IDE is Xcode, as I'm a current iOS developer in duty, and I like to use it for experimental programs with C/C++ rather than using Eclipse-like IDEs. If the developer is coming from Windows, I recommend using Visual Studio since it has great capabilities for developing in C/C++, but the developer will have to create buiild rules for our Flex/Bison files in it's pipeline. For linux, I don't have experience.
 
@@ -17,7 +17,7 @@ For this project, the developers will need to have an IDE that allows to work wi
 
 Flex is the tool that will be used to generate the lexical analyzer, meaning the parser for the tokens that can be inside our language. I won't get into specifics about what Flex is, but rather if the developer is interest on knowing more about it, it can click this [link](https://en.wikipedia.org/wiki/Flex_(lexical_analyser_generator)). For now, lets focus on how to install it. 
 
-To install it in Mac, just run this commands (I'm presumming the developer already has [homebrew](https://brew.sh) inside its computer)
+To install it in Mac, just run these commands (I'm presumming the developer already has [homebrew](https://brew.sh) inside its computer)
 
 ```bash
 brew install flex
@@ -25,15 +25,26 @@ which flex
 flex -V
 ```
 
-I truly encourage the developer to run the command `flex --help` and see the different values
+I truly encourage the developer to run the command `flex --help` and see the different options the developer can use.
 
 ### Bison
+
+Having the lexical tokens is not enough, the compiler needs to establish its grammar rules and functionality behind every rule. For that we use a tool called Bison. Bison takes a similar approach as Flex when parsing the grammar rules, except it's file, a `.yacc` file (selected by this project, normally it would be a `.y` file) and it has more sections in it, besides the include header for the code, and the rules. These sections will help us establishing the tokens for the terminal rules, the types for the non terminal rules and the precedence for some operators.
+
+To install it in Mac, just run these commands.
+
+```bash
+brew install bison
+which bison
+bison -V
+```
+Same as Flex, I truly encourage the developer to run  the command `bison --help` and see the different options the developer can use.
 
 ### LLVM
 
 ### Why are these tools needed.
 
-If the developer opens the project with Xcode, and goes to the build rules, it will see that there are multiple rules regarding files with extensions `.lex` and `.yacc`. These files will be translated into C++ code ultimately and they will be used in the compiler, but it's always easier to use tools for this kind of projects.
+If the developer opens the project with Xcode, and goes to the build rules, it will see that there are multiple rules regarding files with extensions `.lex` and `.yacc`. These files will be translated into C++ code ultimately and they will be used in the compiler, but it's always easier to use tools for these kind of projects.
 
 
 https://www.geeksforgeeks.org/flex-fast-lexical-analyzer-generator/
