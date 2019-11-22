@@ -11,27 +11,27 @@ extern "C" int analyze_tokens();
 %%
 [ \t\n]             ;// { return 0; }
 [\S]                ;
-[a-zA-Z][a-zA-Z0-9\_]*   { SAVE_TOKEN; printf("%s its an identifier\n", yytext); return TIDENTIFIER; }
-[0-9]+                  { SAVE_TOKEN; printf("%s its an integer \n", yytext); return TINTEGER; }
-[0-9]+\.[0-9]+          { SAVE_TOKEN; printf("%s its a double \n", yytext); return TDOUBLE; }
-"="                     { printf("its an assignment sign \n"); return TOKEN(TEQUAL); }
-"=="                    { printf("its an equals sign \n"); return TOKEN(TCEQ); }
-"!="                    { printf("its a not equals sign \n"); return TOKEN(TCNE); }
-"<"                     { printf("its a less than sign \n"); return TOKEN(TCLT); }
-"<="                    { printf("its a less or equals than sign \n"); return TOKEN(TCLE); }
-">"                     { printf("its a less than sign \n"); return TOKEN(TCGT); }
-">="                    { printf("its a less or equals than sign \n"); return TOKEN(TCGE); }
-"("                     { printf("its an opening parenthesis \n"); return TOKEN(TLPAREN); }
-")"                     { printf("its a closing parenthesis \n"); return TOKEN(TRPAREN); }
-"{"                     { printf("its an opening key brackets \n"); return TOKEN(TLBRACE); }
-"}"                     { printf("its a closing key brackets \n"); return TOKEN(TRBRACE); }
-","                     { printf("its a comma \n"); return TOKEN(TCOMMA); }
-"."                     { printf("its a dot \n"); return TOKEN(TDOT); }
-"+"                     { printf("its a plus sign \n"); return TOKEN(TPLUS); }
-"-"                     { printf("its a minus sign \n"); return TOKEN(TMINUS); }
-"*"                     { printf("its a multiplication sign \n"); }
-"/"                     { printf("its a division sign \n"); return TOKEN(TMUL); }
-\".*\"                  { printf("its a string \n"); return TOKEN(TDIV); }
+[a-zA-Z][a-zA-Z0-9\_]*  { SAVE_TOKEN; return TIDENTIFIER; }
+[0-9]+                  { SAVE_TOKEN; return TINTEGER; }
+[0-9]+\.[0-9]+          { SAVE_TOKEN; return TDOUBLE; }
+"="                     { return TOKEN(TEQUAL); }
+"=="                    { return TOKEN(TCEQ); }
+"!="                    { return TOKEN(TCNE); }
+"<"                     { return TOKEN(TCLT); }
+"<="                    { return TOKEN(TCLE); }
+">"                     { return TOKEN(TCGT); }
+">="                    { return TOKEN(TCGE); }
+"("                     { return TOKEN(TLPAREN); }
+")"                     { return TOKEN(TRPAREN); }
+"{"                     { return TOKEN(TLBRACE); }
+"}"                     { return TOKEN(TRBRACE); }
+","                     { return TOKEN(TCOMMA); }
+"."                     { return TOKEN(TDOT); }
+"+"                     { return TOKEN(TPLUS); }
+"-"                     { return TOKEN(TMINUS); }
+"*"                     { return TOKEN(TMUL);  }
+"/"                     { return TOKEN(TDIV); }
+\".*\"                  { printf("its a string \n"); }
 .                       { printf("This is not a correct token\n"); yyterminate(); }
 
 %%

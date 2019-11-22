@@ -7,14 +7,19 @@
 //
 
 #include <iostream>
-#include "flex_bridge.h"
+#include "semantics.hpp"
 
-extern "C" int sum(int x, int y);
+extern NBlock* programBlock;
+extern int yyparse();
+
+//extern "C" int sum(int x, int y);
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    analyze_tokens();
-    
+//    analyze_tokens();
+    std::cout << "Please add a line of code" << std::endl;
+    yyparse();
+    std::cout << programBlock << std::endl;
 //    std::cout << "The number is " << sum(5, 6) << ".\n";
     return 0;
 }

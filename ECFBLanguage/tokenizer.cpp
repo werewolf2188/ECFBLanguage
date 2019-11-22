@@ -1,5 +1,5 @@
 
-#line 3 "/Users/werewolf2188/Proyectos/Mobile/ECFBLanguage/ECFBLanguage/tokenizer.cpp"
+#line 3 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -748,87 +748,87 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-{ SAVE_TOKEN; printf("%s its an identifier\n", yytext); return TIDENTIFIER; }
+{ SAVE_TOKEN; return TIDENTIFIER; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-{ SAVE_TOKEN; printf("%s its an integer \n", yytext); return TINTEGER; }
+{ SAVE_TOKEN; return TINTEGER; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-{ SAVE_TOKEN; printf("%s its a double \n", yytext); return TDOUBLE; }
+{ SAVE_TOKEN; return TDOUBLE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-{ printf("its an assignment sign \n"); return TOKEN(TEQUAL); }
+{ return TOKEN(TEQUAL); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-{ printf("its an equals sign \n"); return TOKEN(TCEQ); }
+{ return TOKEN(TCEQ); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-{ printf("its a not equals sign \n"); return TOKEN(TCNE); }
+{ return TOKEN(TCNE); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-{ printf("its a less than sign \n"); return TOKEN(TCLT); }
+{ return TOKEN(TCLT); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-{ printf("its a less or equals than sign \n"); return TOKEN(TCLE); }
+{ return TOKEN(TCLE); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-{ printf("its a less than sign \n"); return TOKEN(TCGT); }
+{ return TOKEN(TCGT); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-{ printf("its a less or equals than sign \n"); return TOKEN(TCGE); }
+{ return TOKEN(TCGE); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-{ printf("its an opening parenthesis \n"); return TOKEN(TLPAREN); }
+{ return TOKEN(TLPAREN); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-{ printf("its a closing parenthesis \n"); return TOKEN(TRPAREN); }
+{ return TOKEN(TRPAREN); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-{ printf("its an opening key brackets \n"); return TOKEN(TLBRACE); }
+{ return TOKEN(TLBRACE); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-{ printf("its a closing key brackets \n"); return TOKEN(TRBRACE); }
+{ return TOKEN(TRBRACE); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-{ printf("its a comma \n"); return TOKEN(TCOMMA); }
+{ return TOKEN(TCOMMA); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-{ printf("its a dot \n"); return TOKEN(TDOT); }
+{ return TOKEN(TDOT); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-{ printf("its a plus sign \n"); return TOKEN(TPLUS); }
+{ return TOKEN(TPLUS); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-{ printf("its a minus sign \n"); return TOKEN(TMINUS); }
+{ return TOKEN(TMINUS); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-{ printf("its a multiplication sign \n"); }
+{ return TOKEN(TMUL);  }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-{ printf("its a division sign \n"); return TOKEN(TMUL); }
+{ return TOKEN(TDIV); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-{ printf("its a string \n"); return TOKEN(TDIV); }
+{ printf("its a string \n"); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
