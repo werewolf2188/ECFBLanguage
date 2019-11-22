@@ -360,8 +360,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 26
-#define YY_END_OF_BUFFER 27
+#define YY_NUM_RULES 25
+#define YY_END_OF_BUFFER 26
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -371,10 +371,10 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[36] =
     {   0,
-        0,    0,   27,   25,    1,    1,   25,   25,   14,   15,
-       22,   20,   18,   21,   19,   23,    4,   10,    6,   12,
-        3,    2,   16,   17,    9,    0,   24,    0,    4,   11,
-        8,   13,    3,    5,    0
+        0,    0,   26,   24,    1,    1,   24,   24,   13,   14,
+       21,   19,   17,   20,   18,   22,    4,    9,    6,   11,
+        3,    2,   15,   16,    8,    0,   23,    0,    4,   10,
+        7,   12,    3,    5,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -469,6 +469,10 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #include <string>
+#include "semantics.hpp"
+#include "parser.hpp"
+#define SAVE_TOKEN yylval.string = new std::string(yytext, yyleng)
+#define TOKEN(t) (yylval.token = t)
 extern "C" int analyze_tokens();
 /*** Rule Section ***/
 
@@ -744,97 +748,93 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-{ printf("%s its an identifier\n", yytext); }
+{ SAVE_TOKEN; printf("%s its an identifier\n", yytext); return TIDENTIFIER; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-{ printf("%s its an integer \n", yytext); }
+{ SAVE_TOKEN; printf("%s its an integer \n", yytext); return TINTEGER; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-{ printf("%s its a double \n", yytext); }
+{ SAVE_TOKEN; printf("%s its a double \n", yytext); return TDOUBLE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-{ printf("its an equals sign \n"); }
+{ printf("its an assignment sign \n"); return TOKEN(TEQUAL); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-{ printf("its an assignment sign \n"); }
+{ printf("its an equals sign \n"); return TOKEN(TCEQ); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-{ printf("its an equals sign \n"); }
+{ printf("its a not equals sign \n"); return TOKEN(TCNE); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-{ printf("its a not equals sign \n"); }
+{ printf("its a less than sign \n"); return TOKEN(TCLT); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-{ printf("its a less than sign \n"); }
+{ printf("its a less or equals than sign \n"); return TOKEN(TCLE); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-{ printf("its a less or equals than sign \n"); }
+{ printf("its a less than sign \n"); return TOKEN(TCGT); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-{ printf("its a less than sign \n"); }
+{ printf("its a less or equals than sign \n"); return TOKEN(TCGE); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-{ printf("its a less or equals than sign \n"); }
+{ printf("its an opening parenthesis \n"); return TOKEN(TLPAREN); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-{ printf("its an opening parenthesis \n"); }
+{ printf("its a closing parenthesis \n"); return TOKEN(TRPAREN); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-{ printf("its a closing parenthesis \n"); }
+{ printf("its an opening key brackets \n"); return TOKEN(TLBRACE); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-{ printf("its an opening key brackets \n"); }
+{ printf("its a closing key brackets \n"); return TOKEN(TRBRACE); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-{ printf("its a closing key brackets \n"); }
+{ printf("its a comma \n"); return TOKEN(TCOMMA); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-{ printf("its a comma \n"); }
+{ printf("its a dot \n"); return TOKEN(TDOT); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-{ printf("its a dot \n"); }
+{ printf("its a plus sign \n"); return TOKEN(TPLUS); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-{ printf("its a plus sign \n"); }
+{ printf("its a minus sign \n"); return TOKEN(TMINUS); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-{ printf("its a minus sign \n"); }
+{ printf("its a multiplication sign \n"); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-{ printf("its a multiplication sign \n"); }
+{ printf("its a division sign \n"); return TOKEN(TMUL); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-{ printf("its a division sign \n"); }
+{ printf("its a string \n"); return TOKEN(TDIV); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-{ printf("its a string \n"); }
-	YY_BREAK
-case 25:
-YY_RULE_SETUP
 { printf("This is not a correct token\n"); yyterminate(); }
 	YY_BREAK
-case 26:
+case 25:
 YY_RULE_SETUP
 ECHO;
 	YY_BREAK
@@ -1835,6 +1835,7 @@ void yyfree (void * ptr )
 #define YYTABLES_NAME "yytables"
 
 /*** Code Section ***/
+/// Need to analyze why this has to be extern
 int yywrap() { return 1; } 
 int analyze_tokens() {
   

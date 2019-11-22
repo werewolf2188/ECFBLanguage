@@ -60,6 +60,55 @@
 
 
 
+/* Tokens.  */
+#ifndef YYTOKENTYPE
+# define YYTOKENTYPE
+   /* Put the tokens into the symbol table, so that GDB and other debuggers
+      know about them.  */
+   enum yytokentype {
+     TIDENTIFIER = 258,
+     TINTEGER = 259,
+     TDOUBLE = 260,
+     TCEQ = 261,
+     TCNE = 262,
+     TCLT = 263,
+     TCLE = 264,
+     TCGT = 265,
+     TCGE = 266,
+     TEQUAL = 267,
+     TLPAREN = 268,
+     TRPAREN = 269,
+     TLBRACE = 270,
+     TRBRACE = 271,
+     TCOMMA = 272,
+     TDOT = 273,
+     TPLUS = 274,
+     TMINUS = 275,
+     TMUL = 276,
+     TDIV = 277
+   };
+#endif
+/* Tokens.  */
+#define TIDENTIFIER 258
+#define TINTEGER 259
+#define TDOUBLE 260
+#define TCEQ 261
+#define TCNE 262
+#define TCLT 263
+#define TCLE 264
+#define TCGT 265
+#define TCGE 266
+#define TEQUAL 267
+#define TLPAREN 268
+#define TRPAREN 269
+#define TLBRACE 270
+#define TRBRACE 271
+#define TCOMMA 272
+#define TDOT 273
+#define TPLUS 274
+#define TMINUS 275
+#define TMUL 276
+#define TDIV 277
 
 
 
@@ -67,6 +116,9 @@
 /* Copy the first part of user declarations.  */
 
 
+    #include "semantics.hpp"
+    
+    NBlock* programBlock;
     extern int yylex();
     void yyerror(const char *s) { }
 
@@ -90,7 +142,23 @@
 #endif
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+
+{
+    Node *node;
+    NBlock *block;
+    NExpression *expr;
+    NStatement *stmt;
+    NIdentifier *ident;
+    NVariableDeclaration *var_decl;
+    std::vector<NVariableDeclaration*> *varvec;
+    std::vector<NExpression*> *exprvec;
+    std::string *string;
+    int token;
+}
+/* Line 193 of yacc.c.  */
+
+	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
@@ -320,7 +388,7 @@ union yyalloc
 #define YYLAST   0
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  3
+#define YYNTOKENS  23
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  2
 /* YYNRULES -- Number of rules.  */
@@ -330,7 +398,7 @@ union yyalloc
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   257
+#define YYMAXUTOK   277
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -363,7 +431,9 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     1,     2
+       2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16,    17,    18,    19,    20,    21,    22
 };
 
 #if YYDEBUG
@@ -377,13 +447,13 @@ static const yytype_uint8 yyprhs[] =
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-       4,     0,    -1,    -1
+      24,     0,    -1,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    10,    10
+       0,    35,    35
 };
 #endif
 
@@ -392,7 +462,10 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "$accept", "program", 0
+  "$end", "error", "$undefined", "TIDENTIFIER", "TINTEGER", "TDOUBLE",
+  "TCEQ", "TCNE", "TCLT", "TCLE", "TCGT", "TCGE", "TEQUAL", "TLPAREN",
+  "TRPAREN", "TLBRACE", "TRBRACE", "TCOMMA", "TDOT", "TPLUS", "TMINUS",
+  "TMUL", "TDIV", "$accept", "program", 0
 };
 #endif
 
@@ -401,14 +474,16 @@ static const char *const yytname[] =
    token YYLEX-NUM.  */
 static const yytype_uint16 yytoknum[] =
 {
-       0,   256,   257
+       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
+     265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
+     275,   276,   277
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,     3,     4
+       0,    23,    24
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -464,7 +539,7 @@ static const yytype_uint8 yycheck[] =
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     4,     0
+       0,    24,     0
 };
 
 #define yyerrok		(yyerrstatus = 0)
