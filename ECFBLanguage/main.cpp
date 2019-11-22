@@ -19,7 +19,8 @@ int main(int argc, const char * argv[]) {
 //    analyze_tokens();
     std::cout << "Please add a line of code" << std::endl;
     yyparse();
-    std::cout << programBlock << std::endl;
+    programBlock->printString(0);
+//    std::cout << programBlock << std::endl;
 //    std::cout << "The number is " << sum(5, 6) << ".\n";
     return 0;
 }
