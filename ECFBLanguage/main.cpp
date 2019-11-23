@@ -15,17 +15,19 @@ extern int yyparse();
 
 //extern "C" int sum(int x, int y);
 
+void createCoreFunctions(CodeGenContext& context);
+
 int main(int argc, const char * argv[]) {
     // insert code here...
 //    analyze_tokens();
     std::cout << "Please add a line of code" << std::endl;
     yyparse();
     programBlock->printString(0);
-    // see http://comments.gmane.org/gmane.comp.compilers.llvm.devel/33877
     InitializeNativeTarget();
     InitializeNativeTargetAsmPrinter();
     InitializeNativeTargetAsmParser();
     CodeGenContext context;
+    createCoreFunctions(context);
     context.generateCode(*programBlock);
     context.runCode();
 //    std::cout << programBlock << std::endl;
