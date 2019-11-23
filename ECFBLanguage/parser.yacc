@@ -23,6 +23,7 @@
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
 %token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
 %token <token> TPLUS TMINUS TMUL TDIV
+%token <token> TRETURN
 
 %type <ident> ident
 %type <expr> numeric expr
@@ -48,6 +49,7 @@ stmts : stmt { $$ = new NBlock(); $$->statements.push_back($<stmt>1); }
         
 stmt : var_decl | func_decl
 | expr { $$ = new NExpressionStatement(*$1); }
+| TRETURN expr { $$ = new NReturnStatement(*$2); }
 ;
 
 block : TLBRACE stmts TRBRACE { $$ = $2; }

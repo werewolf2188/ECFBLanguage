@@ -58,7 +58,8 @@
      TPLUS = 274,
      TMINUS = 275,
      TMUL = 276,
-     TDIV = 277
+     TDIV = 277,
+     TRETURN = 278
    };
 #endif
 /* Tokens.  */
@@ -82,6 +83,7 @@
 #define TMINUS 275
 #define TMUL 276
 #define TDIV 277
+#define TRETURN 278
 
 
 

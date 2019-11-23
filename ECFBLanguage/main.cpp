@@ -21,6 +21,11 @@ int main(int argc, const char * argv[]) {
     std::cout << "Please add a line of code" << std::endl;
     yyparse();
     programBlock->printString(0);
+    
+    CodeGenContext context;
+    context.generateCode(*programBlock);
+    /* For now we will not run the code, until we can find the issue. */
+    context.runCode();
 //    std::cout << programBlock << std::endl;
 //    std::cout << "The number is " << sum(5, 6) << ".\n";
     return 0;

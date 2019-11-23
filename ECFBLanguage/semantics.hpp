@@ -29,7 +29,7 @@ typedef std::vector<NVariableDeclaration*>::iterator VariableIterator;
 class Node {
 public:
     virtual ~Node() { }
-//    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual llvm::Value* codeGen(CodeGenContext& context);
     virtual void printString(int spaces) { }
 };
 
@@ -141,6 +141,14 @@ public:
         
         this->expression.printString(spaces + 1);
     }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+};
+
+class NReturnStatement: public NStatement {
+public:
+    NExpression& expression;
+    NReturnStatement(NExpression& expression) :
+        expression(expression) { }
     virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
