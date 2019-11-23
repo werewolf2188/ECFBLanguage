@@ -372,6 +372,7 @@
 					"-lLLVMRemarks",
 					"-lLLVMBitstreamReader",
 					"-lLLVMMCDisassembler",
+					"-lLLVMMCJIT",
 					"-lLLVMMC",
 					"-lLLVMDebugInfoCodeView",
 					"-lLLVMDebugInfoMSF",
@@ -385,9 +386,16 @@
 					"-lLLVMBinaryFormat",
 					"-lLLVMSupport",
 					"-lLLVMDemangle",
+					"-lLLVMRuntimeDyld",
+					"-lLLVMExecutionEngine",
 					"-L/usr/local/Cellar/llvm/9.0.0_1/lib",
 					"-Wl,-search_paths_first",
 					"-Wl,-headerpad_max_install_names",
+					"-lpthread",
+					"-ldl",
+					"-lz",
+					"-lncurses",
+					"-rdynamic",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -436,6 +444,7 @@
 					"-lLLVMRemarks",
 					"-lLLVMBitstreamReader",
 					"-lLLVMMCDisassembler",
+					"-lLLVMMCJIT",
 					"-lLLVMMC",
 					"-lLLVMDebugInfoCodeView",
 					"-lLLVMDebugInfoMSF",
@@ -449,9 +458,16 @@
 					"-lLLVMBinaryFormat",
 					"-lLLVMSupport",
 					"-lLLVMDemangle",
+					"-lLLVMRuntimeDyld",
+					"-lLLVMExecutionEngine",
 					"-L/usr/local/Cellar/llvm/9.0.0_1/lib",
 					"-Wl,-search_paths_first",
 					"-Wl,-headerpad_max_install_names",
+					"-lpthread",
+					"-ldl",
+					"-lz",
+					"-lncurses",
+					"-rdynamic",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

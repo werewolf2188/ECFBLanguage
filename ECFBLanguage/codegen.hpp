@@ -25,7 +25,7 @@
 #include <llvm/Bitstream/BitstreamWriter.h>
 #include <llvm/Support/TargetSelect.h>
 #include <llvm/ExecutionEngine/ExecutionEngine.h>
-//#include <llvm/ExecutionEngine/MCJIT.h>
+#include <llvm/ExecutionEngine/MCJIT.h>
 #include <llvm/ExecutionEngine/GenericValue.h>
 #include <llvm/Support/raw_ostream.h>
 
