@@ -42,10 +42,38 @@ Same as Flex, I truly encourage the developer to run  the command `bison --help`
 
 ### LLVM
 
+LLVM is our final goal to approach. LLVM is not an acronym per se, but its the name of the project. It works as a compiler and a toolchain that allows the development of languages that are independent of the operative system. The LLVM project will help us to translate the semantic ASL tree into code to be executed by the JIT compiler. If the developer wants to learn more about it, I recommend to go and read the documentation by going to the website (llvm.org)[https://llvm.org]. For now we will only focus on installing it and start working on it.
+
+To install, simply run these bash commands.
+
+```bash
+brew install llvm
+which llvm-config
+
+echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> ~/.zshrc
+export CPPFLAGS="-I/usr/local/opt/llvm/include"
+export LDFLAGS="-L/usr/local/opt/llvm/lib"
+```
+
+`The exports here will be suggested at the end of installation. I truly recommend the developer to follow them`
+
+`The installation will take at least an hour, or an hour and a half. My computer is Macbook from 2018, and still, it took an hour and a half.`
+
+`The project might give you an error in a header file inside llvm include folder. Simply modify it directly. The class is PreservedAnalysis, and it should be Preservedanalysis. It might be and issue with the version I got, which is 9.0.0_1`
+
+It should be interest to note that the project already knows which c++ flags and which linker flags to use, but if the developer is interest to know, just go to the build settings and look for c++ flags and other linker flags. The developer might get interest to see what libraries we're linking. Also, there's one library that we're getting directly in the build phases, which is `libtermcap.tbd`. If the developer wants to find more about the libraries, it can go to the terminal and use the command line tool `llvm-config`.
+
+```bash
+llvm-config --libs core mcjit native --cxxflags --ldflags # to see all the flags that this project needs
+```
+
 ### Why are these tools needed.
 
 If the developer opens the project with Xcode, and goes to the build rules, it will see that there are multiple rules regarding files with extensions `.lex` and `.yacc`. These files will be translated into C++ code ultimately and they will be used in the compiler, but it's always easier to use tools for these kind of projects.
 
+Also, the use of LLVM allows the developer to get the same project and use it in different environments, and not only in Unix based operative systems.
+
+## References
 
 https://www.geeksforgeeks.org/flex-fast-lexical-analyzer-generator/
 https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/
@@ -55,6 +83,4 @@ https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
 https://github.com/lsegal/my_toy_compiler/blob/master/codegen.h
 https://aquamentus.com/flex_bison.html
 
-echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> ~/.zshrc
-export CPPFLAGS="-I/usr/local/opt/llvm/include"
-export LDFLAGS="-L/usr/local/opt/llvm/lib"
+
