@@ -15,6 +15,7 @@
 		B0CC1BDA2385E315006339B7 /* parser.yacc in Sources */ = {isa = PBXBuildFile; fileRef = B0CC1BD52385DFCE006339B7 /* parser.yacc */; };
 		C2E1E9E92388DCFA00678748 /* codegen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2E1E9E82388DCFA00678748 /* codegen.cpp */; };
 		C2E1E9ED2388ECDB00678748 /* libtermcap.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E1E9EB2388E5F600678748 /* libtermcap.tbd */; };
+		C2F7F7E02389E95A00C5B24D /* core_functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2F7F7DF2389E95A00C5B24D /* core_functions.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -88,6 +89,7 @@
 		C2E1E9E82388DCFA00678748 /* codegen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = codegen.cpp; sourceTree = "<group>"; };
 		C2E1E9EB2388E5F600678748 /* libtermcap.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libtermcap.tbd; path = usr/lib/libtermcap.tbd; sourceTree = SDKROOT; };
 		C2F667FB23878E06000FE2E2 /* semantics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = semantics.hpp; sourceTree = "<group>"; };
+		C2F7F7DF2389E95A00C5B24D /* core_functions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = core_functions.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +137,7 @@
 				C2F667FB23878E06000FE2E2 /* semantics.hpp */,
 				C2E1E9E72388DCD700678748 /* codegen.hpp */,
 				C2E1E9E82388DCFA00678748 /* codegen.cpp */,
+				C2F7F7DF2389E95A00C5B24D /* core_functions.cpp */,
 			);
 			path = ECFBLanguage;
 			sourceTree = "<group>";
@@ -211,6 +214,7 @@
 				B0CC1BD82385E0DF006339B7 /* parser.cpp in Sources */,
 				B029F56823844FB100F91F27 /* tokenizer.lex in Sources */,
 				C2E1E9E92388DCFA00678748 /* codegen.cpp in Sources */,
+				C2F7F7E02389E95A00C5B24D /* core_functions.cpp in Sources */,
 				B0084F0E2384476500393BAA /* main.cpp in Sources */,
 				B029F56623844E7900F91F27 /* assembly.asm in Sources */,
 				B029F56A2384503C00F91F27 /* tokenizer.cpp in Sources */,
