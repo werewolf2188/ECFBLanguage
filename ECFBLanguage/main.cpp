@@ -7,6 +7,7 @@
 //
 
 #include <iostream>
+#include "codegen.hpp"
 #include "semantics.hpp"
 
 extern NBlock* programBlock;

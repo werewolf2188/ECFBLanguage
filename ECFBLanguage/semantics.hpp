@@ -13,7 +13,7 @@
 #include <string>
 #include <llvm/IR/Value.h>
 
-//class CodeGenContext;
+class CodeGenContext;
 class NStatement;
 class NExpression;
 class NVariableDeclaration;
