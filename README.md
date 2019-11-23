@@ -75,12 +75,11 @@ Also, the use of LLVM allows the developer to get the same project and use it in
 
 ## References
 
-https://www.geeksforgeeks.org/flex-fast-lexical-analyzer-generator/
-https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/
-https://llvm.org
-https://stackoverflow.com/questions/28203937/installing-llvm-libraries-along-with-xcode
-https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
-https://github.com/lsegal/my_toy_compiler/blob/master/codegen.h
-https://aquamentus.com/flex_bison.html
+* https://www.geeksforgeeks.org/flex-fast-lexical-analyzer-generator/
+* https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/
+* https://llvm.org
+* https://stackoverflow.com/questions/28203937/installing-llvm-libraries-along-with-xcode
+* https://github.com/lsegal/my_toy_compiler/blob/master/codegen.h
+* https://aquamentus.com/flex_bison.html
 
 
