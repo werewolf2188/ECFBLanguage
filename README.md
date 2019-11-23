@@ -11,7 +11,7 @@ Of course, this project wasn't made completely without proper knowledge of the t
 
 For this project, the developers will need to have an IDE that allows to work with C++, and that can connect other tools to the pipeline. These tools are for the creation of the C++ files that will be used to compile this command line tool. The tools in particular are Flex, Bison and LLVM. The tools for creating the lexicon and grammar are Flex and Bison respectively. LLVM is a library that will help us to create the intermediate code to be compiled. We're not going to use assembly directly, but instead we will use a library to create code in another language than ECFB.
 
-> I should warn the developer, I'm using a Macbook and my IDE is Xcode, as I'm a current iOS developer in duty, and I like to use it for experimental programs with C/C++ rather than using Eclipse-like IDEs. If the developer is coming from Windows, I recommend using Visual Studio since it has great capabilities for developing in C/C++, but the developer will have to create buiild rules for our Flex/Bison files in it's pipeline. For linux, I don't have experience.
+> I should warn the developer, I'm using a Macbook and my IDE is Xcode, as I'm a current iOS developer in duty, and I like to use it for experimental programs with C/C++ rather than using Eclipse-like IDEs. If the developer is coming from Windows, I recommend using Visual Studio since it has great capabilities for developing in C/C++, but the developer will have to create build rules for our Flex/Bison files in it's pipeline. For linux, I don't have experience.
 
 ### Flex
 
@@ -55,11 +55,11 @@ export CPPFLAGS="-I/usr/local/opt/llvm/include"
 export LDFLAGS="-L/usr/local/opt/llvm/lib"
 ```
 
-`The exports here will be suggested at the end of installation. I truly recommend the developer to follow them`
+> The exports here will be suggested at the end of installation. I truly recommend the developer to follow them
 
-`The installation will take at least an hour, or an hour and a half. My computer is Macbook from 2018, and still, it took an hour and a half.`
+> The installation will take at least an hour, or an hour and a half. My computer is Macbook from 2018, and still, it took an hour and a half.
 
-`The project might give you an error in a header file inside llvm include folder. Simply modify it directly. The class is PreservedAnalysis, and it should be Preservedanalysis. It might be and issue with the version I got, which is 9.0.0_1`
+> The project might give you an error in a header file inside llvm include folder. Simply modify it directly. The class is PreservedAnalysis, and it should be Preservedanalysis. It might be and issue with the version I got, which is 9.0.0_1
 
 It should be interest to note that the project already knows which c++ flags and which linker flags to use, but if the developer is interest to know, just go to the build settings and look for c++ flags and other linker flags. The developer might get interest to see what libraries we're linking. Also, there's one library that we're getting directly in the build phases, which is `libtermcap.tbd`. If the developer wants to find more about the libraries, it can go to the terminal and use the command line tool `llvm-config`.
 
