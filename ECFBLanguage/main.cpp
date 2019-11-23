@@ -7,6 +7,7 @@
 //
 
 #include <iostream>
+#include "codegen.hpp"
 #include "semantics.hpp"
 
 extern NBlock* programBlock;
@@ -20,6 +21,13 @@ int main(int argc, const char * argv[]) {
     std::cout << "Please add a line of code" << std::endl;
     yyparse();
     programBlock->printString(0);
+    // see http://comments.gmane.org/gmane.comp.compilers.llvm.devel/33877
+    InitializeNativeTarget();
+    InitializeNativeTargetAsmPrinter();
+    InitializeNativeTargetAsmParser();
+    CodeGenContext context;
+    context.generateCode(*programBlock);
+    context.runCode();
 //    std::cout << programBlock << std::endl;
 //    std::cout << "The number is " << sum(5, 6) << ".\n";
     return 0;

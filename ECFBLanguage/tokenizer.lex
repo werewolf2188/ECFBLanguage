@@ -11,6 +11,7 @@ extern "C" int analyze_tokens();
 %%
 [ \t\n]             ;// { return 0; }
 [\S]                ;
+"return"                { return TOKEN(TRETURN); }
 [a-zA-Z][a-zA-Z0-9\_]*  { SAVE_TOKEN; return TIDENTIFIER; }
 [0-9]+                  { SAVE_TOKEN; return TINTEGER; }
 [0-9]+\.[0-9]+          { SAVE_TOKEN; return TDOUBLE; }

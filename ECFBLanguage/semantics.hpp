@@ -13,7 +13,7 @@
 #include <string>
 #include <llvm/IR/Value.h>
 
-//class CodeGenContext;
+class CodeGenContext;
 class NStatement;
 class NExpression;
 class NVariableDeclaration;
@@ -29,7 +29,7 @@ typedef std::vector<NVariableDeclaration*>::iterator VariableIterator;
 class Node {
 public:
     virtual ~Node() { }
-//    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual llvm::Value* codeGen(CodeGenContext& context);
     virtual void printString(int spaces) { }
 };
 
@@ -48,7 +48,7 @@ public:
     inline void printString(int spaces) {
         std::cout << std::string(spaces, '\t') << "Integer Expression: " << value << std::endl;
     }
-//    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class NDouble : public NExpression {
@@ -58,7 +58,7 @@ public:
     inline void printString(int spaces) {
         std::cout << std::string(spaces, '\t') << "Double Expression: " << value << std::endl;
     }
-//    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class NIdentifier : public NExpression {
@@ -68,7 +68,7 @@ public:
     inline void printString(int spaces) {
         std::cout << std::string(spaces, '\t') << "Identifier Expression: " << name << std::endl;
     }
-//    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class NMethodCall : public NExpression {
@@ -86,7 +86,7 @@ public:
             (*it)->printString(spaces + 1);
         }
     }
-//    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class NBinaryOperator : public NExpression {
@@ -101,7 +101,7 @@ public:
         this->lhs.printString(spaces + 1);
         this->rhs.printString(spaces + 1);
     }
-//    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class NAssignment : public NExpression {
@@ -115,7 +115,7 @@ public:
         this->lhs.printString(spaces + 1);
         this->rhs.printString(spaces + 1);
     }
-//    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class NBlock : public NExpression {
@@ -129,7 +129,7 @@ public:
             (*it)->printString(spaces + 1);
         }
     }
-//    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class NExpressionStatement : public NStatement {
@@ -141,7 +141,15 @@ public:
         
         this->expression.printString(spaces + 1);
     }
-//    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+};
+
+class NReturnStatement: public NStatement {
+public:
+    NExpression& expression;
+    NReturnStatement(NExpression& expression) :
+        expression(expression) { }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class NVariableDeclaration : public NStatement {
@@ -162,7 +170,7 @@ public:
             this->assignmentExpr->printString(spaces + 1);
         }
     }
-//    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class NFunctionDeclaration : public NStatement {
@@ -184,6 +192,6 @@ public:
         }
         this->block.printString(spaces + 1);
     }
-//    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 #endif /* semantics_h */
