@@ -165,7 +165,7 @@ Value * NFunctionDeclaration::codeGen(CodeGenContext& context) {
     
     FunctionType* fType = FunctionType::get(typeOf(type), makeArrayRef(argTypes), false);
     Function* function = Function::Create(fType, GlobalValue::InternalLinkage, id.name.c_str(), context.module);
-    BasicBlock* bblock = BasicBlock::Create(ecfbContext, "", function, 0);
+    BasicBlock* bblock = BasicBlock::Create(ecfbContext, "entry", function, 0);
     
     context.pushBlock(bblock);
     
