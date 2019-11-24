@@ -73,13 +73,34 @@ If the developer opens the project with Xcode, and goes to the build rules, it w
 
 Also, the use of LLVM allows the developer to get the same project and use it in different environments, and not only in Unix based operative systems.
 
+## The language
+
+The programming language syntax for this compiler is very similar to a C like program, but very restrictive at this moment. For now the only things it can build are
+
+* Integer and double instances (int x = 2 or double y = 2.0)
+* Functions (int test(...) { ... return x } or void test2()  )
+* The use of the funtion echo (echo(x + 2))
+
+```c
+int do_math(int a) {
+    int x = a * 2
+    return x + 5
+}
+
+void test() {
+    echo(5)
+}
+
+echo(do_math(4))
+```
+
+This is a version for recreational purposes, but later versions (until it's first release) will have more C stuff in it (booleans, comparisons, if/while/do-while/for statements, strings). Also, the project only allows to write program strings inside the console. The final version will allow to pass a file name and either execute it or build a executable.
+
 ## References
 
-* https://www.geeksforgeeks.org/flex-fast-lexical-analyzer-generator/
-* https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/
 * https://llvm.org
-* https://stackoverflow.com/questions/28203937/installing-llvm-libraries-along-with-xcode
-* https://github.com/lsegal/my_toy_compiler/blob/master/codegen.h
+* https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/
+* https://www.geeksforgeeks.org/flex-fast-lexical-analyzer-generator/
 * https://aquamentus.com/flex_bison.html
 
 
