@@ -110,10 +110,10 @@ Value * NBinaryOperator::codeGen(CodeGenContext& context) {
     Instruction::BinaryOps instr;
     ICmpInst::Predicate cmpPred;
     switch (op) {
-        case TPLUS: instr = Instruction::Add; goto math;
-        case TMINUS: instr = Instruction::Sub; goto math;
-        case TMUL: instr = Instruction::Mul; goto math;
-        case TDIV: instr = Instruction::SDiv; goto math;
+        case TPLUS: instr = this->biggerType() == TDOUBLE ? Instruction::FAdd : Instruction::Add; goto math;
+        case TMINUS: instr = this->biggerType() == TDOUBLE ? Instruction::FSub : Instruction::Sub; goto math;
+        case TMUL: instr = this->biggerType() == TDOUBLE ? Instruction::FMul : Instruction::Mul; goto math;
+        case TDIV: instr = this->biggerType() == TDOUBLE ? Instruction::FDiv : Instruction::SDiv; goto math;
             /* TODO comparison */
         case TCEQ: cmpPred = ICmpInst::ICMP_EQ; goto comp;
         case TCNE: cmpPred = ICmpInst::ICMP_NE; goto comp;

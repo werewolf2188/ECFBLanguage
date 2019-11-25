@@ -34,7 +34,8 @@ public:
 };
 
 class NExpression : public Node {
-    
+public:
+    virtual int resultType();
 };
 
 class NStatement : public Node {
@@ -49,6 +50,7 @@ public:
         std::cout << std::string(spaces, '\t') << "Integer Expression: " << value << std::endl;
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual int resultType();
 };
 
 class NDouble : public NExpression {
@@ -59,6 +61,7 @@ public:
         std::cout << std::string(spaces, '\t') << "Double Expression: " << value << std::endl;
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual int resultType();
 };
 
 class NBoolean : public NExpression {
@@ -69,6 +72,7 @@ public:
         std::cout << std::string(spaces, '\t') << "Boolean Expression: " << value << std::endl;
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual int resultType();
 };
 
 class NIdentifier : public NExpression {
@@ -112,6 +116,8 @@ public:
         this->rhs.printString(spaces + 1);
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual int resultType();
+    virtual int biggerType();
 };
 
 class NAssignment : public NExpression {

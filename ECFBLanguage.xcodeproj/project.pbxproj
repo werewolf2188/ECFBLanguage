@@ -11,6 +11,7 @@
 		B029F56623844E7900F91F27 /* assembly.asm in Sources */ = {isa = PBXBuildFile; fileRef = B029F56523844E7900F91F27 /* assembly.asm */; };
 		B029F56823844FB100F91F27 /* tokenizer.lex in Sources */ = {isa = PBXBuildFile; fileRef = B029F56723844F3800F91F27 /* tokenizer.lex */; };
 		B029F56A2384503C00F91F27 /* tokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B029F5692384503C00F91F27 /* tokenizer.cpp */; };
+		B085623F238C4D150083F4C0 /* semantics_validations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B085623E238C4D150083F4C0 /* semantics_validations.cpp */; };
 		B0CC1BD82385E0DF006339B7 /* parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0CC1BD72385E0DF006339B7 /* parser.cpp */; };
 		B0CC1BDA2385E315006339B7 /* parser.yacc in Sources */ = {isa = PBXBuildFile; fileRef = B0CC1BD52385DFCE006339B7 /* parser.yacc */; };
 		C2E1E9E92388DCFA00678748 /* codegen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2E1E9E82388DCFA00678748 /* codegen.cpp */; };
@@ -82,6 +83,7 @@
 		B029F56B2384518C00F91F27 /* tokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tokenizer.h; sourceTree = "<group>"; };
 		B029F56C2384540A00F91F27 /* flex_bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = flex_bridge.h; sourceTree = "<group>"; };
 		B029F56D2384586700F91F27 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B085623E238C4D150083F4C0 /* semantics_validations.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = semantics_validations.cpp; sourceTree = "<group>"; };
 		B0CC1BD52385DFCE006339B7 /* parser.yacc */ = {isa = PBXFileReference; lastKnownFileType = text; path = parser.yacc; sourceTree = "<group>"; };
 		B0CC1BD62385E0DF006339B7 /* parser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = parser.hpp; sourceTree = "<group>"; };
 		B0CC1BD72385E0DF006339B7 /* parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parser.cpp; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				B029F56523844E7900F91F27 /* assembly.asm */,
 				B029F56C2384540A00F91F27 /* flex_bridge.h */,
 				C2F667FB23878E06000FE2E2 /* semantics.hpp */,
+				B085623E238C4D150083F4C0 /* semantics_validations.cpp */,
 				C2E1E9E72388DCD700678748 /* codegen.hpp */,
 				C2E1E9E82388DCFA00678748 /* codegen.cpp */,
 				C2F7F7DF2389E95A00C5B24D /* core_functions.cpp */,
@@ -214,6 +217,7 @@
 				B0CC1BD82385E0DF006339B7 /* parser.cpp in Sources */,
 				B029F56823844FB100F91F27 /* tokenizer.lex in Sources */,
 				C2E1E9E92388DCFA00678748 /* codegen.cpp in Sources */,
+				B085623F238C4D150083F4C0 /* semantics_validations.cpp in Sources */,
 				C2F7F7E02389E95A00C5B24D /* core_functions.cpp in Sources */,
 				B0084F0E2384476500393BAA /* main.cpp in Sources */,
 				B029F56623844E7900F91F27 /* assembly.asm in Sources */,
