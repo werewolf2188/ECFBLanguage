@@ -19,14 +19,14 @@
     int token;
 }
 
-%token <string> TIDENTIFIER TINTEGER TDOUBLE
+%token <string> TIDENTIFIER TINTEGER TDOUBLE TBOOLEAN
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
 %token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
 %token <token> TPLUS TMINUS TMUL TDIV
 %token <token> TRETURN
 
 %type <ident> ident
-%type <expr> numeric expr
+%type <expr> numeric boolean expr
 %type <varvec> func_decl_args
 %type <exprvec> call_args
 %type <block> stmts block
@@ -63,6 +63,9 @@ numeric : TINTEGER { $$ = new NInteger(atol($1->c_str())); delete $1; }
 | TDOUBLE { $$ = new NDouble(atof($1->c_str())); delete $1; }
 ;
 
+boolean : TBOOLEAN { $$ = new NBoolean($1); delete $1; }
+;
+
 var_decl : ident ident { $$ = new NVariableDeclaration(*$1, *$2); }
 | ident ident TEQUAL expr { $$ = new NVariableDeclaration(*$1, *$2, $4); }
 ;
@@ -80,6 +83,7 @@ expr : ident TEQUAL expr { $$ = new NAssignment(*$<ident>1, *$3); }
 | ident TLPAREN call_args TRPAREN { $$ = new NMethodCall(*$1, *$3); delete $3; }
 | ident { $<ident>$ = $1; }
 | numeric
+| boolean
 | expr comparison expr { $$ = new NBinaryOperator(*$1, $2, *$3); }
 | TLPAREN expr TRPAREN { $$ = $2; }
 ;

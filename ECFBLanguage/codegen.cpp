@@ -75,6 +75,10 @@ Value * NDouble::codeGen(CodeGenContext& context) {
     return ConstantFP::get(Type::getDoubleTy(ecfbContext), value);
 }
 
+Value* NBoolean::codeGen(CodeGenContext& context) {
+    return NULL;
+}
+
 Value * NIdentifier::codeGen(CodeGenContext& context) {
     std::cout << "Creating identifier reference: " << name << std::endl;
     if (context.locals().find(name) == context.locals().end()) {

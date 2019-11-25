@@ -9,9 +9,11 @@ extern "C" int analyze_tokens();
   
 /*** Rule Section ***/
 %%
-[ \t\n]             ;// { return 0; }
+[ \t\n]             ;
 [\S]                ;
+\/\/.*              ; //Comments in a one line
 "return"                { return TOKEN(TRETURN); }
+"true"|"false"          { SAVE_TOKEN; return TBOOLEAN; }
 [a-zA-Z][a-zA-Z0-9\_]*  { SAVE_TOKEN; return TIDENTIFIER; }
 [0-9]+                  { SAVE_TOKEN; return TINTEGER; }
 [0-9]+\.[0-9]+          { SAVE_TOKEN; return TDOUBLE; }

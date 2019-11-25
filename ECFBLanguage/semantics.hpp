@@ -61,6 +61,18 @@ public:
     virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
+class NBoolean : public NExpression {
+public:
+    bool value;
+    NBoolean(std::string * value) {
+        std::cout << "Value: " << value << std::endl;
+    }
+    inline void printString(int spaces) {
+        std::cout << std::string(spaces, '\t') << "Boolean Expression: " << value << std::endl;
+    }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+};
+
 class NIdentifier : public NExpression {
 public:
     std::string name;
