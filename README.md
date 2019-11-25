@@ -77,7 +77,7 @@ Also, the use of LLVM allows the developer to get the same project and use it in
 
 The programming language syntax for this compiler is very similar to a C like program, but very restrictive at this moment. For now the only things it can build are
 
-* Integer and double instances (int x = 2 or double y = 2.0)
+* Integer and double instances (boolean d = false, int x = 2 or double y = 2.0)
 * Functions (int test(...) { ... return x } or void test2()  )
 * The use of the funtion echo (echo(x + 2))
 
@@ -91,10 +91,15 @@ void test() {
     echo(5)
 }
 
+boolean compare(int x, int y) {
+    return x == y
+}
+
 echo(do_math(4))
+echo(compare(5, 6))
 ```
 
-This is a version for recreational purposes, but later versions (until it's first release) will have more C stuff in it (booleans, comparisons, if/while/do-while/for statements, strings). Also, the project only allows to write program strings inside the console. The final version will allow to pass a file name and either execute it or build a executable.
+This is a version for recreational purposes, but later versions (until it's first release) will have more C stuff in it (comparisons [and, or], if/while/do-while/for statements, strings). Also, the project only allows to write program strings inside the console. The final version will allow to pass a file name and either execute it or build a executable.
 
 ## References
 
