@@ -55,6 +55,8 @@ static Type* typeOf(const NIdentifier& type) {
         return Type::getInt64Ty(ecfbContext);
     } else if (type.name.compare("double") == 0) {
         return Type::getDoubleTy(ecfbContext);
+    } else if (type.name.compare("boolean") == 0) {
+        return Type::getInt1Ty(ecfbContext);
     }
     return Type::getVoidTy(ecfbContext);
 }
@@ -76,7 +78,8 @@ Value * NDouble::codeGen(CodeGenContext& context) {
 }
 
 Value* NBoolean::codeGen(CodeGenContext& context) {
-    return NULL;
+    std::cout << "Creating boolean: " << value << std::endl;
+    return ConstantInt::get(Type::getInt1Ty(ecfbContext), value);
 }
 
 Value * NIdentifier::codeGen(CodeGenContext& context) {

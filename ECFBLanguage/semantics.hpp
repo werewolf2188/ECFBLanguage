@@ -64,9 +64,7 @@ public:
 class NBoolean : public NExpression {
 public:
     bool value;
-    NBoolean(std::string * value) {
-        std::cout << "Value: " << value << std::endl;
-    }
+    NBoolean(std::string * value) : value(value->compare("true") == 0) { }
     inline void printString(int spaces) {
         std::cout << std::string(spaces, '\t') << "Boolean Expression: " << value << std::endl;
     }
