@@ -38,7 +38,7 @@ public:
 
 class NExpression : public Node {
 public:
-    virtual int resultType();
+    virtual int resultType(NBlock& currentBlock);
 };
 
 class NStatement : public Node {
@@ -53,7 +53,7 @@ public:
         std::cout << std::string(spaces, '\t') << "Integer Expression: " << value << std::endl;
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
-    virtual int resultType();
+    virtual int resultType(NBlock& currentBlock);
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
@@ -65,7 +65,7 @@ public:
         std::cout << std::string(spaces, '\t') << "Double Expression: " << value << std::endl;
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
-    virtual int resultType();
+    virtual int resultType(NBlock& currentBlock);
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
@@ -81,7 +81,7 @@ public:
         std::cout << std::string(spaces, '\t') << "Boolean Expression: " << value << std::endl;
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
-    virtual int resultType();
+    virtual int resultType(NBlock& currentBlock);
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
@@ -93,6 +93,7 @@ public:
         std::cout << std::string(spaces, '\t') << "Identifier Expression: " << name << std::endl;
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual int resultType(NBlock& currentBlock);
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
@@ -112,13 +113,16 @@ public:
         }
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
-    virtual int resultType();
+    virtual int resultType(NBlock& currentBlock);
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
 class NBinaryOperator : public NExpression {
+protected:
+    int resultingType;
 public:
     int op;
+    
     NExpression& lhs;
     NExpression& rhs;
     NBinaryOperator(NExpression& lhs, int op, NExpression& rhs) : lhs(lhs), op(op), rhs(rhs) { }
@@ -129,8 +133,7 @@ public:
         this->rhs.printString(spaces + 1);
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
-    virtual int resultType();
-    virtual int biggerType();
+    virtual int resultType(NBlock& currentBlock);
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
@@ -150,13 +153,14 @@ public:
 };
 
 class NBlock : public NExpression {
-public:
-    StatementList statements;
-    
+protected:
     VariableList variables;
     StatementList functions;
     const std::string echod = "echod";
     const std::string echoi = "echoi";
+public:
+    StatementList statements;
+    
     NBlock() { }
     inline void printString(int spaces) {
         std::cout << std::string(spaces, '\t') << "Block Expression: " << std::endl;
@@ -167,7 +171,7 @@ public:
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
     virtual bool validate(std::string& error, NBlock& currentBlock);
-    void separateVariablesAndFunctions() {
+    inline void separateVariablesAndFunctions() {
         
         for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
             std::string name = typeid((**it)).name();
@@ -180,6 +184,9 @@ public:
             }
         }
     }
+    inline void addVariable(NVariableDeclaration * variable) { variables.push_back(variable); }
+    inline VariableList getVariables() { return variables; }
+    inline StatementList getFunctions() { return functions; }
 };
 
 class NExpressionStatement : public NStatement {
@@ -227,6 +234,9 @@ public:
 };
 
 class NFunctionDeclaration : public NStatement {
+protected:
+    NReturnStatement* returnStatement = NULL;
+    int noOfReturns;
 public:
     NIdentifier& type;
     NIdentifier& id;
@@ -235,7 +245,19 @@ public:
     NFunctionDeclaration(NIdentifier& type, NIdentifier& id,
             VariableList& arguments, NBlock& block) :
         type(type), id(id), arguments(arguments), block(block) {
+            
             this->block.separateVariablesAndFunctions();
+            for(VariableIterator it = arguments.begin(); it != arguments.end(); it++) {
+                this->block.addVariable(*it);
+            }
+            for (StatementIterator it = block.statements.begin(); it != block.statements.end(); it++) {
+                std::string name = typeid((**it)).name();
+                if (name.find("NReturnStatement") != std::string::npos) {
+                    if (returnStatement == NULL)
+                        returnStatement = (NReturnStatement *)(*it);
+                    noOfReturns++;
+                }
+            }
         }
     inline void printString(int spaces) {
         std::cout << std::string(spaces, '\t') << "Function Declaration: " << std::endl;
