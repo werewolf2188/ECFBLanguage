@@ -156,11 +156,11 @@ class NBlock : public NExpression {
 protected:
     VariableList variables;
     StatementList functions;
-    const std::string echod = "echod";
-    const std::string echoi = "echoi";
+    
 public:
     StatementList statements;
-    
+    const std::string echod = "echod";
+    const std::string echoi = "echoi";
     NBlock() { }
     inline void printString(int spaces) {
         std::cout << std::string(spaces, '\t') << "Block Expression: " << std::endl;
@@ -207,6 +207,11 @@ public:
     NExpression& expression;
     NReturnStatement(NExpression& expression) :
         expression(expression) { }
+    inline void printString(int spaces) {
+        std::cout << std::string(spaces, '\t') << "Return Declaration: " << std::endl;
+        
+        this->expression.printString(spaces + 1);
+    }
     virtual llvm::Value* codeGen(CodeGenContext& context);
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };

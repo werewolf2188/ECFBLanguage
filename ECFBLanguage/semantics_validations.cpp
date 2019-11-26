@@ -36,11 +36,46 @@ bool NBoolean::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NIdentifier::validate(std::string& error, NBlock& currentBlock) {
-    
     return true;
 }
 
 bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
+    
+    bool exists = false;
+    NFunctionDeclaration *fRef = NULL;
+    // Find declaration
+    for (StatementIterator it = currentBlock.getFunctions().begin(); it != currentBlock.getFunctions().end(); it++) {
+        std::string fName = ((NFunctionDeclaration *)(*it))->id.name;
+        if (fName.find(this->id.name) != std::string::npos) {
+            exists = true;
+            fRef = (NFunctionDeclaration *)(*it);
+            break;
+        }
+    }
+    
+    for (StatementIterator it = programBlock->getFunctions().begin(); it != programBlock->getFunctions().end(); it++) {
+        std::string fName = ((NFunctionDeclaration *)(*it))->id.name;
+        if (fName.find(this->id.name) != std::string::npos) {
+            exists = true;
+            fRef = (NFunctionDeclaration *)(*it);
+            break;
+        }
+    }
+    
+    if (this->id.name.find(currentBlock.echod) != std::string::npos) {
+        exists = true;
+    }
+    if (this->id.name.find(currentBlock.echoi) != std::string::npos) {
+        exists = true;
+    }
+    
+    if (!exists) {
+        error = std::string("Method doesnt exists");
+        return false;
+    }
+    
+    //Find arguments result types are correct
+    
     for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
         if (!(**it).validate(error, currentBlock)) {
             return false;
@@ -214,5 +249,25 @@ int NBinaryOperator::resultType(NBlock& currentBlock) {
 }
 
 int NMethodCall::resultType(NBlock& currentBlock) {
-    return -1;
+    NFunctionDeclaration *fRef = NULL;
+    // Find declaration
+    for (StatementIterator it = currentBlock.getFunctions().begin(); it != currentBlock.getFunctions().end(); it++) {
+        std::string fName = ((NFunctionDeclaration *)(*it))->id.name;
+        if (fName.find(this->id.name) != std::string::npos) {
+            
+            fRef = (NFunctionDeclaration *)(*it);
+            break;
+        }
+    }
+    
+    for (StatementIterator it = programBlock->getFunctions().begin(); it != programBlock->getFunctions().end(); it++) {
+        std::string fName = ((NFunctionDeclaration *)(*it))->id.name;
+        if (fName.find(this->id.name) != std::string::npos) {
+            
+            fRef = (NFunctionDeclaration *)(*it);
+            break;
+        }
+    }
+    
+    return fRef != NULL ? fRef->type.resultType(*programBlock) : -1;
 }
