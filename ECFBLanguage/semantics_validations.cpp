@@ -74,7 +74,26 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
         return false;
     }
     
+    //Arguments size have to be the same
+    if (fRef->arguments.size() != this->arguments.size()) {
+        error = std::string("Arguments size is not the same with its declaration");
+        return false;
+    }
+    
     //Find arguments result types are correct
+    VariableIterator it1 = fRef->arguments.begin();
+    ExpressionIterator it2 = this->arguments.begin();
+    do {
+        
+        int type1 = (**it1).type.resultType(currentBlock);
+        int type2 = (**it2).resultType(currentBlock);
+        if (type1 != type2) {
+            error = std::string("Arguments type is not the same with its declaration");
+            return false;
+        }
+        it1++;
+        it2++;
+    } while(it1 != fRef->arguments.end() && it2 != this->arguments.end());
     
     for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
         if (!(**it).validate(error, currentBlock)) {
