@@ -78,12 +78,27 @@ bool NBinaryOperator::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NAssignment::validate(std::string& error, NBlock& currentBlock) {
+    NVariableDeclaration *variable = NULL;
+    for (VariableIterator it = currentBlock.getVariables().begin(); it != currentBlock.getVariables().end(); it++) {
+        std::string vName = (**it).id.name;
+        if (vName.find(lhs.name) != std::string::npos) {
+            variable = *it;
+        }
+    }
+    // Variable does not exists
+    if (variable == NULL) {
+        error = std::string("Not existing variable cannot be assigned");
+        return false;
+    } else if (variable->type.resultType(currentBlock) != rhs.resultType(currentBlock)) {
+        error = std::string("Cannot assign a different type to a variable");
+        return false;
+    }
     return lhs.validate(error, currentBlock) && rhs.validate(error, currentBlock);
 }
 
 bool NBlock::validate(std::string& error, NBlock& currentBlock) {
     for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
-        if (!(**it).validate(error, currentBlock)) {
+        if (!(**it).validate(error, *this)) {
             return false;
         }
     }
@@ -100,7 +115,10 @@ bool NReturnStatement::validate(std::string& error, NBlock& currentBlock) {
 
 bool NVariableDeclaration::validate(std::string& error, NBlock& currentBlock) {
     if (assignmentExpr != NULL) {
-        
+        if (type.resultType(currentBlock) != assignmentExpr->resultType(currentBlock)) {
+            error = std::string("Assignment type incorrect for variable");
+            return false;
+        }
     }
     return true;
 }
