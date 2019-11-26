@@ -36,7 +36,14 @@ bool NBoolean::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NIdentifier::validate(std::string& error, NBlock& currentBlock) {
-    return true;
+    bool exists = false;
+    for (VariableIterator it = currentBlock.getVariables().begin(); it != currentBlock.getVariables().end(); it++) {
+        std::string vName = (**it).id.name;
+        if (vName.find(name) != std::string::npos) {
+            exists = true;
+        }
+    }
+    return exists;
 }
 
 bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
