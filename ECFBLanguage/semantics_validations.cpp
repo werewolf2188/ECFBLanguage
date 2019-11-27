@@ -162,13 +162,12 @@ bool NAssignment::validate(std::string& error, NBlock& currentBlock) {
         if (lType == rType
             || ((lType == TDOUBLE || lType == TINTEGER) && (rType == TDOUBLE || rType == TINTEGER))
             ) {
-            
+            return lhs.validate(error, currentBlock) && rhs.validate(error, currentBlock);
         } else {
             error = std::string("Cannot assign a different type to a variable");
             return false;
         }
     }
-    return lhs.validate(error, currentBlock) && rhs.validate(error, currentBlock);
 }
 
 bool NBlock::validate(std::string& error, NBlock& currentBlock) {
