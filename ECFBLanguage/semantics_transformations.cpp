@@ -7,20 +7,20 @@
 //
 
 #include "semantics_transformations.hpp"
-void transform(NBlock& block) {
-    for (StatementIterator it = block.statements.begin(); it != block.statements.end(); it++) {
-        std::string name = typeid((**it)).name();
-        if (name.find("VariableDeclaration") != std::string::npos) {
-            NVariableDeclaration *vd = (NVariableDeclaration *)(*it);
-            if (vd->assignmentExpr != NULL) {
-                
-            } else {
-                
-            }
-        }
-    }
-}
-
-void transformVariableDeclaration(NVariableDeclaration *vd) {
-    
-}
+//void transform(NBlock& block) {
+//    for (StatementIterator it = block.statements.begin(); it != block.statements.end(); it++) {
+//        std::string name = typeid((**it)).name();
+//        if (name.find("VariableDeclaration") != std::string::npos) {
+//            NVariableDeclaration *vd = (NVariableDeclaration *)(*it);
+//            if (vd->assignmentExpr != NULL) {
+//                
+//            } else {
+//                
+//            }
+//        }
+//    }
+//}
+//
+//void transformVariableDeclaration(NVariableDeclaration *vd) {
+//    
+//}

@@ -187,7 +187,7 @@ bool NAssignment::validate(std::string& error, NBlock& currentBlock) {
         int rType = rhs.resultType(currentBlock);
         
         if (lType == rType
-            || ((lType == TDOUBLE || lType == TINTEGER) && (rType == TDOUBLE || rType == TINTEGER))
+//            || ((lType == TDOUBLE || lType == TINTEGER) && (rType == TDOUBLE || rType == TINTEGER))
             ) {
             return lhs.validate(error, currentBlock) && rhs.validate(error, currentBlock);
         } else {
@@ -219,7 +219,7 @@ bool NVariableDeclaration::validate(std::string& error, NBlock& currentBlock) {
         int lType = type.resultType(currentBlock);
         int rType = assignmentExpr->resultType(currentBlock);
         if (lType == rType
-            || ((lType == TDOUBLE || lType == TINTEGER) && (rType == TDOUBLE || rType == TINTEGER))
+//            || ((lType == TDOUBLE || lType == TINTEGER) && (rType == TDOUBLE || rType == TINTEGER))
             ) {
             return assignmentExpr->validate(error, currentBlock);
             
