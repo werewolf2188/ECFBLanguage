@@ -95,8 +95,9 @@ boolean compare(int x, int y) {
     return x == y
 }
 
-echo(do_math(4))
-echo(compare(5, 6))
+echoi(do_math(4))
+echoi(compare(5, 6))
+echod(2.6)
 ```
 
 This is a version for recreational purposes, but later versions (until it's first release) will have more C stuff in it (conversions between doubles and ints, negative operations, comparisons [and, or], if/while statements, strings). Also, the project only allows to write program strings inside the console. The final version will allow to pass a file name and either execute it or build a executable.
