@@ -36,11 +36,36 @@ bool NBoolean::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NIdentifier::validate(std::string& error, NBlock& currentBlock) {
+    // If the identifier is a type
+    if (name.compare("int") == 0 || name.compare("double") == 0 || name.compare("void") == 0 || name.compare("boolean") == 0) {
+        return true;
+    }
+    
     bool exists = false;
     VariableList vars = currentBlock.getVariables();
+    VariableList globalVars = programBlock->getVariables();
+    StatementList functions = programBlock->getFunctions();
+    
+    // If the identifier is inside the block
     for (VariableIterator it = vars.begin(); it != vars.end(); it++) {
         
         std::string vName = (**it).id.name;
+        if (vName.find(name) != std::string::npos) {
+            exists = true;
+        }
+    }
+    // If the identifier is inside the main block
+    for (VariableIterator it = globalVars.begin(); it != globalVars.end(); it++) {
+
+        std::string vName = (**it).id.name;
+        if (vName.find(name) != std::string::npos) {
+            exists = true;
+        }
+    }
+    // If the identifier is inside the main block and its a function
+    for (StatementIterator it = functions.begin(); it != functions.end(); it++) {
+
+        std::string vName = ((NFunctionDeclaration *)(*it))->id.name;
         if (vName.find(name) != std::string::npos) {
             exists = true;
         }
@@ -74,11 +99,12 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
         }
     }
     
+    // We don;t need to check the arguments for echod nor echoi
     if (this->id.name.find(currentBlock.echod) != std::string::npos) {
-        exists = true;
+        return true;
     }
     if (this->id.name.find(currentBlock.echoi) != std::string::npos) {
-        exists = true;
+        return true;
     }
     
     if (!exists) {
@@ -91,21 +117,22 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
         error = std::string("Arguments size is not the same with its declaration");
         return false;
     }
-    
-    //Find arguments result types are correct
-    VariableIterator it1 = fRef->arguments.begin();
-    ExpressionIterator it2 = this->arguments.begin();
-    do {
-        
-        int type1 = (**it1).type.resultType(currentBlock);
-        int type2 = (**it2).resultType(currentBlock);
-        if (type1 != type2) {
-            error = std::string("Arguments type is not the same with its declaration");
-            return false;
-        }
-        it1++;
-        it2++;
-    } while(it1 != fRef->arguments.end() && it2 != this->arguments.end());
+    if (fRef->arguments.size() > 0 && this->arguments.size() > 0) {
+        //Find arguments result types are correct
+        VariableIterator it1 = fRef->arguments.begin();
+        ExpressionIterator it2 = this->arguments.begin();
+        do {
+            
+            int type1 = (**it1).type.resultType(currentBlock);
+            int type2 = (**it2).resultType(currentBlock);
+            if (type1 != type2) {
+                error = std::string("Arguments type is not the same with its declaration");
+                return false;
+            }
+            it1++;
+            it2++;
+        } while(it1 != fRef->arguments.end() && it2 != this->arguments.end());
+    }
     
     for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
         if (!(**it).validate(error, currentBlock)) {
