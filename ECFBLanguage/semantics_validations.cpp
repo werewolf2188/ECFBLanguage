@@ -37,11 +37,16 @@ bool NBoolean::validate(std::string& error, NBlock& currentBlock) {
 
 bool NIdentifier::validate(std::string& error, NBlock& currentBlock) {
     bool exists = false;
-    for (VariableIterator it = currentBlock.getVariables().begin(); it != currentBlock.getVariables().end(); it++) {
+    VariableList vars = currentBlock.getVariables();
+    for (VariableIterator it = vars.begin(); it != vars.end(); it++) {
+        
         std::string vName = (**it).id.name;
         if (vName.find(name) != std::string::npos) {
             exists = true;
         }
+    }
+    if (!exists) {
+        error = std::string("Variable doesn't exists");
     }
     return exists;
 }
@@ -180,6 +185,7 @@ bool NVariableDeclaration::validate(std::string& error, NBlock& currentBlock) {
             error = std::string("Assignment type incorrect for variable");
             return false;
         }
+        return assignmentExpr->validate(error, currentBlock);
     }
     return true;
 }
