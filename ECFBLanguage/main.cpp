@@ -13,8 +13,6 @@
 extern NBlock* programBlock;
 extern int yyparse();
 
-//extern "C" int sum(int x, int y);
-
 void createCoreFunctions(CodeGenContext& context);
 
 int main(int argc, const char * argv[]) {
@@ -23,14 +21,20 @@ int main(int argc, const char * argv[]) {
     std::cout << "Please add a line of code" << std::endl;
     yyparse();
     programBlock->printString(0);
-    InitializeNativeTarget();
-    InitializeNativeTargetAsmPrinter();
-    InitializeNativeTargetAsmParser();
-    CodeGenContext context;
-    createCoreFunctions(context);
-    context.generateCode(*programBlock);
-    context.runCode();
+    programBlock->separateVariablesAndFunctions();
+    std::string error;
+    if (programBlock->validate(error, *programBlock)) {
+        InitializeNativeTarget();
+        InitializeNativeTargetAsmPrinter();
+        InitializeNativeTargetAsmParser();
+        CodeGenContext context;
+        createCoreFunctions(context);
+        context.generateCode(*programBlock);
+        context.runCode();
+    } else { 
+        std::cout << "There was a problem: " << error << std::endl;
+    }
+    
 //    std::cout << programBlock << std::endl;
-//    std::cout << "The number is " << sum(5, 6) << ".\n";
     return 0;
 }

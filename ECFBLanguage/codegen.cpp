@@ -55,6 +55,8 @@ static Type* typeOf(const NIdentifier& type) {
         return Type::getInt64Ty(ecfbContext);
     } else if (type.name.compare("double") == 0) {
         return Type::getDoubleTy(ecfbContext);
+    } else if (type.name.compare("boolean") == 0) {
+        return Type::getInt1Ty(ecfbContext);
     }
     return Type::getVoidTy(ecfbContext);
 }
@@ -73,6 +75,11 @@ Value * NInteger::codeGen(CodeGenContext& context) {
 Value * NDouble::codeGen(CodeGenContext& context) {
     std::cout << "Creating double: " << value << std::endl;
     return ConstantFP::get(Type::getDoubleTy(ecfbContext), value);
+}
+
+Value* NBoolean::codeGen(CodeGenContext& context) {
+    std::cout << "Creating boolean: " << value << std::endl;
+    return ConstantInt::get(Type::getInt1Ty(ecfbContext), value);
 }
 
 Value * NIdentifier::codeGen(CodeGenContext& context) {
@@ -101,17 +108,25 @@ Value * NMethodCall::codeGen(CodeGenContext& context) {
 Value * NBinaryOperator::codeGen(CodeGenContext& context) {
     std::cout << "Creating binary operation " << op << std::endl;
     Instruction::BinaryOps instr;
+    ICmpInst::Predicate cmpPred;
     switch (op) {
-        case TPLUS: instr = Instruction::Add; goto math;
-        case TMINUS: instr = Instruction::Sub; goto math;
-        case TMUL: instr = Instruction::Mul; goto math;
-        case TDIV: instr = Instruction::SDiv; goto math;
-            
+        case TPLUS: instr = this->resultingType == TDOUBLE ? Instruction::FAdd : Instruction::Add; goto math;
+        case TMINUS: instr = this->resultingType == TDOUBLE ? Instruction::FSub : Instruction::Sub; goto math;
+        case TMUL: instr = this->resultingType == TDOUBLE ? Instruction::FMul : Instruction::Mul; goto math;
+        case TDIV: instr = this->resultingType == TDOUBLE ? Instruction::FDiv : Instruction::SDiv; goto math;
             /* TODO comparison */
+        case TCEQ: cmpPred = ICmpInst::ICMP_EQ; goto comp;
+        case TCNE: cmpPred = ICmpInst::ICMP_NE; goto comp;
+        case TCLT: cmpPred = ICmpInst::ICMP_ULT; goto comp;
+        case TCLE: cmpPred = ICmpInst::ICMP_ULE; goto comp;
+        case TCGT: cmpPred = ICmpInst::ICMP_UGT; goto comp;
+        case TCGE: cmpPred = ICmpInst::ICMP_UGE; goto comp;
     }
     return NULL;
     math:
     return BinaryOperator::Create(instr, lhs.codeGen(context), rhs.codeGen(context), "", context.currentBlock());
+    comp:
+    return new ICmpInst(*context.currentBlock(), cmpPred, lhs.codeGen(context), rhs.codeGen(context));
 }
 
 Value * NAssignment::codeGen(CodeGenContext& context) {

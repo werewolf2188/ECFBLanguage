@@ -33,10 +33,10 @@ llvm::Function* createPrintfFunction(CodeGenContext& context)
     return func;
 }
 
-void createEchoFunction(CodeGenContext& context, llvm::Function* printfFn)
+void createEchoFunction(CodeGenContext& context, llvm::Function* printfFn, const char* constValue, const char *name, Type* expectedType)
 {
     std::vector<llvm::Type*> echo_arg_types;
-    echo_arg_types.push_back(llvm::Type::getInt64Ty(ecfbContext));
+    echo_arg_types.push_back(expectedType);
 
     llvm::FunctionType* echo_type =
         llvm::FunctionType::get(
@@ -44,13 +44,12 @@ void createEchoFunction(CodeGenContext& context, llvm::Function* printfFn)
 
     llvm::Function *func = llvm::Function::Create(
                 echo_type, llvm::Function::InternalLinkage,
-                llvm::Twine("echo"),
+                llvm::Twine(name),
                 context.module
            );
     llvm::BasicBlock *bblock = llvm::BasicBlock::Create(ecfbContext, "entry", func, 0);
     context.pushBlock(bblock);
     
-    const char *constValue = "%d\n";
     llvm::Constant *format_const = llvm::ConstantDataArray::getString(ecfbContext, constValue);
     llvm::GlobalVariable *var =
         new llvm::GlobalVariable(
@@ -82,5 +81,6 @@ void createEchoFunction(CodeGenContext& context, llvm::Function* printfFn)
 
 void createCoreFunctions(CodeGenContext& context) {
     llvm::Function* printfFn = createPrintfFunction(context);
-    createEchoFunction(context, printfFn);
+    createEchoFunction(context, printfFn, "%d\n", "echoi", llvm::Type::getInt64Ty(ecfbContext));
+    createEchoFunction(context, printfFn, "%f\n", "echod", llvm::Type::getDoubleTy(ecfbContext));
 }

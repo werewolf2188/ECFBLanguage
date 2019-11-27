@@ -42,48 +42,50 @@
      TIDENTIFIER = 258,
      TINTEGER = 259,
      TDOUBLE = 260,
-     TCEQ = 261,
-     TCNE = 262,
-     TCLT = 263,
-     TCLE = 264,
-     TCGT = 265,
-     TCGE = 266,
-     TEQUAL = 267,
-     TLPAREN = 268,
-     TRPAREN = 269,
-     TLBRACE = 270,
-     TRBRACE = 271,
-     TCOMMA = 272,
-     TDOT = 273,
-     TPLUS = 274,
-     TMINUS = 275,
-     TMUL = 276,
-     TDIV = 277,
-     TRETURN = 278
+     TBOOLEAN = 261,
+     TCEQ = 262,
+     TCNE = 263,
+     TCLT = 264,
+     TCLE = 265,
+     TCGT = 266,
+     TCGE = 267,
+     TEQUAL = 268,
+     TLPAREN = 269,
+     TRPAREN = 270,
+     TLBRACE = 271,
+     TRBRACE = 272,
+     TCOMMA = 273,
+     TDOT = 274,
+     TPLUS = 275,
+     TMINUS = 276,
+     TMUL = 277,
+     TDIV = 278,
+     TRETURN = 279
    };
 #endif
 /* Tokens.  */
 #define TIDENTIFIER 258
 #define TINTEGER 259
 #define TDOUBLE 260
-#define TCEQ 261
-#define TCNE 262
-#define TCLT 263
-#define TCLE 264
-#define TCGT 265
-#define TCGE 266
-#define TEQUAL 267
-#define TLPAREN 268
-#define TRPAREN 269
-#define TLBRACE 270
-#define TRBRACE 271
-#define TCOMMA 272
-#define TDOT 273
-#define TPLUS 274
-#define TMINUS 275
-#define TMUL 276
-#define TDIV 277
-#define TRETURN 278
+#define TBOOLEAN 261
+#define TCEQ 262
+#define TCNE 263
+#define TCLT 264
+#define TCLE 265
+#define TCGT 266
+#define TCGE 267
+#define TEQUAL 268
+#define TLPAREN 269
+#define TRPAREN 270
+#define TLBRACE 271
+#define TRBRACE 272
+#define TCOMMA 273
+#define TDOT 274
+#define TPLUS 275
+#define TMINUS 276
+#define TMUL 277
+#define TDIV 278
+#define TRETURN 279
 
 
 
