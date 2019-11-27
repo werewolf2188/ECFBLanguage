@@ -155,9 +155,18 @@ bool NAssignment::validate(std::string& error, NBlock& currentBlock) {
     if (variable == NULL) {
         error = std::string("Not existing variable cannot be assigned");
         return false;
-    } else if (variable->type.resultType(currentBlock) != rhs.resultType(currentBlock)) {
-        error = std::string("Cannot assign a different type to a variable");
-        return false;
+    } else {
+        int lType = variable->type.resultType(currentBlock);
+        int rType = rhs.resultType(currentBlock);
+        
+        if (lType == rType
+            || ((lType == TDOUBLE || lType == TINTEGER) && (rType == TDOUBLE || rType == TINTEGER))
+            ) {
+            
+        } else {
+            error = std::string("Cannot assign a different type to a variable");
+            return false;
+        }
     }
     return lhs.validate(error, currentBlock) && rhs.validate(error, currentBlock);
 }
@@ -181,11 +190,18 @@ bool NReturnStatement::validate(std::string& error, NBlock& currentBlock) {
 
 bool NVariableDeclaration::validate(std::string& error, NBlock& currentBlock) {
     if (assignmentExpr != NULL) {
-        if (type.resultType(currentBlock) != assignmentExpr->resultType(currentBlock)) {
+        int lType = type.resultType(currentBlock);
+        int rType = assignmentExpr->resultType(currentBlock);
+        if (lType == rType
+            || ((lType == TDOUBLE || lType == TINTEGER) && (rType == TDOUBLE || rType == TINTEGER))
+            ) {
+            return assignmentExpr->validate(error, currentBlock);
+            
+        } else {
             error = std::string("Assignment type incorrect for variable");
             return false;
         }
-        return assignmentExpr->validate(error, currentBlock);
+        
     }
     return true;
 }
