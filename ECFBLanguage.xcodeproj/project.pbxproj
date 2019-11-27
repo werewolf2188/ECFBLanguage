@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		B0084F0E2384476500393BAA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0084F0D2384476500393BAA /* main.cpp */; };
-		B029F56623844E7900F91F27 /* assembly.asm in Sources */ = {isa = PBXBuildFile; fileRef = B029F56523844E7900F91F27 /* assembly.asm */; };
 		B029F56823844FB100F91F27 /* tokenizer.lex in Sources */ = {isa = PBXBuildFile; fileRef = B029F56723844F3800F91F27 /* tokenizer.lex */; };
 		B029F56A2384503C00F91F27 /* tokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B029F5692384503C00F91F27 /* tokenizer.cpp */; };
 		B085623F238C4D150083F4C0 /* semantics_validations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B085623E238C4D150083F4C0 /* semantics_validations.cpp */; };
@@ -20,19 +19,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
-		B0084F14238447A500393BAA /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.asm";
-			fileType = pattern.proxy;
-			inputFiles = (
-			);
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}.o",
-			);
-			script = "# Type a script or drag a script file from your workspace to insert its path.\n/usr/local/bin/nasm -f macho64 ${INPUT_FILE_PATH} -o ${SCRIPT_OUTPUT_FILE_0}\n";
-		};
 		B0084F1523844B5B00393BAA /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
@@ -77,7 +63,6 @@
 /* Begin PBXFileReference section */
 		B0084F0A2384476500393BAA /* ECFBLanguage */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ECFBLanguage; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0084F0D2384476500393BAA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		B029F56523844E7900F91F27 /* assembly.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = assembly.asm; sourceTree = "<group>"; };
 		B029F56723844F3800F91F27 /* tokenizer.lex */ = {isa = PBXFileReference; lastKnownFileType = text; path = tokenizer.lex; sourceTree = "<group>"; };
 		B029F5692384503C00F91F27 /* tokenizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tokenizer.cpp; sourceTree = "<group>"; };
 		B029F56B2384518C00F91F27 /* tokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tokenizer.h; sourceTree = "<group>"; };
@@ -134,7 +119,6 @@
 				B029F5692384503C00F91F27 /* tokenizer.cpp */,
 				B029F56723844F3800F91F27 /* tokenizer.lex */,
 				B0084F0D2384476500393BAA /* main.cpp */,
-				B029F56523844E7900F91F27 /* assembly.asm */,
 				B029F56C2384540A00F91F27 /* flex_bridge.h */,
 				C2F667FB23878E06000FE2E2 /* semantics.hpp */,
 				B085623E238C4D150083F4C0 /* semantics_validations.cpp */,
@@ -167,7 +151,6 @@
 			buildRules = (
 				B0CC1BD92385E10D006339B7 /* PBXBuildRule */,
 				B0084F1523844B5B00393BAA /* PBXBuildRule */,
-				B0084F14238447A500393BAA /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -220,7 +203,6 @@
 				B085623F238C4D150083F4C0 /* semantics_validations.cpp in Sources */,
 				C2F7F7E02389E95A00C5B24D /* core_functions.cpp in Sources */,
 				B0084F0E2384476500393BAA /* main.cpp in Sources */,
-				B029F56623844E7900F91F27 /* assembly.asm in Sources */,
 				B029F56A2384503C00F91F27 /* tokenizer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -13,8 +13,6 @@
 extern NBlock* programBlock;
 extern int yyparse();
 
-//extern "C" int sum(int x, int y);
-
 void createCoreFunctions(CodeGenContext& context);
 
 int main(int argc, const char * argv[]) {
@@ -38,6 +36,5 @@ int main(int argc, const char * argv[]) {
     }
     
 //    std::cout << programBlock << std::endl;
-//    std::cout << "The number is " << sum(5, 6) << ".\n";
     return 0;
 }
