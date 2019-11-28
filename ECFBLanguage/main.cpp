@@ -7,22 +7,30 @@
 //
 
 #include <iostream>
+#include <stdio.h>
+
 #include "codegen.hpp"
 #include "semantics.hpp"
 
 extern NBlock* programBlock;
 extern int yyparse();
+extern void yyset_in (FILE *  in_str );
 
 void createCoreFunctions(CodeGenContext& context);
 
 int main(int argc, const char * argv[]) {
     // insert code here...
 //    analyze_tokens();
-    std::cout << "Please add a line of code" << std::endl;
+    // This should be coming from the args.
+    FILE *file = fopen("./examples/good_example.ec", "r");
+    yyset_in(file);
+//    std::cout << "Please add a line of code" << std::endl;
+    
     yyparse();
     programBlock->printString(0);
     programBlock->separateVariablesAndFunctions();
     std::string error;
+    
     if (programBlock->validate(error, *programBlock)) {
         InitializeNativeTarget();
         InitializeNativeTargetAsmPrinter();

@@ -35,9 +35,13 @@ bool NBoolean::validate(std::string& error, NBlock& currentBlock) {
     return true;
 }
 
+bool NIdentifier::isType() {
+    return name.compare("int") == 0 || name.compare("double") == 0 || name.compare("void") == 0 || name.compare("boolean") == 0;
+}
+
 bool NIdentifier::validate(std::string& error, NBlock& currentBlock) {
     // If the identifier is a type
-    if (name.compare("int") == 0 || name.compare("double") == 0 || name.compare("void") == 0 || name.compare("boolean") == 0) {
+    if (this->isType()) {
         return true;
     }
     
@@ -78,6 +82,11 @@ bool NIdentifier::validate(std::string& error, NBlock& currentBlock) {
 
 bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
     
+    if (id.isType()) {
+        error = std::string("Function call cannot have the name of a type");
+        return false;
+    }
+    
     bool exists = false;
     NFunctionDeclaration *fRef = NULL;
     // Find declaration
@@ -99,11 +108,21 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
         }
     }
     
-    // We don;t need to check the arguments for echod nor echoi
+    // We don't need to check the arguments for echod nor echoi
     if (this->id.name.find(currentBlock.echod) != std::string::npos) {
+        for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
+            if (!(**it).validate(error, currentBlock)) {
+                return false;
+            }
+        }
         return true;
     }
     if (this->id.name.find(currentBlock.echoi) != std::string::npos) {
+        for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
+            if (!(**it).validate(error, currentBlock)) {
+                return false;
+            }
+        }
         return true;
     }
     
@@ -186,6 +205,11 @@ bool NAssignment::validate(std::string& error, NBlock& currentBlock) {
         int lType = variable->type.resultType(currentBlock);
         int rType = rhs.resultType(currentBlock);
         
+        if (lhs.isType()) {
+            error = std::string("Function cannot have the name of a type");
+            return false;
+        }
+        
         if (lType == rType
 //            || ((lType == TDOUBLE || lType == TINTEGER) && (rType == TDOUBLE || rType == TINTEGER))
             ) {
@@ -215,6 +239,16 @@ bool NReturnStatement::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NVariableDeclaration::validate(std::string& error, NBlock& currentBlock) {
+    if (!type.isType()) {
+        error = std::string("Variable type is not a type");
+        return false;
+    }
+    
+    if (id.isType()) {
+        error = std::string("Variable cannot have the name of a type");
+        return false;
+    }
+    
     if (assignmentExpr != NULL) {
         int lType = type.resultType(currentBlock);
         int rType = assignmentExpr->resultType(currentBlock);
@@ -229,6 +263,8 @@ bool NVariableDeclaration::validate(std::string& error, NBlock& currentBlock) {
         }
         
     }
+    
+    
     return true;
 }
 
@@ -265,6 +301,17 @@ bool NFunctionDeclaration::validate(std::string& error, NBlock& currentBlock) {
             return false;
         }
     }
+    
+    if (!type.isType()) {
+        error = std::string("Return type is not a type");
+        return false;
+    }
+    
+    if (id.isType()) {
+        error = std::string("Function cannot have the name of a type");
+        return false;
+    }
+    
     return type.validate(error, currentBlock) && id.validate(error, currentBlock) && variables && block.validate(error, currentBlock);
 }
 
