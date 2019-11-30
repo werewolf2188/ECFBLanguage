@@ -95,6 +95,7 @@ public:
     virtual llvm::Value* codeGen(CodeGenContext& context);
     virtual int resultType(NBlock& currentBlock);
     virtual bool validate(std::string& error, NBlock& currentBlock);
+    virtual bool isType();
 };
 
 class NMethodCall : public NExpression {

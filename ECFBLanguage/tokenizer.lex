@@ -40,8 +40,8 @@ extern "C" int analyze_tokens();
 %%
   
 /*** Code Section ***/
-/// Need to analyze why this has to be extern
-int yywrap() { return 1; } 
+int yywrap() { return 1; }
+
 int analyze_tokens() {
   
 // Explanation:

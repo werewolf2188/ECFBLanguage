@@ -1,5 +1,5 @@
 
-#line 3 "/Users/enriquericalde/American_Airlines/Playgrounds/ECFBLanguage/ECFBLanguage/tokenizer.cpp"
+#line 3 "/Users/werewolf2188/Proyectos/Mobile/ECFBLanguage/ECFBLanguage/tokenizer.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -1862,8 +1862,8 @@ void yyfree (void * ptr )
 #define YYTABLES_NAME "yytables"
 
 /*** Code Section ***/
-/// Need to analyze why this has to be extern
-int yywrap() { return 1; } 
+int yywrap() { return 1; }
+
 int analyze_tokens() {
   
 // Explanation:
