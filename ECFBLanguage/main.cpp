@@ -18,13 +18,27 @@ extern void yyset_in (FILE *  in_str );
 
 void createCoreFunctions(CodeGenContext& context);
 
+typedef struct Options {
+    const char* file = NULL;
+} Options;
+
+Options getOptions(int argc, const char * argv[]);
+
 int main(int argc, const char * argv[]) {
     // insert code here...
 //    analyze_tokens();
-    // This should be coming from the args.
-    FILE *file = fopen("./examples/good_example.ec", "r");
+    
+    Options options = getOptions(argc, argv);
+    if (options.file == NULL) {
+        std::cout << "Please specify to compile" << std::endl;
+        return 9;
+    }
+    FILE *file = fopen(options.file, "r");
+    if (file == NULL) {
+        std::cout << "File does not exists" << std::endl;
+        return 9;
+    }
     yyset_in(file);
-//    std::cout << "Please add a line of code" << std::endl;
     
     yyparse();
     programBlock->printString(0);
@@ -42,7 +56,14 @@ int main(int argc, const char * argv[]) {
     } else { 
         std::cout << "There was a problem: " << error << std::endl;
     }
-    
-//    std::cout << programBlock << std::endl;
     return 0;
+}
+
+
+Options getOptions(int argc, const char * argv[]) {
+    Options options;
+    if (argc > 1) {
+        options.file = argv[1];
+    }
+    return options;
 }
