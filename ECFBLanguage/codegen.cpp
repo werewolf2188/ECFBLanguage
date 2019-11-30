@@ -79,7 +79,7 @@ Value * NDouble::codeGen(CodeGenContext& context) {
 
 Value* NBoolean::codeGen(CodeGenContext& context) {
     std::cout << "Creating boolean: " << value << std::endl;
-    return ConstantInt::get(Type::getInt1Ty(ecfbContext), value);
+    return ConstantInt::get(Type::getInt1Ty(ecfbContext), (value ? 1 : 0));
 }
 
 Value * NIdentifier::codeGen(CodeGenContext& context) {
@@ -109,6 +109,9 @@ Value * NBinaryOperator::codeGen(CodeGenContext& context) {
     std::cout << "Creating binary operation " << op << std::endl;
     Instruction::BinaryOps instr;
     ICmpInst::Predicate cmpPred;
+    FCmpInst::Predicate cmpFPred;
+    bool lhsIsDouble = std::string(typeid(lhs).name()).find("Double") != std::string::npos;
+    bool rhsIsDouble = std::string(typeid(rhs).name()).find("Double") != std::string::npos;
     switch (op) {
         case TPLUS: instr = this->resultingType == TDOUBLE ? Instruction::FAdd : Instruction::Add; goto math;
         case TMINUS: instr = this->resultingType == TDOUBLE ? Instruction::FSub : Instruction::Sub; goto math;
@@ -116,18 +119,72 @@ Value * NBinaryOperator::codeGen(CodeGenContext& context) {
         case TDIV: instr = this->resultingType == TDOUBLE ? Instruction::FDiv : Instruction::SDiv; goto math;
         case TREMAIN: instr = this->resultingType == TDOUBLE ? Instruction::FRem : Instruction::SRem; goto math;
             /* TODO comparison */
-        case TCEQ: cmpPred = ICmpInst::ICMP_EQ; goto comp;
-        case TCNE: cmpPred = ICmpInst::ICMP_NE; goto comp;
-        case TCLT: cmpPred = ICmpInst::ICMP_ULT; goto comp;
-        case TCLE: cmpPred = ICmpInst::ICMP_ULE; goto comp;
-        case TCGT: cmpPred = ICmpInst::ICMP_UGT; goto comp;
-        case TCGE: cmpPred = ICmpInst::ICMP_UGE; goto comp;
+        case TCEQ:
+            if (lhsIsDouble && rhsIsDouble) {
+                cmpFPred = FCmpInst::FCMP_OEQ; goto compFlt;
+            } else {
+                cmpPred = ICmpInst::ICMP_EQ; goto compInt;
+            }
+            
+        case TCNE:
+            if (lhsIsDouble && rhsIsDouble) {
+                cmpFPred = FCmpInst::FCMP_ONE; goto compFlt;
+            } else {
+                cmpPred = ICmpInst::ICMP_NE; goto compInt;
+            }
+        case TCLT:
+            if (lhsIsDouble && rhsIsDouble) {
+                cmpFPred = FCmpInst::FCMP_OLT; goto compFlt;
+            } else {
+                cmpPred = ICmpInst::ICMP_ULT; goto compInt;
+            }
+        case TCLE:
+            if (lhsIsDouble && rhsIsDouble) {
+                cmpFPred = FCmpInst::FCMP_OLE; goto compFlt;
+            } else {
+                cmpPred = ICmpInst::ICMP_ULE; goto compInt;
+            }
+        case TCGT:
+            if (lhsIsDouble && rhsIsDouble) {
+                cmpFPred = FCmpInst::FCMP_OGT; goto compFlt;
+            } else {
+                cmpPred = ICmpInst::ICMP_UGT; goto compInt;
+            }
+        case TCGE:
+            if (lhsIsDouble && rhsIsDouble) {
+                cmpFPred = FCmpInst::FCMP_OGE; goto compFlt;
+            } else  {
+                cmpPred = ICmpInst::ICMP_UGE; goto compInt;
+            }
     }
+    
     return NULL;
     math:
     return BinaryOperator::Create(instr, lhs.codeGen(context), rhs.codeGen(context), "", context.currentBlock());
-    comp:
+    compInt:
     return new ICmpInst(*context.currentBlock(), cmpPred, lhs.codeGen(context), rhs.codeGen(context));
+    compFlt:
+    return new FCmpInst(*context.currentBlock(), cmpFPred, lhs.codeGen(context), rhs.codeGen(context));
+}
+
+Value * NUnaryOperator::codeGen(CodeGenContext &context) {
+    std::cout << "Creating unary operation " << op << std::endl;
+//    ICmpInst::Predicate cmpPred;
+    switch (op) {
+        case TMINUS:
+            if (this->resultingType == TDOUBLE) {
+                return UnaryOperator::CreateFNeg(rhs.codeGen(context), "", context.currentBlock());
+            } else if (this->resultingType == TINTEGER) {
+                
+            }
+            break;
+        case TNOT:
+            if (this->resultingType == TBOOLEAN) {
+                
+            }
+            break;
+    }
+    return NULL;
 }
 
 Value * NAssignment::codeGen(CodeGenContext& context) {

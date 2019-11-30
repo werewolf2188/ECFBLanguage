@@ -360,8 +360,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 29
-#define YY_END_OF_BUFFER 30
+#define YY_NUM_RULES 30
+#define YY_END_OF_BUFFER 31
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -371,10 +371,10 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[53] =
     {   0,
-        0,    0,   30,   28,    1,    1,   28,   28,   26,   16,
-       17,   24,   22,   20,   23,   21,   25,    7,   12,    9,
-       14,    6,    2,    6,    6,    6,   18,   19,   11,    0,
-       27,    3,    0,    7,   13,   10,   15,    6,    6,    6,
+        0,    0,   31,   29,    1,    1,   16,   29,   27,   17,
+       18,   25,   23,   21,   24,   22,   26,    7,   12,    9,
+       14,    6,    2,    6,    6,    6,   19,   20,   11,    0,
+       28,    3,    0,    7,   13,   10,   15,    6,    6,    6,
         6,    3,    8,    6,    6,    6,    6,    6,    5,    6,
         4,    0
     } ;
@@ -815,57 +815,61 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-{ return TOKEN(TLPAREN); }
+{ return TOKEN(TNOT); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-{ return TOKEN(TRPAREN); }
+{ return TOKEN(TLPAREN); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-{ return TOKEN(TLBRACE); }
+{ return TOKEN(TRPAREN); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-{ return TOKEN(TRBRACE); }
+{ return TOKEN(TLBRACE); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-{ return TOKEN(TCOMMA); }
+{ return TOKEN(TRBRACE); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-{ return TOKEN(TDOT); }
+{ return TOKEN(TCOMMA); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-{ return TOKEN(TPLUS); }
+{ return TOKEN(TDOT); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-{ return TOKEN(TMINUS); }
+{ return TOKEN(TPLUS); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-{ return TOKEN(TMUL);  }
+{ return TOKEN(TMINUS); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-{ return TOKEN(TDIV); }
+{ return TOKEN(TMUL);  }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-{ return TOKEN(TREMAIN); }
+{ return TOKEN(TDIV); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-{ printf("its a string \n"); }
+{ return TOKEN(TREMAIN); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-{ printf("This is not a correct token\n"); yyterminate(); }
+{ printf("its a string \n"); }
 	YY_BREAK
 case 29:
+YY_RULE_SETUP
+{ printf("This is not a correct token\n"); yyterminate(); }
+	YY_BREAK
+case 30:
 YY_RULE_SETUP
 ECHO;
 	YY_BREAK

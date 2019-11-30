@@ -138,6 +138,23 @@ public:
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
+class NUnaryOperator : public NExpression {
+protected:
+    int resultingType;
+public:
+    int op;
+    
+    NExpression& rhs;
+    NUnaryOperator(int op, NExpression& rhs) : op(op), rhs(rhs) { }
+    inline void printString(int spaces) {
+        std::cout << std::string(spaces, '\t') << "Unary operator Expression: " << std::endl;
+        this->rhs.printString(spaces + 1);
+    }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual int resultType(NBlock& currentBlock);
+    virtual bool validate(std::string& error, NBlock& currentBlock);
+};
+
 class NAssignment : public NExpression {
 public:
     NIdentifier& lhs;

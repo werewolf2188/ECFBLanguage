@@ -50,18 +50,19 @@
      TCGT = 266,
      TCGE = 267,
      TEQUAL = 268,
-     TLPAREN = 269,
-     TRPAREN = 270,
-     TLBRACE = 271,
-     TRBRACE = 272,
-     TCOMMA = 273,
-     TDOT = 274,
-     TPLUS = 275,
-     TMINUS = 276,
-     TMUL = 277,
-     TDIV = 278,
-     TREMAIN = 279,
-     TRETURN = 280
+     TNOT = 269,
+     TLPAREN = 270,
+     TRPAREN = 271,
+     TLBRACE = 272,
+     TRBRACE = 273,
+     TCOMMA = 274,
+     TDOT = 275,
+     TPLUS = 276,
+     TMINUS = 277,
+     TMUL = 278,
+     TDIV = 279,
+     TREMAIN = 280,
+     TRETURN = 281
    };
 #endif
 /* Tokens.  */
@@ -76,18 +77,19 @@
 #define TCGT 266
 #define TCGE 267
 #define TEQUAL 268
-#define TLPAREN 269
-#define TRPAREN 270
-#define TLBRACE 271
-#define TRBRACE 272
-#define TCOMMA 273
-#define TDOT 274
-#define TPLUS 275
-#define TMINUS 276
-#define TMUL 277
-#define TDIV 278
-#define TREMAIN 279
-#define TRETURN 280
+#define TNOT 269
+#define TLPAREN 270
+#define TRPAREN 271
+#define TLBRACE 272
+#define TRBRACE 273
+#define TCOMMA 274
+#define TDOT 275
+#define TPLUS 276
+#define TMINUS 277
+#define TMUL 278
+#define TDIV 279
+#define TREMAIN 280
+#define TRETURN 281
 
 
 

@@ -180,11 +180,35 @@ bool NBinaryOperator::validate(std::string& error, NBlock& currentBlock) {
         case TCLE:
         case TCGT:
         case TCGE:
-            if (lhs.resultType(currentBlock) != TBOOLEAN) {
+            
+            bool lhsIsNumber = std::string(typeid(lhs).name()).find("Integer") != std::string::npos || std::string(typeid(lhs).name()).find("Double") != std::string::npos;
+            bool rhsIsNumber = std::string(typeid(rhs).name()).find("Integer") != std::string::npos || std::string(typeid(rhs).name()).find("Double") != std::string::npos;
+            
+            if ((lhs.resultType(currentBlock) == TBOOLEAN && rhs.resultType(currentBlock) == TBOOLEAN)
+                || (lhsIsNumber && rhsIsNumber)) {
+                return lhs.validate(error, currentBlock) && rhs.validate(error, currentBlock);
+            }
+            else if (lhs.resultType(currentBlock) != TBOOLEAN ) {
                 error = std::string("Left value has to return a boolean");
             } else if (rhs.resultType(currentBlock) != TBOOLEAN) {
                 error = std::string("Right value has to return a boolean");
-            } else return lhs.validate(error, currentBlock) && rhs.validate(error, currentBlock);
+            }
+            break;
+    }
+    return false;
+}
+
+bool NUnaryOperator::validate(std::string &error, NBlock &currentBlock) {
+    switch (op) {
+        case TMINUS:
+            if (rhs.resultType(currentBlock) == TBOOLEAN) {
+                error = std::string("Right value has to return a number");
+            } else return rhs.validate(error, currentBlock);
+            break;
+        case TNOT:
+            if (rhs.resultType(currentBlock) != TBOOLEAN) {
+                error = std::string("Right value has to return a boolean");
+            } else return rhs.validate(error, currentBlock);
             break;
     }
     return false;
@@ -367,6 +391,17 @@ int NBinaryOperator::resultType(NBlock& currentBlock) {
         case TCLE: return TBOOLEAN;
         case TCGT: return TBOOLEAN;
         case TCGE: return TBOOLEAN;
+    }
+    return -1;
+}
+
+int NUnaryOperator::resultType(NBlock& currentBlock) {
+    if (rhs.resultType(currentBlock) == TDOUBLE) resultingType = TDOUBLE;
+    else resultingType = TINTEGER;
+    
+    switch (op) {
+        case TMINUS: return resultingType;
+        case TNOT: return TBOOLEAN;
     }
     return -1;
 }

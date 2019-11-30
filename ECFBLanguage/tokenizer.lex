@@ -24,6 +24,7 @@ extern "C" int analyze_tokens();
 "<="                    { return TOKEN(TCLE); }
 ">"                     { return TOKEN(TCGT); }
 ">="                    { return TOKEN(TCGE); }
+"!"                     { return TOKEN(TNOT); }
 "("                     { return TOKEN(TLPAREN); }
 ")"                     { return TOKEN(TRPAREN); }
 "{"                     { return TOKEN(TLBRACE); }
