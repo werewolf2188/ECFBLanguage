@@ -5,6 +5,7 @@ int test(int x) {
 	return z % 7
 }
 boolean b = 4.5 > 3.7
-echoi(b)
-echod(4.5)
+echoi(!b)
+echoi(-1)
+echod(-4.5)
 echoi(test(5))

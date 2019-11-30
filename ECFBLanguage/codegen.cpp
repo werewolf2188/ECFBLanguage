@@ -175,14 +175,15 @@ Value * NUnaryOperator::codeGen(CodeGenContext &context) {
             if (this->resultingType == TDOUBLE) {
                 return UnaryOperator::CreateFNeg(rhs.codeGen(context), "", context.currentBlock());
             } else if (this->resultingType == TINTEGER) {
-                
+                Value * minusOne = ConstantInt::get(Type::getInt64Ty(ecfbContext), -1, true);
+                Value * bOp = BinaryOperator::Create(Instruction::Mul, minusOne, rhs.codeGen(context), "", context.currentBlock());
+                return bOp;
             }
             break;
         case TNOT:
-            if (this->resultingType == TBOOLEAN) {
-                
-            }
-            break;
+            Value * one = ConstantInt::get(Type::getInt1Ty(ecfbContext), 1);
+            Value * bOp = BinaryOperator::Create(Instruction::Xor, one, rhs.codeGen(context), "", context.currentBlock());
+            return bOp;
     }
     return NULL;
 }

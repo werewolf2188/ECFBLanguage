@@ -199,6 +199,7 @@ bool NBinaryOperator::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NUnaryOperator::validate(std::string &error, NBlock &currentBlock) {
+    this->resultType(currentBlock);
     switch (op) {
         case TMINUS:
             if (rhs.resultType(currentBlock) == TBOOLEAN) {
