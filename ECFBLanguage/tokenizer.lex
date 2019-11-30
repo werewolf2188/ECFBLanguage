@@ -34,6 +34,7 @@ extern "C" int analyze_tokens();
 "-"                     { return TOKEN(TMINUS); }
 "*"                     { return TOKEN(TMUL);  }
 "/"                     { return TOKEN(TDIV); }
+"%"                     { return TOKEN(TREMAIN); }
 \".*\"                  { printf("its a string \n"); }
 .                       { printf("This is not a correct token\n"); yyterminate(); }
 

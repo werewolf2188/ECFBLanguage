@@ -78,6 +78,8 @@ Also, the use of LLVM allows the developer to get the same project and use it in
 The programming language syntax for this compiler is very similar to a C like program, but very restrictive at this moment. For now the only things it can build are
 
 * Integer, double  and boolean instances (boolean d = false, int x = 2 or double y = 2.0)
+* Simple binary operations (+, -, *, /, % )
+* Simple binary comparisons between numbers (<, <=, >, >=, ==, != )
 * Functions (int test(...) { ... return x } or void test2()  )
 * The use of the funtion echoi (echoi(x + 2)) or echod (echod(y + 2.4))
 

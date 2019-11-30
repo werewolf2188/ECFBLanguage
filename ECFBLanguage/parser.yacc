@@ -22,7 +22,7 @@
 %token <string> TIDENTIFIER TINTEGER TDOUBLE TBOOLEAN
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
 %token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
-%token <token> TPLUS TMINUS TMUL TDIV
+%token <token> TPLUS TMINUS TMUL TDIV TREMAIN
 %token <token> TRETURN
 
 %type <ident> ident
@@ -34,7 +34,7 @@
 %type <token> comparison
 
 %left TPLUS TMINUS
-%left TMUL TDIV
+%left TMUL TDIV TREMAIN
 
 %start program
 
@@ -94,6 +94,6 @@ call_args : /*blank*/  { $$ = new ExpressionList(); }
 ;
 
 comparison : TCEQ | TCNE | TCLT | TCLE | TCGT | TCGE
-| TPLUS | TMINUS | TMUL | TDIV
+| TPLUS | TMINUS | TMUL | TDIV | TREMAIN
 ;
 %%

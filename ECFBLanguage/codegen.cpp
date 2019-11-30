@@ -114,6 +114,7 @@ Value * NBinaryOperator::codeGen(CodeGenContext& context) {
         case TMINUS: instr = this->resultingType == TDOUBLE ? Instruction::FSub : Instruction::Sub; goto math;
         case TMUL: instr = this->resultingType == TDOUBLE ? Instruction::FMul : Instruction::Mul; goto math;
         case TDIV: instr = this->resultingType == TDOUBLE ? Instruction::FDiv : Instruction::SDiv; goto math;
+        case TREMAIN: instr = this->resultingType == TDOUBLE ? Instruction::FRem : Instruction::SRem; goto math;
             /* TODO comparison */
         case TCEQ: cmpPred = ICmpInst::ICMP_EQ; goto comp;
         case TCNE: cmpPred = ICmpInst::ICMP_NE; goto comp;

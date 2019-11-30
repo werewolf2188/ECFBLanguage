@@ -60,7 +60,8 @@
      TMINUS = 276,
      TMUL = 277,
      TDIV = 278,
-     TRETURN = 279
+     TREMAIN = 279,
+     TRETURN = 280
    };
 #endif
 /* Tokens.  */
@@ -85,7 +86,8 @@
 #define TMINUS 276
 #define TMUL 277
 #define TDIV 278
-#define TRETURN 279
+#define TREMAIN 279
+#define TRETURN 280
 
 
 

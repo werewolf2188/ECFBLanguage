@@ -167,6 +167,7 @@ bool NBinaryOperator::validate(std::string& error, NBlock& currentBlock) {
         case TMINUS:
         case TMUL:
         case TDIV:
+        case TREMAIN:
             if (lhs.resultType(currentBlock) == TBOOLEAN) {
                 error = std::string("Left value has to return a number");
             } else if (rhs.resultType(currentBlock) == TBOOLEAN) {
@@ -358,6 +359,7 @@ int NBinaryOperator::resultType(NBlock& currentBlock) {
         case TMINUS: return resultingType;
         case TMUL: return resultingType;
         case TDIV: return resultingType;
+        case TREMAIN: return resultingType;
             /* TODO comparison */
         case TCEQ: return TBOOLEAN;
         case TCNE: return TBOOLEAN;
