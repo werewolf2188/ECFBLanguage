@@ -20,9 +20,9 @@
 }
 
 %token <string> TIDENTIFIER TINTEGER TDOUBLE TBOOLEAN
-%token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
+%token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL TNOT
 %token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
-%token <token> TPLUS TMINUS TMUL TDIV
+%token <token> TPLUS TMINUS TMUL TDIV TREMAIN
 %token <token> TRETURN
 
 %type <ident> ident
@@ -32,9 +32,10 @@
 %type <block> stmts block
 %type <stmt> program stmt var_decl func_decl
 %type <token> comparison
+%type <token> negative
 
 %left TPLUS TMINUS
-%left TMUL TDIV
+%left TMUL TDIV TREMAIN
 
 %start program
 
@@ -84,6 +85,7 @@ expr : ident TEQUAL expr { $$ = new NAssignment(*$<ident>1, *$3); }
 | ident { $<ident>$ = $1; }
 | numeric
 | boolean
+| negative expr { $$ = new NUnaryOperator($1, *$2); }
 | expr comparison expr { $$ = new NBinaryOperator(*$1, $2, *$3); }
 | TLPAREN expr TRPAREN { $$ = $2; }
 ;
@@ -94,6 +96,9 @@ call_args : /*blank*/  { $$ = new ExpressionList(); }
 ;
 
 comparison : TCEQ | TCNE | TCLT | TCLE | TCGT | TCGE
-| TPLUS | TMINUS | TMUL | TDIV
+| TPLUS | TMINUS | TMUL | TDIV | TREMAIN
+;
+
+negative : TNOT | TMINUS
 ;
 %%
