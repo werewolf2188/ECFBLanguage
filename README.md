@@ -80,6 +80,7 @@ The programming language syntax for this compiler is very similar to a C like pr
 * Integer, double  and boolean instances (boolean d = false, int x = 2 or double y = 2.0)
 * Simple binary operations (+, -, *, /, % )
 * Simple binary comparisons between numbers (<, <=, >, >=, ==, != )
+* Simple unary operators (-. !)
 * Functions (int test(...) { ... return x } or void test2()  )
 * The use of the funtion echoi (echoi(x + 2)) or echod (echod(y + 2.4))
 
@@ -104,7 +105,7 @@ echod(2.6)
 
 The project is taking the file inside the examples folder. This file is being passed in the arguments array. This value can be modifiied by going to the scheme and edit. Just select the scheme -> Edit scheme -> Run -> Arguments.
 
-This is a version for recreational purposes, but later versions (until it's first release) will have more C stuff in it (conversions between doubles and ints, negative operations, comparisons [and, or], if/while statements, strings).  The final version will allow to pass the file name and either execute it or build a executable.
+This is a version for recreational purposes, but later versions (until it's first release) will have more C stuff in it (conversions between doubles and ints, comparisons [and, or], if/while statements, strings).  The final version will allow to pass the file name and either execute it or build a executable.
 
 ## References
 

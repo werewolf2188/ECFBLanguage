@@ -169,7 +169,6 @@ Value * NBinaryOperator::codeGen(CodeGenContext& context) {
 
 Value * NUnaryOperator::codeGen(CodeGenContext &context) {
     std::cout << "Creating unary operation " << op << std::endl;
-//    ICmpInst::Predicate cmpPred;
     switch (op) {
         case TMINUS:
             if (this->resultingType == TDOUBLE) {
