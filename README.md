@@ -82,7 +82,7 @@ The programming language syntax for this compiler is very similar to a C like pr
 * Simple binary comparisons between numbers (<, <=, >, >=, ==, != )
 * Simple unary operators (-. !)
 * Functions (int test(...) { ... return x } or void test2()  )
-* The use of the funtion echoi (echoi(x + 2)) or echod (echod(y + 2.4))
+* The use of the funtion echoi (echoi(x + 2)), echod (echod(y + 2.4), or echob (echob(false)))
 
 ```c
 int do_math(int a) {
@@ -101,6 +101,7 @@ boolean compare(int x, int y) {
 echoi(do_math(4))
 echoi(compare(5, 6))
 echod(2.6)
+echob(false)
 ```
 
 The project is taking the file inside the examples folder. This file is being passed in the arguments array. This value can be modifiied by going to the scheme and edit. Just select the scheme -> Edit scheme -> Run -> Arguments.

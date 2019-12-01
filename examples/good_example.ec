@@ -5,7 +5,9 @@ int test(int x) {
 	return ww % 7
 }
 boolean b = 4.5 > 3.7
-echoi(!b)
+echob(!b)
 echoi(-1)
 echod(-4.5)
+echob(true)
+echob(true != false)
 echoi(test(5))
