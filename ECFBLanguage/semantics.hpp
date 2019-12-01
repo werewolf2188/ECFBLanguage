@@ -178,6 +178,7 @@ protected:
 public:
     StatementList statements;
     const std::string echod = "echod";
+    const std::string echob = "echob";
     const std::string echoi = "echoi";
     NBlock() { }
     inline void printString(int spaces) {

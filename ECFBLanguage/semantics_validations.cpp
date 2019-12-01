@@ -108,16 +108,10 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
         }
     }
     
-    // We don't need to check the arguments for echod nor echoi
-    if (this->id.name.find(currentBlock.echod) != std::string::npos) {
-        for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
-            if (!(**it).validate(error, currentBlock)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    if (this->id.name.find(currentBlock.echoi) != std::string::npos) {
+    // We don't need to check the arguments for echod, echoi nor echob
+    if (this->id.name.find(currentBlock.echod) != std::string::npos
+        || this->id.name.find(currentBlock.echob) != std::string::npos
+        || this->id.name.find(currentBlock.echoi) != std::string::npos) {
         for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
             if (!(**it).validate(error, currentBlock)) {
                 return false;
