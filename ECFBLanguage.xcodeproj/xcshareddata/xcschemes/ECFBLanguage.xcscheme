@@ -52,7 +52,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "/Users/werewolf2188/Proyectos/Mobile/ECFBLanguage/examples/good_example.ec"
+            argument = "$(SRCROOT)/examples/good_example.ec"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
