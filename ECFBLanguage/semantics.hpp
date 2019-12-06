@@ -158,6 +158,7 @@ public:
 class NDataConversion : public NExpression {
 protected:
     int resultingType;
+    int previousType;
 public:
     NIdentifier& type;
     NExpression& rhs;
@@ -167,6 +168,9 @@ public:
         this->type.printString(spaces + 1);
         this->rhs.printString(spaces + 1);
     }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual int resultType(NBlock& currentBlock);
+    virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
 class NAssignment : public NExpression {

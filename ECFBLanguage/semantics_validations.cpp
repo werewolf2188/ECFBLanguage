@@ -209,6 +209,20 @@ bool NUnaryOperator::validate(std::string &error, NBlock &currentBlock) {
     return false;
 }
 
+bool NDataConversion::validate(std::string &error, NBlock &currentBlock) {
+    if (!this->type.isType()) {
+        error = std::string("Type casting not using a type");
+        return false;
+    } else if (this->type.resultType(currentBlock) == TBOOLEAN || this->type.resultType(currentBlock) == -1
+               || (this->rhs.resultType(currentBlock) != TDOUBLE && this->rhs.resultType(currentBlock) != TINTEGER)) {
+        error = std::string("Type casting cannot happen with non number types");
+        return false;
+    }
+    previousType = rhs.resultType(currentBlock);
+    resultingType = type.resultType(currentBlock);
+    return rhs.validate(error, currentBlock);
+}
+
 bool NAssignment::validate(std::string& error, NBlock& currentBlock) {
     NVariableDeclaration *variable = NULL;
     for (VariableIterator it = currentBlock.getVariables().begin(); it != currentBlock.getVariables().end(); it++) {
@@ -429,6 +443,10 @@ int NUnaryOperator::resultType(NBlock& currentBlock) {
         case TNOT: return TBOOLEAN;
     }
     return -1;
+}
+
+int NDataConversion::resultType(NBlock &currentBlock) {
+    return type.resultType(currentBlock);
 }
 
 int NMethodCall::resultType(NBlock& currentBlock) {
