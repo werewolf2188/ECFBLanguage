@@ -191,9 +191,9 @@ Value * NDataConversion::codeGen(CodeGenContext &context) {
     std::cout << "Creating Data Conversion for " << type.name << std::endl;
     
     if (resultingType == TDOUBLE && previousType == TINTEGER) {
-        return CastInst::CreateFPCast(rhs.codeGen(context), Type::getDoubleTy(ecfbContext));
+        return CastInst::Create(Instruction::CastOps::SIToFP, rhs.codeGen(context), Type::getDoubleTy(ecfbContext));
     } else if (resultingType == TINTEGER && previousType == TDOUBLE) {
-        return CastInst::CreateIntegerCast(rhs.codeGen(context), Type::getInt64Ty(ecfbContext), true);
+        return CastInst::Create(Instruction::CastOps::FPToSI, rhs.codeGen(context), Type::getInt64Ty(ecfbContext));
     }
     
     return rhs.codeGen(context);
