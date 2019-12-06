@@ -2,8 +2,8 @@ int test(int x) {
 	int y = x + 2
 	int z = y * x + 2
 	int ww = z * -2
-	int d = (int) 2.5
-	return ww % 7
+	double dd = (double)ww
+	return (int)dd % 7
 }
 boolean b = 4.5 > 3.7
 echob(!b)
