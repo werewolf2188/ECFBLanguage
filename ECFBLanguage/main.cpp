@@ -8,7 +8,7 @@
 
 #include <iostream>
 #include <stdio.h>
-
+#include "semantics_transformations.hpp"
 #include "codegen.hpp"
 #include "semantics.hpp"
 
@@ -41,10 +41,10 @@ int main(int argc, const char * argv[]) {
     yyset_in(file);
     
     yyparse();
-    programBlock->printString(0);
     programBlock->separateVariablesAndFunctions();
     std::string error;
-    
+    transform(*programBlock);
+    programBlock->printString(0);
     if (programBlock->validate(error, *programBlock)) {
         InitializeNativeTarget();
         InitializeNativeTargetAsmPrinter();

@@ -155,6 +155,24 @@ public:
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
+class NDataConversion : public NExpression {
+protected:
+    int resultingType;
+    int previousType;
+public:
+    NIdentifier& type;
+    NExpression& rhs;
+    NDataConversion(NIdentifier& type, NExpression& rhs) : type(type), rhs(rhs) {}
+    inline void printString(int spaces) {
+        std::cout << std::string(spaces, '\t') << "Data Conversion Expression: " << std::endl;
+        this->type.printString(spaces + 1);
+        this->rhs.printString(spaces + 1);
+    }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual int resultType(NBlock& currentBlock);
+    virtual bool validate(std::string& error, NBlock& currentBlock);
+};
+
 class NAssignment : public NExpression {
 public:
     NIdentifier& lhs;

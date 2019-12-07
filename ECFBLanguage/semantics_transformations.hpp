@@ -11,7 +11,6 @@
 
 #include <stdio.h>
 #include "semantics.hpp"
-//extern void transformVariableDeclaration(NVariableDeclaration *vd);
-//extern void transform(NBlock& block);
+extern void transform(NBlock& block);
 
 #endif /* semantics_transformations_hpp */

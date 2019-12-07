@@ -187,6 +187,18 @@ Value * NUnaryOperator::codeGen(CodeGenContext &context) {
     return NULL;
 }
 
+Value * NDataConversion::codeGen(CodeGenContext &context) {
+    std::cout << "Creating Data Conversion for " << type.name << std::endl;
+    
+    if (resultingType == TDOUBLE && previousType == TINTEGER) {
+        return new SIToFPInst(rhs.codeGen(context), Type::getDoubleTy(ecfbContext), "conv", context.currentBlock());
+    } else if (resultingType == TINTEGER && previousType == TDOUBLE) {        
+        return new FPToSIInst(rhs.codeGen(context), Type::getInt64Ty(ecfbContext), "conv", context.currentBlock());
+    }
+    
+    return rhs.codeGen(context);
+}
+
 Value * NAssignment::codeGen(CodeGenContext& context) {
     std::cout << "Creating assignment for " << lhs.name << std::endl;
     if (context.locals().find(lhs.name) == context.locals().end()) {

@@ -83,15 +83,17 @@ The programming language syntax for this compiler is very similar to a C like pr
 * Simple unary operators (-. !)
 * Functions (int test(...) { ... return x } or void test2()  )
 * The use of the funtion echoi (echoi(x + 2)), echod (echod(y + 2.4), or echob (echob(false)))
+* conversions between doubles and ints
 
 ```c
 int do_math(int a) {
     int x = a * 2
-    return x + 5
+    double d = x * 4.3
+    return (int) d
 }
 
 void test() {
-    echo(5)
+    echoi(5)
 }
 
 boolean compare(int x, int y) {
@@ -106,7 +108,7 @@ echob(false)
 
 The project is taking the file inside the examples folder. This file is being passed in the arguments array. This value can be modifiied by going to the scheme and edit. Just select the scheme -> Edit scheme -> Run -> Arguments.
 
-This is a version for recreational purposes, but later versions (until it's first release) will have more C stuff in it (conversions between doubles and ints, comparisons [and, or], if/while statements, strings).  The final version will allow to pass the file name and either execute it or build a executable.
+This is a version for recreational purposes, but later versions (until it's first release) will have more C stuff in it (comparisons [and, or], if/while statements, strings).  The final version will allow to pass the file name and either execute it or build a executable.
 
 ## References
 

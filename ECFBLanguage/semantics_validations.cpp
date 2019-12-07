@@ -209,6 +209,20 @@ bool NUnaryOperator::validate(std::string &error, NBlock &currentBlock) {
     return false;
 }
 
+bool NDataConversion::validate(std::string &error, NBlock &currentBlock) {
+    if (!this->type.isType()) {
+        error = std::string("Type casting not using a type");
+        return false;
+    } else if (this->type.resultType(currentBlock) == TBOOLEAN || this->type.resultType(currentBlock) == -1
+               || (this->rhs.resultType(currentBlock) != TDOUBLE && this->rhs.resultType(currentBlock) != TINTEGER)) {
+        error = std::string("Type casting cannot happen with non number types");
+        return false;
+    }
+    previousType = rhs.resultType(currentBlock);
+    resultingType = type.resultType(currentBlock);
+    return rhs.validate(error, currentBlock);
+}
+
 bool NAssignment::validate(std::string& error, NBlock& currentBlock) {
     NVariableDeclaration *variable = NULL;
     for (VariableIterator it = currentBlock.getVariables().begin(); it != currentBlock.getVariables().end(); it++) {
@@ -259,6 +273,21 @@ bool NReturnStatement::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NVariableDeclaration::validate(std::string& error, NBlock& currentBlock) {
+    
+    int times = 0;
+    VariableList variables = currentBlock.getVariables();
+    for (VariableIterator it = variables.begin(); it != variables.end(); it++) {
+        std::string fName = ((NVariableDeclaration*)(*it))->id.name;
+        if (fName.compare(this->id.name) == 0) {
+            times++;
+        }
+    }
+    
+    if (times > 1) {
+        error = std::string("Variable cannot be redeclared");
+        return false;
+    }
+    
     if (!type.isType()) {
         error = std::string("Variable type is not a type");
         return false;
@@ -289,6 +318,21 @@ bool NVariableDeclaration::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NFunctionDeclaration::validate(std::string& error, NBlock& currentBlock) {
+    
+    int times = 0;
+    StatementList functions = currentBlock.getFunctions();
+    for (StatementIterator it = functions.begin(); it != functions.end(); it++) {
+        std::string fName = ((NFunctionDeclaration*)(*it))->id.name;
+        if (fName.compare(this->id.name) == 0) {
+            times++;
+        }
+    }
+    
+    if (times > 1) {
+        error = std::string("Function cannot be redeclared");
+        return false;
+    }
+    
     // We check there are no function declarations inside the function
     if (this->block.getFunctions().size() > 0) {
         error = std::string("No functions can be declared inside a function");
@@ -399,6 +443,10 @@ int NUnaryOperator::resultType(NBlock& currentBlock) {
         case TNOT: return TBOOLEAN;
     }
     return -1;
+}
+
+int NDataConversion::resultType(NBlock &currentBlock) {
+    return type.resultType(currentBlock);
 }
 
 int NMethodCall::resultType(NBlock& currentBlock) {
