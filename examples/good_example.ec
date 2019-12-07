@@ -3,7 +3,10 @@ int test(int x) {
 	int z = y * x + 2
 	int ww = z * -2
 	double dd = ww
+	string s = "Hello"
+	printf(s)
 	return (int)dd % 7
+	
 }
 boolean b = 4.5 > 3.7
 echob(!b)

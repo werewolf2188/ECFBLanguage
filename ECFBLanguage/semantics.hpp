@@ -85,6 +85,18 @@ public:
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
+class NString : public NExpression {
+public:
+    std::string * value;
+    NString(std::string * value) : value(value) { }
+    inline void printString(int spaces) {
+        std::cout << std::string(spaces, '\t') << "String Expression: " << value << std::endl;
+    }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual int resultType(NBlock& currentBlock);
+    virtual bool validate(std::string& error, NBlock& currentBlock);
+};
+
 class NIdentifier : public NExpression {
 public:
     std::string name;
@@ -198,6 +210,7 @@ public:
     const std::string echod = "echod";
     const std::string echob = "echob";
     const std::string echoi = "echoi";
+    const std::string printf = "printf";
     NBlock() { }
     inline void printString(int spaces) {
         std::cout << std::string(spaces, '\t') << "Block Expression: " << std::endl;

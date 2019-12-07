@@ -74,7 +74,7 @@ void transformVariableDeclaration(NVariableDeclaration *vd, NBlock& block) {
 }
 NExpression* transformVariableDeclaration(NExpression *previousExpression, int expectedType, NBlock& block) {
     // TODO: Balance binary operators inside boolean assignments
-    if (expectedType != TBOOLEAN && expectedType != -1) {
+    if (expectedType != TBOOLEAN && expectedType != TSTRING && expectedType != -1) {
         std::string name = typeid((*previousExpression)).name();
         
         if (name.find("NBinaryOperator") != std::string::npos) {

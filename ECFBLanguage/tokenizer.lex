@@ -5,6 +5,7 @@
 #define SAVE_TOKEN yylval.string = new std::string(yytext, yyleng)
 #define TOKEN(t) (yylval.token = t)
 extern "C" int analyze_tokens();
+extern "C" void removeChar(char *str, char garbage);
 %}
   
 /*** Rule Section ***/
@@ -36,13 +37,23 @@ extern "C" int analyze_tokens();
 "*"                     { return TOKEN(TMUL);  }
 "/"                     { return TOKEN(TDIV); }
 "%"                     { return TOKEN(TREMAIN); }
-\".*\"                  { printf("its a string \n"); }
+\".*\"                  { removeChar(yytext, '"'); printf(yytext); SAVE_TOKEN; return TSTRING; }
 .                       { printf("This is not a correct token\n"); yyterminate(); }
 
 %%
   
 /*** Code Section ***/
 int yywrap() { return 1; }
+
+void removeChar(char *str, char garbage) {
+
+    char *src, *dst;
+    for (src = dst = str; *src != '\0'; src++) {
+        *dst = *src;
+        if (*dst != garbage) dst++;
+    }
+    *dst = '\0';
+}
 
 int analyze_tokens() {
   

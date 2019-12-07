@@ -77,6 +77,24 @@ Value * NDouble::codeGen(CodeGenContext& context) {
     return ConstantFP::get(Type::getDoubleTy(ecfbContext), value);
 }
 
+Value * NString::codeGen(CodeGenContext &context) {
+    std::cout << "Creating string: " << value << std::endl;
+    const char* cValue = value->c_str();
+    size_t length = strlen(cValue);
+    
+    llvm::Constant *stringConstant = llvm::ConstantDataArray::getString(ecfbContext, cValue);
+    
+    llvm::Constant *zero =
+    llvm::Constant::getNullValue(llvm::IntegerType::getInt32Ty(ecfbContext));
+    std::vector<llvm::Constant*> indices;
+    indices.push_back(zero);
+    indices.push_back(zero);
+    
+    llvm::Constant *string_var_ref = llvm::ConstantExpr::getGetElementPtr(
+    llvm::ArrayType::get(llvm::IntegerType::get(ecfbContext, 8), length+1), stringConstant, indices);
+    return string_var_ref;
+}
+
 Value* NBoolean::codeGen(CodeGenContext& context) {
     std::cout << "Creating boolean: " << value << std::endl;
     return ConstantInt::get(Type::getInt1Ty(ecfbContext), (value ? 1 : 0));

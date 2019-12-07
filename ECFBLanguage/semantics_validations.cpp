@@ -27,6 +27,10 @@ bool NDouble::validate(std::string& error, NBlock& currentBlock) {
     return true;
 }
 
+bool NString::validate(std::string &error, NBlock &currentBlock) {
+    return true;
+}
+
 bool NBoolean::validate(std::string& error, NBlock& currentBlock) {
     if (stringValue.compare("true") != 0 && stringValue.compare("false")) {
         error = std::string("Boolean value only accepts true or false");
@@ -36,7 +40,7 @@ bool NBoolean::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NIdentifier::isType() {
-    return name.compare("int") == 0 || name.compare("double") == 0 || name.compare("void") == 0 || name.compare("boolean") == 0;
+    return name.compare("int") == 0 || name.compare("double") == 0 || name.compare("void") == 0 || name.compare("boolean") == 0  || name.compare("string") == 0;
 }
 
 bool NIdentifier::validate(std::string& error, NBlock& currentBlock) {
@@ -111,7 +115,8 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
     // We don't need to check the arguments for echod, echoi nor echob
     if (this->id.name.find(currentBlock.echod) != std::string::npos
         || this->id.name.find(currentBlock.echob) != std::string::npos
-        || this->id.name.find(currentBlock.echoi) != std::string::npos) {
+        || this->id.name.find(currentBlock.echoi) != std::string::npos
+        || this->id.name.find(currentBlock.printf) != std::string::npos) {
         for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
             if (!(**it).validate(error, currentBlock)) {
                 return false;
@@ -156,6 +161,12 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NBinaryOperator::validate(std::string& error, NBlock& currentBlock) {
+    
+    if (this->lhs.resultType(currentBlock) == TSTRING || this->rhs.resultType(currentBlock) == TSTRING) {
+        error = std::string("Binary operand cannot be applied to string");
+        return false;
+    }
+    
     switch (op) {
         case TPLUS:
         case TMINUS:
@@ -193,6 +204,12 @@ bool NBinaryOperator::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NUnaryOperator::validate(std::string &error, NBlock &currentBlock) {
+    
+    if (this->rhs.resultType(currentBlock) == TSTRING) {
+        error = std::string("Binary operand cannot be applied to string");
+        return false;
+    }
+    
     this->resultType(currentBlock);
     switch (op) {
         case TMINUS:
@@ -213,7 +230,7 @@ bool NDataConversion::validate(std::string &error, NBlock &currentBlock) {
     if (!this->type.isType()) {
         error = std::string("Type casting not using a type");
         return false;
-    } else if (this->type.resultType(currentBlock) == TBOOLEAN || this->type.resultType(currentBlock) == -1
+    } else if (this->type.resultType(currentBlock) == TBOOLEAN || this->type.resultType(currentBlock) == TSTRING || this->type.resultType(currentBlock) == -1
                || (this->rhs.resultType(currentBlock) != TDOUBLE && this->rhs.resultType(currentBlock) != TINTEGER)) {
         error = std::string("Type casting cannot happen with non number types");
         return false;
@@ -395,6 +412,10 @@ int NDouble::resultType(NBlock& currentBlock) {
 int NBoolean::resultType(NBlock& currentBlock) {
     return TBOOLEAN;
 }
+
+int NString::resultType(NBlock &currentBlock) {
+    return TSTRING;
+}
  
 int NIdentifier::resultType(NBlock& currentBlock) {
     if (name.compare("int") == 0) {
@@ -403,7 +424,9 @@ int NIdentifier::resultType(NBlock& currentBlock) {
         return TDOUBLE;
     } else if (name.compare("boolean") == 0) {
         return TBOOLEAN;
-    } else {
+    } else if (name.compare("string") == 0) {
+        return TSTRING;
+    }else {
         for (VariableIterator it = currentBlock.getVariables().begin(); it != currentBlock.getVariables().end(); it++) {
             std::string vName = (**it).id.name;
             if (vName.compare(name) == 0) {
