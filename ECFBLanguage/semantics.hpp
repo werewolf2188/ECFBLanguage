@@ -90,7 +90,7 @@ public:
     std::string * value;
     NString(std::string * value) : value(value) { }
     inline void printString(int spaces) {
-        std::cout << std::string(spaces, '\t') << "String Expression: " << value << std::endl;
+        std::cout << std::string(spaces, '\t') << "String Expression: " << *value << std::endl;
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
     virtual int resultType(NBlock& currentBlock);

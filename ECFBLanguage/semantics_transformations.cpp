@@ -8,6 +8,8 @@
 
 #include "semantics_transformations.hpp"
 #include "parser.hpp"
+extern NBlock* programBlock;
+
 void transformVariableDeclaration(NVariableDeclaration *vd, NBlock& block);
 
 NExpression* transformVariableDeclaration(NExpression *previousExpression, int expectedType, NBlock& block);
@@ -17,6 +19,8 @@ NExpression* transformFloat(NExpression * previousValue, int expectedType, NBloc
 NExpression* transformMethod(NExpression * previousValue, int expectedType, NBlock& block);
 NExpression* transformIdentifier(NExpression * previousValue, int expectedType, NBlock& block);
 NExpression* transformBinaryExpression(NBinaryOperator * previousBinaryOperator, int expectedType, NBlock& block);
+NExpressionStatement* transformMethodCallArguments(NMethodCall *methodCall, NBlock& block);
+
 
 void transform(NBlock& block) {
     // We check the variables first
@@ -35,10 +39,7 @@ void transform(NBlock& block) {
     // Then we check each of the assignments to see that everything's ok.
     for(StatementIterator it = block.statements.begin(); it != block.statements.end(); it++) {
         std::string name = typeid((**it)).name();
-        if (name.find("NAssignment") != std::string::npos) {
-            NAssignment *assign = ((NAssignment*)(*it));
-            assign->rhs = *transformVariableDeclaration(&assign->rhs, assign->resultType(block), block);
-        } else if (name.find("NExpressionStatement") != std::string::npos) {
+        if (name.find("NExpressionStatement") != std::string::npos) {
             NExpressionStatement *exprSt = ((NExpressionStatement*)(*it));
             std::string name = typeid((*exprSt).expression).name();
             if (name.find("NAssignment") != std::string::npos) {
@@ -47,6 +48,11 @@ void transform(NBlock& block) {
                 NAssignment *nAssign = new NAssignment(assign->lhs, *nRHS);
                 NExpressionStatement * nExpressionStatement = new NExpressionStatement(*nAssign);
                 *it = nExpressionStatement;
+            } else if(name.find("NMethodCall") != std::string::npos) {
+                NMethodCall *methodCall = ((NMethodCall*)&((*exprSt).expression));
+                NExpressionStatement * nExpressionStatement = transformMethodCallArguments(methodCall, block);
+                if (nExpressionStatement != NULL)
+                    *it = nExpressionStatement;
             }
         }
     }
@@ -131,4 +137,44 @@ NExpression* transformMethod(NExpression * previousValue, int expectedType, NBlo
            return new NDataConversion(*id, *previousValue);
        }
        return previousValue;
+}
+
+
+NExpressionStatement* transformMethodCallArguments(NMethodCall *methodCall, NBlock& block) {
+    bool exists = false;
+    NFunctionDeclaration *fRef = NULL;
+    
+    for (StatementIterator it = programBlock->getFunctions().begin(); it != programBlock->getFunctions().end(); it++) {
+        std::string fName = ((NFunctionDeclaration *)(*it))->id.name;
+        if (fName.find(methodCall->id.name) != std::string::npos) {
+            exists = true;
+            fRef = (NFunctionDeclaration *)(*it);
+            break;
+        }
+    }
+    if (exists) {
+        //Arguments size have to be the same
+        if (fRef->arguments.size() != methodCall->arguments.size()) {
+            return NULL;
+        }
+        if (fRef->arguments.size() > 0 && methodCall->arguments.size() > 0) {
+            //Find arguments result types are correct
+            VariableIterator it1 = fRef->arguments.begin();
+            ExpressionIterator it2 = methodCall->arguments.begin();
+            do {
+                
+                int type1 = (**it1).type.resultType(*programBlock);
+                int type2 = (**it2).resultType(*programBlock);
+                if (type1 != type2) {
+                    if ((type1 == TDOUBLE && type2 == TINTEGER) || (type1 == TINTEGER && type2 == TDOUBLE)) {
+                        *it2 = transformVariableDeclaration(*it2, type1, block);
+                    }
+                }
+                it1++;
+                it2++;
+            } while(it1 != fRef->arguments.end() && it2 != methodCall->arguments.end());
+            return new NExpressionStatement(*methodCall);
+        }
+    }
+    return NULL;
 }

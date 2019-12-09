@@ -1,7 +1,8 @@
 int test(int x) {
 	int y = x + 2
 	int z = y * x + 2
-	int ww = z * -2
+	int ww
+	ww = z * -2
 	double dd = ww
 	string s = "The result is %f"
 	printf(s, dd)
