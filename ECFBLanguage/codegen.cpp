@@ -57,6 +57,9 @@ static Type* typeOf(const NIdentifier& type) {
         return Type::getDoubleTy(ecfbContext);
     } else if (type.name.compare("boolean") == 0) {
         return Type::getInt1Ty(ecfbContext);
+    } else if (type.name.compare("string") == 0) {
+        // get the length
+        return  ArrayType::get(llvm::IntegerType::get(ecfbContext, 8), 255);
     }
     return Type::getVoidTy(ecfbContext);
 }
@@ -80,19 +83,11 @@ Value * NDouble::codeGen(CodeGenContext& context) {
 Value * NString::codeGen(CodeGenContext &context) {
     std::cout << "Creating string: " << value << std::endl;
     const char* cValue = value->c_str();
-    size_t length = strlen(cValue);
+    size_t size = sizeof(cValue);
     
     llvm::Constant *stringConstant = llvm::ConstantDataArray::getString(ecfbContext, cValue);
-    
-    llvm::Constant *zero =
-    llvm::Constant::getNullValue(llvm::IntegerType::getInt32Ty(ecfbContext));
-    std::vector<llvm::Constant*> indices;
-    indices.push_back(zero);
-    indices.push_back(zero);
-    
-    llvm::Constant *string_var_ref = llvm::ConstantExpr::getGetElementPtr(
-    llvm::ArrayType::get(llvm::IntegerType::get(ecfbContext, 8), length+1), stringConstant, indices);
-    return string_var_ref;
+    llvm::GlobalVariable *varStr = new llvm::GlobalVariable(*context.module, ArrayType::get(llvm::IntegerType::get(ecfbContext, 8), size+1), true, llvm::GlobalValue::PrivateLinkage, stringConstant, ".varstr");
+    return varStr;
 }
 
 Value* NBoolean::codeGen(CodeGenContext& context) {
