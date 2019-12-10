@@ -1,13 +1,13 @@
 
 # Enrique's C language For Beginners (ECFB Language).
 
-## 1. Introduction
+## Introduction
 
 This project was born with two ideas in mind. One, to create a simple-enough-to-learn programming language, based on C/C++ for non-developers to engage into the developer world. Two, to allow me, and developers with more time in the business on how programming languages work, and how they can be done by any developer out there. Sometimes developers tend to learn one language to the fullest without understanding its core, or even thinking how it was made or what happens behind them. Understanding the different parts of a programming language will allow developers not to only have more knowledge on how languages work, but also on how different languages have similar attributes, that could be learnt faster if developers learn the attributes, rather than the language itself.
 
 Of course, this project wasn't made completely without proper knowledge of the tools and the IDE. I used different sources for my research, not only on the explanations of the tools but also in the creation of the language. I will expose them at the end of this readme. For now, let's move to the basic requirements for this project.
 
-## 1. Requirements
+## Requirements
 
 For this project, the developers will need to have an IDE that allows to work with C++, and that can connect other tools to the pipeline. These tools are for the creation of the C++ files that will be used to compile this command line tool. The tools in particular are Flex, Bison and LLVM. The tools for creating the lexicon and grammar are Flex and Bison respectively. LLVM is a library that will help us to create the intermediate code to be compiled. We're not going to use assembly directly, but instead we will use a library to create code in another language than ECFB.
 
