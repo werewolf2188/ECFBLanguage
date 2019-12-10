@@ -9,6 +9,9 @@
 #include "semantics_transformations.hpp"
 #include "parser.hpp"
 extern NBlock* programBlock;
+extern NFunctionDeclaration * echod;
+extern NFunctionDeclaration * echob;
+extern NFunctionDeclaration * echoi;
 
 void transformVariableDeclaration(NVariableDeclaration *vd, NBlock& block);
 
@@ -151,6 +154,18 @@ NMethodCall* transformMethodCallArguments(NMethodCall *methodCall, NBlock& block
             fRef = (NFunctionDeclaration *)(*it);
             break;
         }
+    }
+    if (methodCall->id.name.find(echod->id.name) != std::string::npos) {
+        fRef = echod;
+        exists = true;
+    } else if (methodCall->id.name.find(echob->id.name) != std::string::npos) {
+        fRef = echob;
+        exists = true;
+    } else if (methodCall->id.name.find(echoi->id.name) != std::string::npos) {
+        fRef = echoi;
+        exists = true;
+    } else if (methodCall->id.name.find(block.printf) != std::string::npos) {
+        return methodCall;
     }
     if (exists) {
         //Arguments size have to be the same

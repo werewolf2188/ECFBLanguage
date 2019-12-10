@@ -10,8 +10,40 @@
 #include "semantics.hpp"
 #include "parser.hpp"
 #include <typeinfo>
-
+#include <stdarg.h>
 extern NBlock* programBlock;
+extern NFunctionDeclaration * echod;
+extern NFunctionDeclaration * echob;
+extern NFunctionDeclaration * echoi;
+
+NVariableDeclaration* createArgument(const char* type, const char* name) {
+    NIdentifier* typeId = new NIdentifier(std::string(type));
+    NIdentifier* nameId = new NIdentifier(std::string(name));
+    return new NVariableDeclaration(*typeId, *nameId);
+}
+
+NFunctionDeclaration* createEmptyNFunctionDeclaration(const char* type, const char* name, int numArgs, ...) {
+    NIdentifier* typeId = new NIdentifier(std::string(type));
+    NIdentifier* nameId = new NIdentifier(std::string(name));
+    VariableList arguments;
+    va_list valist;
+    /* initialize valist for num number of arguments */
+    va_start(valist, numArgs);
+    /* access all the arguments assigned to valist */
+    for (int i = 0; i < numArgs; i++) {
+        arguments.push_back(va_arg(valist, NVariableDeclaration*));
+    }
+    /* clean memory reserved for valist */
+    va_end(valist);
+    
+    NBlock * block = new NBlock();
+    NFunctionDeclaration *function = new NFunctionDeclaration(*typeId, *nameId, arguments, *block);
+    return function;
+}
+
+NFunctionDeclaration * echod = createEmptyNFunctionDeclaration("void", "echod", 1, createArgument("double", "toPrint"));
+NFunctionDeclaration * echob = createEmptyNFunctionDeclaration("void", "echob", 1, createArgument("boolean", "toPrint"));
+NFunctionDeclaration * echoi = createEmptyNFunctionDeclaration("void", "echoi", 1, createArgument("int", "toPrint"));
 
 /* Validations */
 bool Node::validate(std::string& error, NBlock& currentBlock) {
@@ -113,9 +145,9 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
     }
     
     // We don't need to check the arguments for echod, echoi nor echob
-    if (this->id.name.find(currentBlock.echod) != std::string::npos
-        || this->id.name.find(currentBlock.echob) != std::string::npos
-        || this->id.name.find(currentBlock.echoi) != std::string::npos
+    if (this->id.name.find(echod->id.name) != std::string::npos
+        || this->id.name.find(echob->id.name) != std::string::npos
+        || this->id.name.find(echoi->id.name) != std::string::npos
         || this->id.name.find(currentBlock.printf) != std::string::npos) {
         for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
             if (!(**it).validate(error, currentBlock)) {
@@ -335,6 +367,15 @@ bool NVariableDeclaration::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NFunctionDeclaration::validate(std::string& error, NBlock& currentBlock) {
+    
+    if (this->id.name.find(echod->id.name) != std::string::npos
+    || this->id.name.find(echob->id.name) != std::string::npos
+    || this->id.name.find(echoi->id.name) != std::string::npos
+    || this->id.name.find(currentBlock.printf) != std::string::npos
+    || this->id.name.find(std::string("main")) != std::string::npos) {
+        error = std::string("Cannot overwrite function");
+        return false;
+    }
     
     int times = 0;
     StatementList functions = currentBlock.getFunctions();

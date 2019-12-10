@@ -207,9 +207,6 @@ protected:
     
 public:
     StatementList statements;
-    const std::string echod = "echod";
-    const std::string echob = "echob";
-    const std::string echoi = "echoi";
     const std::string printf = "printf";
     NBlock() { }
     inline void printString(int spaces) {
@@ -327,4 +324,8 @@ public:
     virtual llvm::Value* codeGen(CodeGenContext& context);
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
+
+extern NFunctionDeclaration *echod;
+extern NFunctionDeclaration *echob;
+extern NFunctionDeclaration *echoi;
 #endif /* semantics_h */
