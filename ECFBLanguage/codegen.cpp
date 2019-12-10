@@ -105,19 +105,6 @@ Value * NIdentifier::codeGen(CodeGenContext& context) {
     return new LoadInst(context.locals()[name], "", false, context.currentBlock());
 }
 
-Constant* getPointer(Constant* var, CodeGenContext& context) {
-    llvm::Constant *zero =
-        llvm::Constant::getNullValue(llvm::IntegerType::getInt32Ty(ecfbContext));
-
-    std::vector<llvm::Constant*> indices;
-    indices.push_back(zero);
-    indices.push_back(zero);
-    NIdentifier* id = new NIdentifier(std::string("string"));
-    
-    Constant *var_ref = ConstantExpr::getGetElementPtr(typeOf(*id), var, indices);
-    return var_ref;
-}
-
 Value * NMethodCall::codeGen(CodeGenContext& context) {
     Function *function = context.module->getFunction(id.name.c_str());
     if (function == NULL) {
