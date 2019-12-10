@@ -59,7 +59,8 @@ static Type* typeOf(const NIdentifier& type) {
         return Type::getInt1Ty(ecfbContext);
     } else if (type.name.compare("string") == 0) {
         // get the length
-        return  ArrayType::get(llvm::IntegerType::get(ecfbContext, 8), 255);
+        
+        return  ArrayType::get(llvm::IntegerType::get(ecfbContext, 8), 255)->getPointerTo();
     }
     return Type::getVoidTy(ecfbContext);
 }
@@ -102,6 +103,19 @@ Value * NIdentifier::codeGen(CodeGenContext& context) {
         return NULL;
     }
     return new LoadInst(context.locals()[name], "", false, context.currentBlock());
+}
+
+Constant* getPointer(Constant* var, CodeGenContext& context) {
+    llvm::Constant *zero =
+        llvm::Constant::getNullValue(llvm::IntegerType::getInt32Ty(ecfbContext));
+
+    std::vector<llvm::Constant*> indices;
+    indices.push_back(zero);
+    indices.push_back(zero);
+    NIdentifier* id = new NIdentifier(std::string("string"));
+    
+    Constant *var_ref = ConstantExpr::getGetElementPtr(typeOf(*id), var, indices);
+    return var_ref;
 }
 
 Value * NMethodCall::codeGen(CodeGenContext& context) {

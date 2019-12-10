@@ -10,10 +10,9 @@ int test(int x) {
 	
 }
 
-// This one does not work
-//void test2(string t) {
-//	printf(t)
-//}
+void test2(string t) {
+	printf(t)
+}
 
 boolean b = 4.5 > 3.7
 echob(!b)
@@ -23,4 +22,4 @@ echob(true)
 echob(true != false)
 echoi(test(5.5))
 
-// test2("Good bye")
+test2("Good bye")
