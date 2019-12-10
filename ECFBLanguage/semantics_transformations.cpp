@@ -19,7 +19,7 @@ NExpression* transformFloat(NExpression * previousValue, int expectedType, NBloc
 NExpression* transformMethod(NExpression * previousValue, int expectedType, NBlock& block);
 NExpression* transformIdentifier(NExpression * previousValue, int expectedType, NBlock& block);
 NExpression* transformBinaryExpression(NBinaryOperator * previousBinaryOperator, int expectedType, NBlock& block);
-NExpressionStatement* transformMethodCallArguments(NMethodCall *methodCall, NBlock& block);
+NMethodCall* transformMethodCallArguments(NMethodCall *methodCall, NBlock& block);
 
 
 void transform(NBlock& block) {
@@ -50,9 +50,9 @@ void transform(NBlock& block) {
                 *it = nExpressionStatement;
             } else if(name.find("NMethodCall") != std::string::npos) {
                 NMethodCall *methodCall = ((NMethodCall*)&((*exprSt).expression));
-                NExpressionStatement * nExpressionStatement = transformMethodCallArguments(methodCall, block);
-                if (nExpressionStatement != NULL)
-                    *it = nExpressionStatement;
+                methodCall = transformMethodCallArguments(methodCall, block);
+                if (methodCall != NULL)
+                    *it = new NExpressionStatement(*methodCall);
             }
         }
     }
@@ -134,13 +134,13 @@ NExpression* transformMethod(NExpression * previousValue, int expectedType, NBlo
     if (previousValue->resultType(block) != expectedType) {
            
            NIdentifier *id = new NIdentifier(std::string(expectedType == TDOUBLE ? "double" : "int"));
-           return new NDataConversion(*id, *previousValue);
+           return new NDataConversion(*id, *(transformMethodCallArguments((NMethodCall*)previousValue, block)));
        }
-       return previousValue;
+       return transformMethodCallArguments((NMethodCall*)previousValue, block);
 }
 
 
-NExpressionStatement* transformMethodCallArguments(NMethodCall *methodCall, NBlock& block) {
+NMethodCall* transformMethodCallArguments(NMethodCall *methodCall, NBlock& block) {
     bool exists = false;
     NFunctionDeclaration *fRef = NULL;
     
@@ -170,10 +170,14 @@ NExpressionStatement* transformMethodCallArguments(NMethodCall *methodCall, NBlo
                         *it2 = transformVariableDeclaration(*it2, type1, block);
                     }
                 }
+                std::string name = typeid(**it2).name();
+                if (name.find("NMethodCall") != std::string::npos) {
+                   *it2 = transformMethodCallArguments((NMethodCall*)(*it2), block);
+                }
                 it1++;
                 it2++;
             } while(it1 != fRef->arguments.end() && it2 != methodCall->arguments.end());
-            return new NExpressionStatement(*methodCall);
+            return methodCall;
         }
     }
     return NULL;
