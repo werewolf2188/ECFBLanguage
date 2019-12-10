@@ -115,7 +115,7 @@ test()
 test2("Good bye World")
 ```
 
-The project is taking the file inside the examples folder. This file is being passed in the arguments array. This value can be modifiied by going to the scheme and edit. Just select the scheme -> Edit scheme -> Run -> Arguments.
+The project is taking the file inside the examples folder. This file is being passed in the arguments array. This value can be modified by going to the scheme and edit it. Just select the scheme -> Edit scheme -> Run -> Arguments.
 
 This is a version for recreational purposes, but later versions (until it's first release) will have more C stuff in it (comparisons [and, or], if/while statements).  The final version will allow to pass the file name and either execute it or build a executable.
 
