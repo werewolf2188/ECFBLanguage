@@ -57,6 +57,10 @@ static Type* typeOf(const NIdentifier& type) {
         return Type::getDoubleTy(ecfbContext);
     } else if (type.name.compare("boolean") == 0) {
         return Type::getInt1Ty(ecfbContext);
+    } else if (type.name.compare("string") == 0) {
+        // get the length
+        
+        return  ArrayType::get(llvm::IntegerType::get(ecfbContext, 8), 255)->getPointerTo();
     }
     return Type::getVoidTy(ecfbContext);
 }
@@ -75,6 +79,16 @@ Value * NInteger::codeGen(CodeGenContext& context) {
 Value * NDouble::codeGen(CodeGenContext& context) {
     std::cout << "Creating double: " << value << std::endl;
     return ConstantFP::get(Type::getDoubleTy(ecfbContext), value);
+}
+
+Value * NString::codeGen(CodeGenContext &context) {
+    std::cout << "Creating string: " << value << std::endl;
+    const char* cValue = value->c_str();
+    size_t size = sizeof(cValue);
+    
+    llvm::Constant *stringConstant = llvm::ConstantDataArray::getString(ecfbContext, cValue);
+    llvm::GlobalVariable *varStr = new llvm::GlobalVariable(*context.module, ArrayType::get(llvm::IntegerType::get(ecfbContext, 8), size+1), true, llvm::GlobalValue::PrivateLinkage, stringConstant, ".varstr");
+    return varStr;
 }
 
 Value* NBoolean::codeGen(CodeGenContext& context) {

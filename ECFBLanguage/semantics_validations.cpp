@@ -10,8 +10,40 @@
 #include "semantics.hpp"
 #include "parser.hpp"
 #include <typeinfo>
-
+#include <stdarg.h>
 extern NBlock* programBlock;
+extern NFunctionDeclaration * echod;
+extern NFunctionDeclaration * echob;
+extern NFunctionDeclaration * echoi;
+
+NVariableDeclaration* createArgument(const char* type, const char* name) {
+    NIdentifier* typeId = new NIdentifier(std::string(type));
+    NIdentifier* nameId = new NIdentifier(std::string(name));
+    return new NVariableDeclaration(*typeId, *nameId);
+}
+
+NFunctionDeclaration* createEmptyNFunctionDeclaration(const char* type, const char* name, int numArgs, ...) {
+    NIdentifier* typeId = new NIdentifier(std::string(type));
+    NIdentifier* nameId = new NIdentifier(std::string(name));
+    VariableList arguments;
+    va_list valist;
+    /* initialize valist for num number of arguments */
+    va_start(valist, numArgs);
+    /* access all the arguments assigned to valist */
+    for (int i = 0; i < numArgs; i++) {
+        arguments.push_back(va_arg(valist, NVariableDeclaration*));
+    }
+    /* clean memory reserved for valist */
+    va_end(valist);
+    
+    NBlock * block = new NBlock();
+    NFunctionDeclaration *function = new NFunctionDeclaration(*typeId, *nameId, arguments, *block);
+    return function;
+}
+
+NFunctionDeclaration * echod = createEmptyNFunctionDeclaration("void", "echod", 1, createArgument("double", "toPrint"));
+NFunctionDeclaration * echob = createEmptyNFunctionDeclaration("void", "echob", 1, createArgument("boolean", "toPrint"));
+NFunctionDeclaration * echoi = createEmptyNFunctionDeclaration("void", "echoi", 1, createArgument("int", "toPrint"));
 
 /* Validations */
 bool Node::validate(std::string& error, NBlock& currentBlock) {
@@ -27,6 +59,10 @@ bool NDouble::validate(std::string& error, NBlock& currentBlock) {
     return true;
 }
 
+bool NString::validate(std::string &error, NBlock &currentBlock) {
+    return true;
+}
+
 bool NBoolean::validate(std::string& error, NBlock& currentBlock) {
     if (stringValue.compare("true") != 0 && stringValue.compare("false")) {
         error = std::string("Boolean value only accepts true or false");
@@ -36,7 +72,7 @@ bool NBoolean::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NIdentifier::isType() {
-    return name.compare("int") == 0 || name.compare("double") == 0 || name.compare("void") == 0 || name.compare("boolean") == 0;
+    return name.compare("int") == 0 || name.compare("double") == 0 || name.compare("void") == 0 || name.compare("boolean") == 0  || name.compare("string") == 0;
 }
 
 bool NIdentifier::validate(std::string& error, NBlock& currentBlock) {
@@ -109,9 +145,10 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
     }
     
     // We don't need to check the arguments for echod, echoi nor echob
-    if (this->id.name.find(currentBlock.echod) != std::string::npos
-        || this->id.name.find(currentBlock.echob) != std::string::npos
-        || this->id.name.find(currentBlock.echoi) != std::string::npos) {
+    if (this->id.name.find(echod->id.name) != std::string::npos
+        || this->id.name.find(echob->id.name) != std::string::npos
+        || this->id.name.find(echoi->id.name) != std::string::npos
+        || this->id.name.find(currentBlock.printf) != std::string::npos) {
         for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
             if (!(**it).validate(error, currentBlock)) {
                 return false;
@@ -156,6 +193,12 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NBinaryOperator::validate(std::string& error, NBlock& currentBlock) {
+    
+    if (this->lhs.resultType(currentBlock) == TSTRING || this->rhs.resultType(currentBlock) == TSTRING) {
+        error = std::string("Binary operand cannot be applied to string");
+        return false;
+    }
+    
     switch (op) {
         case TPLUS:
         case TMINUS:
@@ -193,6 +236,12 @@ bool NBinaryOperator::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NUnaryOperator::validate(std::string &error, NBlock &currentBlock) {
+    
+    if (this->rhs.resultType(currentBlock) == TSTRING) {
+        error = std::string("Binary operand cannot be applied to string");
+        return false;
+    }
+    
     this->resultType(currentBlock);
     switch (op) {
         case TMINUS:
@@ -213,7 +262,7 @@ bool NDataConversion::validate(std::string &error, NBlock &currentBlock) {
     if (!this->type.isType()) {
         error = std::string("Type casting not using a type");
         return false;
-    } else if (this->type.resultType(currentBlock) == TBOOLEAN || this->type.resultType(currentBlock) == -1
+    } else if (this->type.resultType(currentBlock) == TBOOLEAN || this->type.resultType(currentBlock) == TSTRING || this->type.resultType(currentBlock) == -1
                || (this->rhs.resultType(currentBlock) != TDOUBLE && this->rhs.resultType(currentBlock) != TINTEGER)) {
         error = std::string("Type casting cannot happen with non number types");
         return false;
@@ -319,6 +368,15 @@ bool NVariableDeclaration::validate(std::string& error, NBlock& currentBlock) {
 
 bool NFunctionDeclaration::validate(std::string& error, NBlock& currentBlock) {
     
+    if (this->id.name.find(echod->id.name) != std::string::npos
+    || this->id.name.find(echob->id.name) != std::string::npos
+    || this->id.name.find(echoi->id.name) != std::string::npos
+    || this->id.name.find(currentBlock.printf) != std::string::npos
+    || this->id.name.find(std::string("main")) != std::string::npos) {
+        error = std::string("Cannot overwrite function");
+        return false;
+    }
+    
     int times = 0;
     StatementList functions = currentBlock.getFunctions();
     for (StatementIterator it = functions.begin(); it != functions.end(); it++) {
@@ -395,6 +453,10 @@ int NDouble::resultType(NBlock& currentBlock) {
 int NBoolean::resultType(NBlock& currentBlock) {
     return TBOOLEAN;
 }
+
+int NString::resultType(NBlock &currentBlock) {
+    return TSTRING;
+}
  
 int NIdentifier::resultType(NBlock& currentBlock) {
     if (name.compare("int") == 0) {
@@ -403,7 +465,9 @@ int NIdentifier::resultType(NBlock& currentBlock) {
         return TDOUBLE;
     } else if (name.compare("boolean") == 0) {
         return TBOOLEAN;
-    } else {
+    } else if (name.compare("string") == 0) {
+        return TSTRING;
+    }else {
         for (VariableIterator it = currentBlock.getVariables().begin(); it != currentBlock.getVariables().end(); it++) {
             std::string vName = (**it).id.name;
             if (vName.compare(name) == 0) {

@@ -863,7 +863,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-{ printf("its a string \n"); }
+{ SAVE_TOKEN; return TSTRING; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP

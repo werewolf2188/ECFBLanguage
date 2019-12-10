@@ -36,7 +36,7 @@ extern "C" int analyze_tokens();
 "*"                     { return TOKEN(TMUL);  }
 "/"                     { return TOKEN(TDIV); }
 "%"                     { return TOKEN(TREMAIN); }
-\".*\"                  { printf("its a string \n"); }
+\".*\"                  { SAVE_TOKEN; return TSTRING; }
 .                       { printf("This is not a correct token\n"); yyterminate(); }
 
 %%
