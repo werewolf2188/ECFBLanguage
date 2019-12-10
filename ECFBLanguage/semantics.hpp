@@ -88,7 +88,11 @@ public:
 class NString : public NExpression {
 public:
     std::string * value;
-    NString(std::string * value) : value(value) { }
+    NString(std::string * value) {
+        value->erase(std::remove(value->begin(), value->end(), '\"'), value->end());
+        value->append("\n");
+        this->value = value;
+    }
     inline void printString(int spaces) {
         std::cout << std::string(spaces, '\t') << "String Expression: " << *value << std::endl;
     }

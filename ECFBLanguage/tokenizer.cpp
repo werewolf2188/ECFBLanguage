@@ -489,7 +489,6 @@ char *yytext;
 #define SAVE_TOKEN yylval.string = new std::string(yytext, yyleng)
 #define TOKEN(t) (yylval.token = t)
 extern "C" int analyze_tokens();
-extern "C" void removeChar(char *str, char garbage);
 /*** Rule Section ***/
 
 #define INITIAL 0
@@ -864,7 +863,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-{ removeChar(yytext, '"'); printf(yytext); SAVE_TOKEN; return TSTRING; }
+{ SAVE_TOKEN; return TSTRING; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
@@ -1872,16 +1871,6 @@ void yyfree (void * ptr )
 
 /*** Code Section ***/
 int yywrap() { return 1; }
-
-void removeChar(char *str, char garbage) {
-
-    char *src, *dst;
-    for (src = dst = str; *src != '\0'; src++) {
-        *dst = *src;
-        if (*dst != garbage) dst++;
-    }
-    *dst = '\0';
-}
 
 int analyze_tokens() {
   

@@ -4,7 +4,7 @@ int test(int x) {
 	int ww
 	ww = z * -2
 	double dd = ww
-	string s = "The result is %f "
+	string s = "The result is %f"
 	printf(s, dd)
 	return (int)dd % 7
 	
