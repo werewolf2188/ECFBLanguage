@@ -12,6 +12,7 @@ int test(int x) {
 
 void test2(string t) {
 	printf(t)
+	double de = 2.4 + 3 - 4.2 + 5
 }
 
 boolean b = 4.5 > 3.7

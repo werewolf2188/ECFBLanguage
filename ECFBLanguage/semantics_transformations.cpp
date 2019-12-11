@@ -111,9 +111,11 @@ NExpression* transformInt(NExpression * previousValue, int expectedType, NBlock&
 
 NExpression* transformBinaryExpression(NBinaryOperator * previousBinaryOperator, int expectedType, NBlock& block) {
     int type = previousBinaryOperator->resultType(block);
-    previousBinaryOperator->lhs = *transformVariableDeclaration(&previousBinaryOperator->lhs, expectedType, block);
-    previousBinaryOperator->rhs = *transformVariableDeclaration(&previousBinaryOperator->rhs, expectedType, block);
-    return transformIdentifier(previousBinaryOperator, expectedType, block);
+    NBinaryOperator * newBinary = new NBinaryOperator(
+                                                      *transformVariableDeclaration(&previousBinaryOperator->lhs, expectedType, block),
+                                                      previousBinaryOperator->op,
+                                                      *transformVariableDeclaration(&previousBinaryOperator->rhs, expectedType, block));
+    return transformIdentifier(newBinary, expectedType, block);
 }
 
 NExpression* transformFloat(NExpression * previousValue, int expectedType, NBlock& block) {
