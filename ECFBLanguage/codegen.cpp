@@ -124,6 +124,7 @@ Value * NBinaryOperator::codeGen(CodeGenContext& context) {
     Instruction::BinaryOps instr;
     ICmpInst::Predicate cmpPred;
     FCmpInst::Predicate cmpFPred;
+    // There's a bug in here
     bool lhsIsDouble = std::string(typeid(lhs).name()).find("Double") != std::string::npos;
     bool rhsIsDouble = std::string(typeid(rhs).name()).find("Double") != std::string::npos;
     switch (op) {

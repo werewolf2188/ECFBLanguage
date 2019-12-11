@@ -205,30 +205,36 @@ bool NBinaryOperator::validate(std::string& error, NBlock& currentBlock) {
         case TMUL:
         case TDIV:
         case TREMAIN:
-            if (lhs.resultType(currentBlock) == TBOOLEAN) {
+            if (lhs.resultType(currentBlock) != TDOUBLE && lhs.resultType(currentBlock) != TINTEGER) {
                 error = std::string("Left value has to return a number");
-            } else if (rhs.resultType(currentBlock) == TBOOLEAN) {
+            } else if (rhs.resultType(currentBlock) != TDOUBLE && rhs.resultType(currentBlock) != TINTEGER) {
                 error = std::string("Right value has to return a number");
             } else return lhs.validate(error, currentBlock) && rhs.validate(error, currentBlock);
             break;
         case TCEQ:
         case TCNE:
+            if ((lhs.resultType(currentBlock) != TSTRING  && lhs.resultType(currentBlock) != -1
+                 && rhs.resultType(currentBlock) != TSTRING && rhs.resultType(currentBlock) != -1)) {
+                return lhs.validate(error, currentBlock) && rhs.validate(error, currentBlock);
+            }
+            else if (lhs.resultType(currentBlock) == TSTRING || lhs.resultType(currentBlock) == -1) {
+                error = std::string("Left value has to return a number or a boolean");
+            } else if (rhs.resultType(currentBlock) == TSTRING || rhs.resultType(currentBlock) == -1) {
+                error = std::string("Right value has to return a number or a boolean");
+            }
+            break;
         case TCLT:
         case TCLE:
         case TCGT:
         case TCGE:
-            
-            bool lhsIsNumber = std::string(typeid(lhs).name()).find("Integer") != std::string::npos || std::string(typeid(lhs).name()).find("Double") != std::string::npos;
-            bool rhsIsNumber = std::string(typeid(rhs).name()).find("Integer") != std::string::npos || std::string(typeid(rhs).name()).find("Double") != std::string::npos;
-            
-            if ((lhs.resultType(currentBlock) == TBOOLEAN && rhs.resultType(currentBlock) == TBOOLEAN)
-                || (lhsIsNumber && rhsIsNumber)) {
+            if ((lhs.resultType(currentBlock) == TDOUBLE || lhs.resultType(currentBlock) == TINTEGER)
+                && (rhs.resultType(currentBlock) == TDOUBLE || rhs.resultType(currentBlock) == TINTEGER)) {
                 return lhs.validate(error, currentBlock) && rhs.validate(error, currentBlock);
             }
-            else if (lhs.resultType(currentBlock) != TBOOLEAN ) {
-                error = std::string("Left value has to return a boolean");
-            } else if (rhs.resultType(currentBlock) != TBOOLEAN) {
-                error = std::string("Right value has to return a boolean");
+            else if (lhs.resultType(currentBlock) != TDOUBLE && lhs.resultType(currentBlock) != TINTEGER) {
+                error = std::string("Left value has to return a number");
+            } else if (rhs.resultType(currentBlock) != TDOUBLE && rhs.resultType(currentBlock) != TINTEGER) {
+                error = std::string("Right value has to return a number");
             }
             break;
     }
