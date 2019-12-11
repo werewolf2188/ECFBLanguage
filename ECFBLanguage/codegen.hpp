@@ -38,6 +38,7 @@ static LLVMContext ecfbContext;
 class CodeGenBlock {
 public:
     BasicBlock *block;
+    NBlock* nBlock;
     Value *returnValue;
     std::map<std::string, Value*> locals;
 };
@@ -64,9 +65,14 @@ public:
         return blocks.top()->block;
     }
     
-    void pushBlock(BasicBlock* block) {
+    NBlock& currentNBlock() {
+        return *(blocks.top()->nBlock);
+    }
+    
+    void pushBlock(BasicBlock* block, NBlock* nBlock) {
         blocks.push(new CodeGenBlock());
         blocks.top()->block = block;
+        blocks.top()->nBlock = nBlock;
     }
     
     void popBlock() {

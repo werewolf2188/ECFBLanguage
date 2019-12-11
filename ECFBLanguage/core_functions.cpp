@@ -75,7 +75,7 @@ void createEchoBooleanFunction(CodeGenContext& context, llvm::Function* printfFn
     
     // Block echob
     llvm::BasicBlock *bblock = llvm::BasicBlock::Create(ecfbContext, "entry", func, 0);
-    context.pushBlock(bblock);
+    context.pushBlock(bblock, NULL);
     
     //For the purpose of adding zero at the end of the string, lets create a null constant
     llvm::Constant *zero =
@@ -128,7 +128,7 @@ void createEchoFunction(CodeGenContext& context, llvm::Function* printfFn, const
                 context.module
            );
     llvm::BasicBlock *bblock = llvm::BasicBlock::Create(ecfbContext, "entry", func, 0);
-    context.pushBlock(bblock);
+    context.pushBlock(bblock, NULL);
     
     llvm::Constant *format_const = llvm::ConstantDataArray::getString(ecfbContext, constValue);
     llvm::GlobalVariable *var =
