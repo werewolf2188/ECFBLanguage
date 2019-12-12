@@ -15,7 +15,7 @@ void test2(string t) {
 	double de = 2.4 + 3 - 4.2 + 5
 }
 
-boolean b = 4.5 > 3.7
+boolean b = ((4 + 3) > (2.3 - 4.6)) && (3 > 4)
 boolean c = b && true
 boolean dee = c || false
 echob(!b)

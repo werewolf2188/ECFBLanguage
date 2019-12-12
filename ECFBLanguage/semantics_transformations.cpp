@@ -82,7 +82,6 @@ void transformVariableDeclaration(NVariableDeclaration *vd, NBlock& block) {
     
 }
 NExpression* transformVariableDeclaration(NExpression *previousExpression, int expectedType, NBlock& block) {
-    // TODO: Balance binary operators inside boolean assignments
     if (expectedType != TBOOLEAN && expectedType != TSTRING && expectedType != -1) {
         std::string name = typeid((*previousExpression)).name();
         
@@ -96,6 +95,16 @@ NExpression* transformVariableDeclaration(NExpression *previousExpression, int e
             return transformInt(previousExpression, expectedType, block);
         } else if (name.find("NMethodCall") != std::string::npos) {
             return transformMethod(previousExpression, expectedType, block);
+        }
+    } else if (expectedType == TBOOLEAN) {
+        std::string name = typeid((*previousExpression)).name();
+        
+        if (name.find("NBinaryOperator") != std::string::npos) {
+            NBinaryOperator * oper = (NBinaryOperator *)previousExpression;
+            int newExpectedType = oper->lhs.resultType(block);
+            NExpression * lhs = (transformVariableDeclaration(&oper->lhs, newExpectedType, block));
+            NExpression * rhs = (transformVariableDeclaration(&oper->rhs, newExpectedType, block));
+            return new NBinaryOperator(*lhs, oper->op, *rhs);
         }
     }
     return previousExpression;
