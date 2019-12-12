@@ -21,7 +21,7 @@ void CodeGenContext::generateCode(NBlock &block) {
     BasicBlock *bblock = BasicBlock::Create(ecfbContext, "entry", mainFunction);
     
     /* Push a new variable/block context */
-    pushBlock(bblock);
+    pushBlock(bblock, &block);
     block.codeGen(*this); /* Emit bytecode for the top level block */
     ReturnInst::Create(ecfbContext, bblock);
     popBlock();
@@ -124,8 +124,10 @@ Value * NBinaryOperator::codeGen(CodeGenContext& context) {
     Instruction::BinaryOps instr;
     ICmpInst::Predicate cmpPred;
     FCmpInst::Predicate cmpFPred;
-    bool lhsIsDouble = std::string(typeid(lhs).name()).find("Double") != std::string::npos;
-    bool rhsIsDouble = std::string(typeid(rhs).name()).find("Double") != std::string::npos;
+    // There's a bug in here
+    
+    bool lhsIsDouble = lhs.resultType(context.currentNBlock()) == TDOUBLE;
+    bool rhsIsDouble = rhs.resultType(context.currentNBlock()) == TDOUBLE;
     switch (op) {
         case TPLUS: instr = this->resultingType == TDOUBLE ? Instruction::FAdd : Instruction::Add; goto math;
         case TMINUS: instr = this->resultingType == TDOUBLE ? Instruction::FSub : Instruction::Sub; goto math;
@@ -170,6 +172,10 @@ Value * NBinaryOperator::codeGen(CodeGenContext& context) {
             } else  {
                 cmpPred = ICmpInst::ICMP_UGE; goto compInt;
             }
+        case TAND:
+            instr = Instruction::And; goto math;
+        case TOR:
+            instr = Instruction::Or; goto math;
     }
     
     return NULL;
@@ -266,7 +272,7 @@ Value * NFunctionDeclaration::codeGen(CodeGenContext& context) {
     Function* function = Function::Create(fType, GlobalValue::InternalLinkage, id.name.c_str(), context.module);
     BasicBlock* bblock = BasicBlock::Create(ecfbContext, "entry", function, 0);
     
-    context.pushBlock(bblock);
+    context.pushBlock(bblock, &block);
     
     Function::arg_iterator argsValues = function->arg_begin();
     Value* argumentValue;

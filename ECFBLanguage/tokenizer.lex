@@ -36,6 +36,8 @@ extern "C" int analyze_tokens();
 "*"                     { return TOKEN(TMUL);  }
 "/"                     { return TOKEN(TDIV); }
 "%"                     { return TOKEN(TREMAIN); }
+"&&"                    { return TOKEN(TAND); }
+"||"                    { return TOKEN(TOR); }
 \".*\"                  { SAVE_TOKEN; return TSTRING; }
 .                       { printf("This is not a correct token\n"); yyterminate(); }
 
