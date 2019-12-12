@@ -81,7 +81,7 @@ The programming language syntax for this compiler is very similar to a C like pr
 * Simple binary operations (+, -, *, /, % )
 * Simple binary comparisons between numbers (<, <=, >, >=, ==, !=)
 * And/Or operations (&&, ||)
-* Simple unary operators (-. !)
+* Simple unary operators (-, !)
 * Functions (int test(...) { ... return x } or void test2()  )
 * The use of the funtion echoi (echoi(x + 2)), echod (echod(y + 2.4), or echob (echob(false)))
 * conversions between doubles and ints
