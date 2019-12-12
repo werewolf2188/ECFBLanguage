@@ -172,6 +172,10 @@ Value * NBinaryOperator::codeGen(CodeGenContext& context) {
             } else  {
                 cmpPred = ICmpInst::ICMP_UGE; goto compInt;
             }
+        case TAND:
+            instr = Instruction::And; goto math;
+        case TOR:
+            instr = Instruction::Or; goto math;
     }
     
     return NULL;

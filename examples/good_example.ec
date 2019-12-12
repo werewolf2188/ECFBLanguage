@@ -16,7 +16,11 @@ void test2(string t) {
 }
 
 boolean b = 4.5 > 3.7
+boolean c = b && true
+boolean dee = c || false
 echob(!b)
+echob(c)
+echob(dee)
 echoi(-1)
 echod(-4.5)
 echob(true)

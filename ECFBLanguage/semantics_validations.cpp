@@ -237,6 +237,19 @@ bool NBinaryOperator::validate(std::string& error, NBlock& currentBlock) {
                 error = std::string("Right value has to return a number");
             }
             break;
+        case TAND:
+        case TOR:
+            if ((lhs.resultType(currentBlock) == TBOOLEAN)
+                && (rhs.resultType(currentBlock) == TBOOLEAN)) {
+                return lhs.validate(error, currentBlock) && rhs.validate(error, currentBlock);
+            }
+            else if (lhs.resultType(currentBlock) != TBOOLEAN) {
+                error = std::string("Left value has to return a boolean");
+            } else if (rhs.resultType(currentBlock) != TBOOLEAN) {
+                error = std::string("Right value has to return a boolean");
+            }
+            break;
+            break;
     }
     return false;
 }
@@ -500,6 +513,8 @@ int NBinaryOperator::resultType(NBlock& currentBlock) {
         case TCLE: return TBOOLEAN;
         case TCGT: return TBOOLEAN;
         case TCGE: return TBOOLEAN;
+        case TAND: return TBOOLEAN;
+        case TOR: return TBOOLEAN;
     }
     return -1;
 }
