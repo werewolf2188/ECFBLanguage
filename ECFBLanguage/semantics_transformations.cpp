@@ -177,6 +177,8 @@ NMethodCall* transformMethodCallArguments(NMethodCall *methodCall, NBlock& block
         exists = true;
     } else if (methodCall->id.name.find(block.printf) != std::string::npos) {
         return methodCall;
+    } else if (methodCall->id.name.find(block.gets) != std::string::npos) {
+        return methodCall;
     }
     if (exists) {
         //Arguments size have to be the same

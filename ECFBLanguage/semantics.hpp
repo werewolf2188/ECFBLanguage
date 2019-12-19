@@ -212,6 +212,7 @@ protected:
 public:
     StatementList statements;
     const std::string printf = "printf";
+    const std::string gets = "gets";
     NBlock() { }
     inline void printString(int spaces) {
         std::cout << std::string(spaces, '\t') << "Block Expression: " << std::endl;

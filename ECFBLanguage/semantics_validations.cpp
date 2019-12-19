@@ -148,6 +148,7 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
     if (this->id.name.find(echod->id.name) != std::string::npos
         || this->id.name.find(echob->id.name) != std::string::npos
         || this->id.name.find(echoi->id.name) != std::string::npos
+        || this->id.name.find(currentBlock.gets) != std::string::npos
         || this->id.name.find(currentBlock.printf) != std::string::npos) {
         for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
             if (!(**it).validate(error, currentBlock)) {
@@ -390,6 +391,7 @@ bool NFunctionDeclaration::validate(std::string& error, NBlock& currentBlock) {
     if (this->id.name.find(echod->id.name) != std::string::npos
     || this->id.name.find(echob->id.name) != std::string::npos
     || this->id.name.find(echoi->id.name) != std::string::npos
+        || this->id.name.find(currentBlock.gets) != std::string::npos
     || this->id.name.find(currentBlock.printf) != std::string::npos
     || this->id.name.find(std::string("main")) != std::string::npos) {
         error = std::string("Cannot overwrite function");

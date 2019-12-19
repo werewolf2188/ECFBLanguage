@@ -12,6 +12,7 @@ int test(int x) {
 
 void test2(string t) {
 	printf(t)
+	//gets()
 	double de = 2.4 + 3 - 4.2 + 5
 }
 
