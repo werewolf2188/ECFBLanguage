@@ -253,13 +253,30 @@ public:
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
+class NIfStatement : public NStatement {
+    
+};
+
+class NWhileStatement : public NStatement {
+public:
+    NExpression& expression;
+    NBlock& block;
+    NWhileStatement(NExpression& expression, NBlock& block) : expression(expression), block(block) { }
+    inline void printString(int spaces) {
+        std::cout << std::string(spaces, '\t') << "While Statement: " << std::endl;
+        
+        this->expression.printString(spaces + 1);
+        this->block.printString(spaces + 1);
+    }
+};
+
 class NReturnStatement: public NStatement {
 public:
     NExpression& expression;
     NReturnStatement(NExpression& expression) :
         expression(expression) { }
     inline void printString(int spaces) {
-        std::cout << std::string(spaces, '\t') << "Return Declaration: " << std::endl;
+        std::cout << std::string(spaces, '\t') << "Return Statement: " << std::endl;
         
         this->expression.printString(spaces + 1);
     }

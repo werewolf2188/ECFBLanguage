@@ -12,6 +12,9 @@ extern "C" int analyze_tokens();
 [ \t\n]             ;
 [\S]                ;
 \/\/.*              ; //Comments in a one line
+"if"                    { return TOKEN(TIF); }
+"else"                  { return TOKEN(TELSE); }
+"while"                 { return TOKEN(TWHILE); }
 "return"                { return TOKEN(TRETURN); }
 "true"|"false"          { SAVE_TOKEN; return TBOOLEAN; }
 [a-zA-Z][a-zA-Z0-9\_]*  { SAVE_TOKEN; return TIDENTIFIER; }
