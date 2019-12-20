@@ -30,7 +30,7 @@
 %type <varvec> func_decl_args
 %type <exprvec> call_args
 %type <block> stmts block
-%type <stmt> program stmt var_decl func_decl while
+%type <stmt> program stmt var_decl func_decl while if
 %type <token> comparison
 %type <token> negative
 
@@ -48,9 +48,13 @@ stmts : stmt { $$ = new NBlock(); $$->statements.push_back($<stmt>1); }
 | stmts stmt { $1->statements.push_back($<stmt>2); }
 ;
         
-stmt : var_decl | func_decl | while
+stmt : var_decl | func_decl | while | if
 | expr { $$ = new NExpressionStatement(*$1); }
 | TRETURN expr { $$ = new NReturnStatement(*$2); }
+;
+
+if : TIF TLPAREN expr TRPAREN block { $$ = new NIfStatement(*$3, *$5); }
+| TIF TLPAREN expr TRPAREN block TELSE block { $$ = new NIfStatement(*$3, *$5, $7); }
 ;
 
 while : TWHILE TLPAREN expr TRPAREN block { $$ = new NWhileStatement(*$3, *$5); }

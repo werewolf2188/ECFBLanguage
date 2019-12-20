@@ -255,7 +255,26 @@ public:
 };
 
 class NIfStatement : public NStatement {
+public:
+    NExpression& expression;
+    NBlock& block;
+    NBlock* elseBlock = NULL;
+    NIfStatement(NExpression& expression, NBlock& block) :
+    expression(expression), block(block) {}
+    NIfStatement(NExpression& expression, NBlock& block, NBlock* elseBlock) :
+    expression(expression), block(block), elseBlock(elseBlock) {}
     
+    inline void printString(int spaces) {
+        std::cout << std::string(spaces, '\t') << "If Statement: " << std::endl;
+           
+        this->expression.printString(spaces + 1);
+        this->block.printString(spaces + 1);
+        
+        if (this->elseBlock != NULL) {
+            std::cout << std::string(spaces, '\t') << "else Statement: " << std::endl;
+            this->elseBlock->printString(spaces + 1);
+        }
+    }
 };
 
 class NWhileStatement : public NStatement {
