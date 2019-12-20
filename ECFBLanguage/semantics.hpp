@@ -275,6 +275,7 @@ public:
             this->elseBlock->printString(spaces + 1);
         }
     }
+    virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
 class NWhileStatement : public NStatement {
@@ -288,6 +289,7 @@ public:
         this->expression.printString(spaces + 1);
         this->block.printString(spaces + 1);
     }
+    virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
 class NReturnStatement: public NStatement {

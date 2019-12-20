@@ -337,6 +337,28 @@ bool NExpressionStatement::validate(std::string& error, NBlock& currentBlock) {
     return expression.validate(error, currentBlock);
 }
 
+bool NIfStatement::validate(std::string& error, NBlock& currentBlock) {
+    
+    if (this->expression.resultType(currentBlock) != TBOOLEAN) {
+        error = std::string("The evaluated expression has to be boolean");
+        return false;
+    }
+    bool elseBlockValid = true;
+    if (this->elseBlock != NULL) {
+        elseBlockValid = this->elseBlock->validate(error, currentBlock);
+    }
+    return this->expression.validate(error, currentBlock) && this->block.validate(error, currentBlock) && elseBlockValid;
+}
+
+bool NWhileStatement::validate(std::string& error, NBlock& currentBlock) {
+    
+    if (this->expression.resultType(currentBlock) != TBOOLEAN) {
+        error = std::string("The evaluated expression has to be boolean");
+        return false;
+    }
+    return this->expression.validate(error, currentBlock) && this->block.validate(error, currentBlock);
+}
+
 bool NReturnStatement::validate(std::string& error, NBlock& currentBlock) {
     return expression.validate(error, currentBlock);
 }

@@ -57,6 +57,22 @@ void transform(NBlock& block) {
                 if (methodCall != NULL)
                     *it = new NExpressionStatement(*methodCall);
             }
+        } else if (name.find("NIfStatement") != std::string::npos) {
+            NIfStatement *ifState = ((NIfStatement*)(*it));
+            NExpression * expr = transformVariableDeclaration(&ifState->expression, ifState->expression.resultType(block), block);
+            transform(ifState->block);
+            if (ifState->elseBlock != NULL) {
+                transform(*(ifState->elseBlock));
+                *it = new NIfStatement(*expr, ifState->block, ifState->elseBlock);
+            } else {
+                 *it = new NIfStatement(*expr, ifState->block);
+            }
+            
+        } else if (name.find("NWhileStatement") != std::string::npos) {
+            NWhileStatement *whileState = ((NWhileStatement*)(*it));
+            NExpression * expr = transformVariableDeclaration(&whileState->expression, whileState->expression.resultType(block), block);
+            transform(whileState->block);
+            *it = new NWhileStatement(*expr, whileState->block);            
         }
     }
 }
