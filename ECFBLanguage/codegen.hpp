@@ -9,8 +9,6 @@
 #ifndef codegen_h
 #define codegen_h
 
-#include <stack>
-#include <typeinfo>
 #include <llvm/IR/Module.h>
 #include <llvm/IR/Function.h>
 #include <llvm/IR/Type.h>
@@ -38,6 +36,7 @@ static LLVMContext ecfbContext;
 class CodeGenBlock {
 public:
     BasicBlock *block;
+    BasicBlock *endBlock;
     NBlock* nBlock;
     Value *returnValue;
     std::map<std::string, Value*> locals;
@@ -52,6 +51,7 @@ public:
     Module* module;
     CodeGenContext() {
         module = new Module("main", ecfbContext);
+        srand(time(nullptr));
     }
     
     void generateCode(NBlock& block);
@@ -69,10 +69,19 @@ public:
         return *(blocks.top()->nBlock);
     }
     
-    void pushBlock(BasicBlock* block, NBlock* nBlock) {
-        blocks.push(new CodeGenBlock());
-        blocks.top()->block = block;
-        blocks.top()->nBlock = nBlock;
+    void pushBlock(BasicBlock* block, NBlock* nBlock, BasicBlock * endBlock = nullptr) {
+        if (blocks.size() > 0) {
+            std::map<std::string, Value*>& previousLocals = locals();
+            blocks.push(new CodeGenBlock());
+            blocks.top()->block = block;
+            blocks.top()->nBlock = nBlock;
+            blocks.top()->locals = previousLocals;
+            blocks.top()->endBlock = endBlock;
+        } else {
+            blocks.push(new CodeGenBlock());
+            blocks.top()->block = block;
+            blocks.top()->nBlock = nBlock;
+        }
     }
     
     void popBlock() {
@@ -83,6 +92,18 @@ public:
     
     void setCurrentReturnValue(Value *value) {
         blocks.top()->returnValue = value;
+    }
+
+    void setCurrentLocals(std::map<std::string, Value*>& value) {
+        blocks.top()->locals = value;
+    }
+
+    BasicBlock* getCurrentEndBlock() {
+        return blocks.top()->endBlock;
+    }
+
+    bool isMain() {
+        return blocks.size() == 1;
     }
        
     Value* getCurrentReturnValue() {

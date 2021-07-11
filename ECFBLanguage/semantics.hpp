@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <llvm/IR/Value.h>
+#include <functional>
 
 class CodeGenContext;
 class NStatement;
@@ -29,11 +30,14 @@ typedef std::vector<NVariableDeclaration*>::iterator VariableIterator;
 class NBlock;
 
 class Node {
+protected:
+    bool generated = false;
 public:
     virtual ~Node() { }
     virtual llvm::Value* codeGen(CodeGenContext& context);
     virtual void printString(int spaces) { }
     virtual bool validate(std::string& error, NBlock& currentBlock);
+    inline bool wasGenerated() { return generated; }
 };
 
 class NExpression : public Node {
@@ -239,6 +243,23 @@ public:
     inline void addVariable(NVariableDeclaration * variable) { variables.push_back(variable); }
     inline VariableList getVariables() { return variables; }
     inline StatementList getFunctions() { return functions; }
+    inline NBlock& copy() {
+        NBlock *newBlock = new NBlock();
+        for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
+            if (!(*it)->wasGenerated()) {
+                newBlock->statements.push_back(*it);
+            }
+        }
+        newBlock->separateVariablesAndFunctions();
+        return *newBlock;
+    }
+    inline bool contains(std::function<bool(NStatement *)> function) {
+        bool cont = false;
+        for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
+            cont = function(*it);
+        }
+        return cont;
+    }
 };
 
 class NExpressionStatement : public NStatement {
@@ -275,6 +296,7 @@ public:
             this->elseBlock->printString(spaces + 1);
         }
     }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 

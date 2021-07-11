@@ -36,41 +36,50 @@ void transform(NBlock& block) {
     StatementList functions = block.getFunctions();
     for(StatementIterator it = functions.begin(); it != functions.end(); it++) {
         NFunctionDeclaration *function = ((NFunctionDeclaration *)(*it));
+        // Add variables from old block to new block
+        for (VariableIterator it = variables.begin(); it != variables.end(); it++) {
+            function->block.addVariable(*it);
+        }
         transform(function->block);
     }
     
     // Then we check each of the assignments to see that everything's ok.
     for(StatementIterator it = block.statements.begin(); it != block.statements.end(); it++) {
-        std::string name = typeid((**it)).name();
-        if (name.find("NExpressionStatement") != std::string::npos) {
-            NExpressionStatement *exprSt = ((NExpressionStatement*)(*it));
-            std::string name = typeid((*exprSt).expression).name();
-            if (name.find("NAssignment") != std::string::npos) {
-                NAssignment *assign = ((NAssignment*)&((*exprSt).expression));
+        if (NExpressionStatement *exprSt = dynamic_cast<NExpressionStatement *>(*it)) {
+            if (NAssignment *assign = dynamic_cast<NAssignment *>(&(exprSt->expression))) {
                 NExpression * nRHS = transformVariableDeclaration(&assign->rhs, assign->lhs.resultType(block), block);
                 NAssignment *nAssign = new NAssignment(assign->lhs, *nRHS);
                 NExpressionStatement * nExpressionStatement = new NExpressionStatement(*nAssign);
                 *it = nExpressionStatement;
-            } else if(name.find("NMethodCall") != std::string::npos) {
-                NMethodCall *methodCall = ((NMethodCall*)&((*exprSt).expression));
+            } else if(NMethodCall *methodCall = dynamic_cast<NMethodCall *>(&(exprSt->expression))) {
                 methodCall = transformMethodCallArguments(methodCall, block);
                 if (methodCall != NULL)
                     *it = new NExpressionStatement(*methodCall);
             }
-        } else if (name.find("NIfStatement") != std::string::npos) {
-            NIfStatement *ifState = ((NIfStatement*)(*it));
+        } else if (NIfStatement *ifState = dynamic_cast<NIfStatement *>(*it)) {
             NExpression * expr = transformVariableDeclaration(&ifState->expression, ifState->expression.resultType(block), block);
+            // Add variables from old block to new block
+            for (VariableIterator it = variables.begin(); it != variables.end(); it++) {
+                ifState->block.addVariable(*it);
+            }
+            ifState->block.separateVariablesAndFunctions();
             transform(ifState->block);
             if (ifState->elseBlock != NULL) {
+                // Add variables from old block to new block
+                for (VariableIterator it = variables.begin(); it != variables.end(); it++) {
+                    ifState->elseBlock->addVariable(*it);
+                }
+                ifState->elseBlock->separateVariablesAndFunctions();
                 transform(*(ifState->elseBlock));
                 *it = new NIfStatement(*expr, ifState->block, ifState->elseBlock);
             } else {
+                // Add variables from old block to new block
                  *it = new NIfStatement(*expr, ifState->block);
             }
             
-        } else if (name.find("NWhileStatement") != std::string::npos) {
-            NWhileStatement *whileState = ((NWhileStatement*)(*it));
+        } else if (NWhileStatement *whileState = dynamic_cast<NWhileStatement *>(*it)) {
             NExpression * expr = transformVariableDeclaration(&whileState->expression, whileState->expression.resultType(block), block);
+            // Add variables from old block to new block
             transform(whileState->block);
             *it = new NWhileStatement(*expr, whileState->block);            
         }
@@ -84,9 +93,7 @@ void transformVariableDeclaration(NVariableDeclaration *vd, NBlock& block) {
     } else {
         StatementList statements = block.statements;
         for(StatementIterator it = statements.begin(); it != statements.end(); it++) {
-            std::string name = typeid((**it)).name();
-            if (name.find("NAssignment") != std::string::npos) {
-                NAssignment *assign = ((NAssignment*)(*it));
+            if (NAssignment *assign = dynamic_cast<NAssignment*>(*it)) {
                 if (assign->lhs.name.compare(vd->id.name) == 0) {
                     assign->rhs = *transformVariableDeclaration(&assign->rhs, type, block);
                     break;
@@ -99,24 +106,21 @@ void transformVariableDeclaration(NVariableDeclaration *vd, NBlock& block) {
 }
 NExpression* transformVariableDeclaration(NExpression *previousExpression, int expectedType, NBlock& block) {
     if (expectedType != TBOOLEAN && expectedType != TSTRING && expectedType != -1) {
-        std::string name = typeid((*previousExpression)).name();
-        
-        if (name.find("NBinaryOperator") != std::string::npos) {
-            return transformBinaryExpression((NBinaryOperator *)previousExpression, expectedType, block);
-        } else if (name.find("NIdentifier") != std::string::npos) {
-            return transformIdentifier(previousExpression, expectedType, block);
-        } else if (name.find("NInteger") != std::string::npos) {
-            return transformFloat(previousExpression, expectedType, block);
-        } else if (name.find("NDouble") != std::string::npos) {
-            return transformInt(previousExpression, expectedType, block);
-        } else if (name.find("NMethodCall") != std::string::npos) {
-            return transformMethod(previousExpression, expectedType, block);
+        if (NBinaryOperator * binary = dynamic_cast<NBinaryOperator* >(previousExpression)) {
+            return transformBinaryExpression(binary, expectedType, block);
+        } else if (NIdentifier *id = dynamic_cast<NIdentifier*>(previousExpression)) {
+            return transformIdentifier(id, expectedType, block);
+        } else if (NInteger * intId = dynamic_cast<NInteger *>(previousExpression)) {
+            return transformFloat(intId, expectedType, block);
+        } else if (NDouble *doubleId = dynamic_cast<NDouble *>(previousExpression)) {
+            return transformInt(doubleId, expectedType, block);
+        } else if (NMethodCall *call = dynamic_cast<NMethodCall*>(previousExpression)) {
+            return transformMethod(call, expectedType, block);
         }
     } else if (expectedType == TBOOLEAN) {
         std::string name = typeid((*previousExpression)).name();
         
-        if (name.find("NBinaryOperator") != std::string::npos) {
-            NBinaryOperator * oper = (NBinaryOperator *)previousExpression;
+        if (NBinaryOperator * oper = dynamic_cast<NBinaryOperator* >(previousExpression)) {
             int newExpectedType = oper->lhs.resultType(block);
             NExpression * lhs = (transformVariableDeclaration(&oper->lhs, newExpectedType, block));
             NExpression * rhs = (transformVariableDeclaration(&oper->rhs, newExpectedType, block));
@@ -214,9 +218,8 @@ NMethodCall* transformMethodCallArguments(NMethodCall *methodCall, NBlock& block
                         *it2 = transformVariableDeclaration(*it2, type1, block);
                     }
                 }
-                std::string name = typeid(**it2).name();
-                if (name.find("NMethodCall") != std::string::npos) {
-                   *it2 = transformMethodCallArguments((NMethodCall*)(*it2), block);
+                if (NMethodCall *call = dynamic_cast<NMethodCall*>(*it2)) {
+                   *it2 = transformMethodCallArguments(call, block);
                 }
                 it1++;
                 it2++;

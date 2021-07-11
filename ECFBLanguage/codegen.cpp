@@ -10,6 +10,7 @@
 #include "semantics.hpp"
 #include "codegen.hpp"
 #include "parser.hpp"
+#include <sstream>
 
 /* Compile the AST into a module */
 void CodeGenContext::generateCode(NBlock &block) {
@@ -23,7 +24,7 @@ void CodeGenContext::generateCode(NBlock &block) {
     /* Push a new variable/block context */
     pushBlock(bblock, &block);
     block.codeGen(*this); /* Emit bytecode for the top level block */
-    ReturnInst::Create(ecfbContext, bblock);
+    ReturnInst::Create(ecfbContext, this->currentBlock());
     popBlock();
     
     /* Print the bytecode in a human-readable format to see if our program compiled properly
@@ -68,20 +69,24 @@ static Type* typeOf(const NIdentifier& type) {
 /* -- Code Generation -- */
 
 Value * Node::codeGen(CodeGenContext &context) {
+    this->generated = true;
     return NULL;
 }
 
 Value * NInteger::codeGen(CodeGenContext& context) {
+    this->generated = true;
     std::cout << "Creating integer: " << value << std::endl;
     return ConstantInt::get(Type::getInt64Ty(ecfbContext), value, true);
 }
 
 Value * NDouble::codeGen(CodeGenContext& context) {
+    this->generated = true;
     std::cout << "Creating double: " << value << std::endl;
     return ConstantFP::get(Type::getDoubleTy(ecfbContext), value);
 }
 
 Value * NString::codeGen(CodeGenContext &context) {
+    this->generated = true;
     std::cout << "Creating string: " << value << std::endl;
     const char* cValue = value->c_str();
     size_t size = sizeof(cValue);
@@ -92,11 +97,13 @@ Value * NString::codeGen(CodeGenContext &context) {
 }
 
 Value* NBoolean::codeGen(CodeGenContext& context) {
+    this->generated = true;
     std::cout << "Creating boolean: " << value << std::endl;
     return ConstantInt::get(Type::getInt1Ty(ecfbContext), (value ? 1 : 0));
 }
 
 Value * NIdentifier::codeGen(CodeGenContext& context) {
+    this->generated = true;
     std::cout << "Creating identifier reference: " << name << std::endl;
     if (context.locals().find(name) == context.locals().end()) {
         std::cerr << "undeclared variable " << name << std::endl;
@@ -106,6 +113,7 @@ Value * NIdentifier::codeGen(CodeGenContext& context) {
 }
 
 Value * NMethodCall::codeGen(CodeGenContext& context) {
+    this->generated = true;
     Function *function = context.module->getFunction(id.name.c_str());
     if (function == NULL) {
         std::cerr << "No such function " << id.name << std::endl;
@@ -120,6 +128,7 @@ Value * NMethodCall::codeGen(CodeGenContext& context) {
 }
 
 Value * NBinaryOperator::codeGen(CodeGenContext& context) {
+    this->generated = true;
     std::cout << "Creating binary operation " << op << std::endl;
     Instruction::BinaryOps instr;
     ICmpInst::Predicate cmpPred;
@@ -188,6 +197,7 @@ Value * NBinaryOperator::codeGen(CodeGenContext& context) {
 }
 
 Value * NUnaryOperator::codeGen(CodeGenContext &context) {
+    this->generated = true;
     std::cout << "Creating unary operation " << op << std::endl;
     switch (op) {
         case TMINUS:
@@ -208,6 +218,7 @@ Value * NUnaryOperator::codeGen(CodeGenContext &context) {
 }
 
 Value * NDataConversion::codeGen(CodeGenContext &context) {
+    this->generated = true;
     std::cout << "Creating Data Conversion for " << type.name << std::endl;
     
     if (resultingType == TDOUBLE && previousType == TINTEGER) {
@@ -220,6 +231,7 @@ Value * NDataConversion::codeGen(CodeGenContext &context) {
 }
 
 Value * NAssignment::codeGen(CodeGenContext& context) {
+    this->generated = true;
     std::cout << "Creating assignment for " << lhs.name << std::endl;
     if (context.locals().find(lhs.name) == context.locals().end()) {
         std::cerr << "Undeclared variable" << lhs.name << std::endl;
@@ -229,6 +241,7 @@ Value * NAssignment::codeGen(CodeGenContext& context) {
 }
 
 Value * NBlock::codeGen(CodeGenContext& context) {
+    this->generated = true;
     Value *last = NULL;
     for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
         std::cout << "Generating code for " << typeid(**it).name() << std::endl;
@@ -239,11 +252,13 @@ Value * NBlock::codeGen(CodeGenContext& context) {
 }
 
 Value * NExpressionStatement::codeGen(CodeGenContext& context) {
+    this->generated = true;
     std::cout << "Generating code for " << typeid(expression).name() << std::endl;
     return expression.codeGen(context);
 }
 
 Value* NReturnStatement::codeGen(CodeGenContext &context) {
+    this->generated = true;
     std::cout << "Generating return code for " << typeid(expression).name() << std::endl;
     Value *returnValue = expression.codeGen(context);
     context.setCurrentReturnValue(returnValue);
@@ -251,18 +266,35 @@ Value* NReturnStatement::codeGen(CodeGenContext &context) {
 }
 
 Value * NVariableDeclaration::codeGen(CodeGenContext& context) {
+    this->generated = true;
     std::cout << "Creating variable declaration " << type.name << " " << id.name << std::endl;
     
-    AllocaInst *alloc = new AllocaInst(typeOf(type), 0 ,id.name.c_str(), context.currentBlock());
-    context.locals()[id.name] = alloc;
-    if (assignmentExpr != NULL) {
-        NAssignment assn(id, *assignmentExpr);
-        assn.codeGen(context);
+    if (context.isMain()) {
+        GlobalVariable *variable = new GlobalVariable(*context.module,
+                                                      typeOf(type),
+                                                      false,
+                                                      GlobalValue::CommonLinkage,
+                                                      Constant::getNullValue(typeOf(type)),
+                                                      id.name.c_str());
+        context.locals()[id.name] = variable;
+        if (assignmentExpr != NULL) {
+            NAssignment assn(id, *assignmentExpr);
+            assn.codeGen(context);
+        }
+        return variable;
+    } else {
+        AllocaInst *alloc = new AllocaInst(typeOf(type), 0 ,id.name.c_str(), context.currentBlock());
+        context.locals()[id.name] = alloc;
+        if (assignmentExpr != NULL) {
+            NAssignment assn(id, *assignmentExpr);
+            assn.codeGen(context);
+        }
+        return alloc;
     }
-    return alloc;
 }
 
 Value * NFunctionDeclaration::codeGen(CodeGenContext& context) {
+    this->generated = true;
     std::vector<Type *> argTypes;
     for (VariableIterator it = arguments.begin(); it != arguments.end(); it++) {
         argTypes.push_back(typeOf((**it).type));
@@ -291,4 +323,56 @@ Value * NFunctionDeclaration::codeGen(CodeGenContext& context) {
     context.popBlock();
     std::cout << "Creating function: " << id.name << std::endl;
     return function;
+}
+
+Value * NIfStatement::codeGen(CodeGenContext& context) {
+    this->generated = true;
+    Value * exp = this->expression.codeGen(context);
+    uint id = rand();
+    std::stringstream trueName;
+    trueName << "trueBlock." << id;
+    std::stringstream falseName;
+    falseName << "falseBlock." << id;
+    std::stringstream endName;
+    endName << "endBlock." << id;
+
+    BasicBlock *trueBlock = BasicBlock::Create(ecfbContext, trueName.str(), context.currentBlock()->getParent());
+    BasicBlock *falseBlock = BasicBlock::Create(ecfbContext, falseName.str(), context.currentBlock()->getParent());
+    BasicBlock *endBlock = BasicBlock::Create(ecfbContext, endName.str(), context.currentBlock()->getParent());
+
+    if (context.getCurrentEndBlock()) {
+        BranchInst::Create(context.getCurrentEndBlock(), endBlock);
+    }
+
+    context.pushBlock(trueBlock, &this->block, endBlock);
+    this->block.codeGen(context);
+    context.popBlock();
+    if (this->elseBlock) {
+        context.pushBlock(falseBlock, this->elseBlock, endBlock);
+        this->elseBlock->codeGen(context);
+        context.popBlock();
+    }
+    
+    BranchInst::Create(trueBlock, falseBlock, exp, context.currentBlock());
+
+    auto containsIf = [&](NStatement *state) {
+        return dynamic_cast<NIfStatement *>(state) != nullptr;
+    };
+    if (!this->block.contains(containsIf)) {
+        BranchInst::Create(endBlock, trueBlock);
+    }
+    if (this->elseBlock != nullptr &&
+        !this->elseBlock->contains(containsIf)) {
+        BranchInst::Create(endBlock, falseBlock);
+    }
+
+    NBlock *nblock = &context.currentNBlock().copy();
+    auto locals = context.locals();
+    context.popBlock();
+    context.pushBlock(endBlock, nblock);
+    context.setCurrentLocals(locals);
+    
+    std::cout << "Creating if statement with ID: " << id << std::endl;
+    
+    return endBlock;
 }
