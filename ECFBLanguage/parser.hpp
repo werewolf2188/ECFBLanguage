@@ -65,7 +65,10 @@
      TMUL = 281,
      TDIV = 282,
      TREMAIN = 283,
-     TRETURN = 284
+     TRETURN = 284,
+     TIF = 285,
+     TELSE = 286,
+     TWHILE = 287
    };
 #endif
 /* Tokens.  */
@@ -96,6 +99,9 @@
 #define TDIV 282
 #define TREMAIN 283
 #define TRETURN 284
+#define TIF 285
+#define TELSE 286
+#define TWHILE 287
 
 
 

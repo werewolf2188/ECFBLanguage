@@ -108,6 +108,10 @@ boolean compare(int x, int y) {
     return (x == y) && (x > 4)
 }
 
+if (2 > 3) {
+    printf("I am in")
+}
+
 echoi(do_math(4))
 echoi(compare(5, 6))
 echod(2.6)
@@ -118,7 +122,7 @@ test2("Good bye World")
 
 The project is taking the file inside the examples folder. This file is being passed in the arguments array. This value can be modified by going to the scheme and edit it. Just select the scheme -> Edit scheme -> Run -> Arguments.
 
-This is a version for recreational purposes, but later versions (until it's first release) will have more C stuff in it (if/while statements).  The final version will allow to pass the file name and either execute it or build a executable.
+This is a version for recreational purposes, but later versions (until it's first release) will have more C stuff in it (while statements).  The final version will allow to pass the file name and either execute it or build a executable.
 
 ## References
 
@@ -126,5 +130,6 @@ This is a version for recreational purposes, but later versions (until it's firs
 * https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/
 * https://www.geeksforgeeks.org/flex-fast-lexical-analyzer-generator/
 * https://aquamentus.com/flex_bison.html
+* https://github.com/Virtual-Machine/llvm-tutorial-book
 
 

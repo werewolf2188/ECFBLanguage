@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <llvm/IR/Value.h>
+#include <functional>
 
 class CodeGenContext;
 class NStatement;
@@ -29,11 +30,14 @@ typedef std::vector<NVariableDeclaration*>::iterator VariableIterator;
 class NBlock;
 
 class Node {
+protected:
+    bool generated = false;
 public:
     virtual ~Node() { }
     virtual llvm::Value* codeGen(CodeGenContext& context);
     virtual void printString(int spaces) { }
     virtual bool validate(std::string& error, NBlock& currentBlock);
+    inline bool wasGenerated() { return generated; }
 };
 
 class NExpression : public Node {
@@ -212,6 +216,7 @@ protected:
 public:
     StatementList statements;
     const std::string printf = "printf";
+    const std::string gets = "gets";
     NBlock() { }
     inline void printString(int spaces) {
         std::cout << std::string(spaces, '\t') << "Block Expression: " << std::endl;
@@ -238,6 +243,23 @@ public:
     inline void addVariable(NVariableDeclaration * variable) { variables.push_back(variable); }
     inline VariableList getVariables() { return variables; }
     inline StatementList getFunctions() { return functions; }
+    inline NBlock& copy() {
+        NBlock *newBlock = new NBlock();
+        for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
+            if (!(*it)->wasGenerated()) {
+                newBlock->statements.push_back(*it);
+            }
+        }
+        newBlock->separateVariablesAndFunctions();
+        return *newBlock;
+    }
+    inline bool contains(std::function<bool(NStatement *)> function) {
+        bool cont = false;
+        for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
+            cont = function(*it);
+        }
+        return cont;
+    }
 };
 
 class NExpressionStatement : public NStatement {
@@ -253,13 +275,52 @@ public:
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 
+class NIfStatement : public NStatement {
+public:
+    NExpression& expression;
+    NBlock& block;
+    NBlock* elseBlock = NULL;
+    NIfStatement(NExpression& expression, NBlock& block) :
+    expression(expression), block(block) {}
+    NIfStatement(NExpression& expression, NBlock& block, NBlock* elseBlock) :
+    expression(expression), block(block), elseBlock(elseBlock) {}
+    
+    inline void printString(int spaces) {
+        std::cout << std::string(spaces, '\t') << "If Statement: " << std::endl;
+           
+        this->expression.printString(spaces + 1);
+        this->block.printString(spaces + 1);
+        
+        if (this->elseBlock != NULL) {
+            std::cout << std::string(spaces, '\t') << "else Statement: " << std::endl;
+            this->elseBlock->printString(spaces + 1);
+        }
+    }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+    virtual bool validate(std::string& error, NBlock& currentBlock);
+};
+
+class NWhileStatement : public NStatement {
+public:
+    NExpression& expression;
+    NBlock& block;
+    NWhileStatement(NExpression& expression, NBlock& block) : expression(expression), block(block) { }
+    inline void printString(int spaces) {
+        std::cout << std::string(spaces, '\t') << "While Statement: " << std::endl;
+        
+        this->expression.printString(spaces + 1);
+        this->block.printString(spaces + 1);
+    }
+    virtual bool validate(std::string& error, NBlock& currentBlock);
+};
+
 class NReturnStatement: public NStatement {
 public:
     NExpression& expression;
     NReturnStatement(NExpression& expression) :
         expression(expression) { }
     inline void printString(int spaces) {
-        std::cout << std::string(spaces, '\t') << "Return Declaration: " << std::endl;
+        std::cout << std::string(spaces, '\t') << "Return Statement: " << std::endl;
         
         this->expression.printString(spaces + 1);
     }

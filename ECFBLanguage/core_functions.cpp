@@ -15,6 +15,23 @@ using namespace std;
 extern int yyparse();
 extern NBlock* programBlock;
 
+llvm::Function* createGetSFunction(CodeGenContext& context) {
+    std::vector<llvm::Type*> gets_arg_types;
+       gets_arg_types.push_back(llvm::Type::getInt8PtrTy(ecfbContext)); //char*
+
+       llvm::FunctionType* gets_type =
+           llvm::FunctionType::get(
+               llvm::Type::getInt32Ty(ecfbContext), gets_arg_types, false);
+    
+    llvm::Function *func = llvm::Function::Create(
+         gets_type, llvm::Function::ExternalLinkage,
+         llvm::Twine("gets"),
+         context.module
+    );
+    
+    return func;
+}
+
 llvm::Function* createPrintfFunction(CodeGenContext& context)
 {
     std::vector<llvm::Type*> printf_arg_types;
@@ -22,7 +39,7 @@ llvm::Function* createPrintfFunction(CodeGenContext& context)
 
     llvm::FunctionType* printf_type =
         llvm::FunctionType::get(
-            llvm::Type::getInt32Ty(ecfbContext), printf_arg_types, true);
+            llvm::Type::getInt8PtrTy(ecfbContext), printf_arg_types, true);
 
     llvm::Function *func = llvm::Function::Create(
                 printf_type, llvm::Function::ExternalLinkage,
@@ -160,6 +177,7 @@ void createEchoFunction(CodeGenContext& context, llvm::Function* printfFn, const
 
 
 void createCoreFunctions(CodeGenContext& context) {
+    createGetSFunction(context);
     llvm::Function* printfFn = createPrintfFunction(context);
     createEchoFunction(context, printfFn, "%d\n", "echoi", llvm::Type::getInt64Ty(ecfbContext));
     createEchoFunction(context, printfFn, "%f\n", "echod", llvm::Type::getDoubleTy(ecfbContext));
