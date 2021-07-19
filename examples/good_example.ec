@@ -42,4 +42,15 @@ echob(true)
 echob(true != false)
 echoi(test(5.5))
 
+int xx = 0
+
+while (xx < 10) {
+	if ((xx % 2) == 0) {
+		printf("Prime")
+	} else {
+		printf("Not Prime")
+	}
+	xx = xx + 1
+}
+
 test2("Good bye")

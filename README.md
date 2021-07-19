@@ -11,7 +11,7 @@ Of course, this project wasn't made completely without proper knowledge of the t
 
 For this project, the developers will need to have an IDE that allows to work with C++, and that can connect other tools to the pipeline. These tools are for the creation of the C++ files that will be used to compile this command line tool. The tools in particular are Flex, Bison and LLVM. The tools for creating the lexicon and grammar are Flex and Bison respectively. LLVM is a library that will help us to create the intermediate code to be compiled. We're not going to use assembly directly, but instead we will use a library to create code in another language than ECFB.
 
-> I should warn the developer, I'm using a Macbook and my IDE is Xcode, as I'm a current iOS developer in duty, and I like to use it for experimental programs with C/C++ rather than using Eclipse-like IDEs. If the developer is coming from Windows, I recommend using Visual Studio since it has great capabilities for developing in C/C++, but the developer will have to create build rules for our Flex/Bison files in it's pipeline. For linux, I don't have experience.
+> I should warn the developer, I'm using a Macbook and my IDE is Xcode, as I'm a current iOS developer in duty, and I like to use it for experimental programs with C/C++ rather than using Eclipse-like IDEs. If the developer is coming from Windows, I recommend using Visual Studio since it has great capabilities for developing in C/C++, but the developer will have to create build rules for our Flex/Bison files in it's pipeline. For linux, I don't the have experience to give an advice.
 
 ### Flex
 
@@ -85,44 +85,103 @@ The programming language syntax for this compiler is very similar to a C like pr
 * Functions (int test(...) { ... return x } or void test2()  )
 * The use of the funtion echoi (echoi(x + 2)), echod (echod(y + 2.4), or echob (echob(false)))
 * conversions between doubles and ints
-* strings and printf
+* strings and printf, gets functions
+* If and While statements
 
 ```c
-int do_math(int a) {
-    int x = a * 2
-    double d = x * 4.3
-    return (int) d
+int a = 2
+
+int test(int x) {
+    int y = x + a
+    int z = y * x + 2
+    int ww
+    ww = z * -2
+    double dd = ww
+    string s = "The result is %f"
+    printf(s, dd)
+    return (int)dd % 7
+    
 }
 
-void test() {
-    echoi(5)
-    string s = "Hello World"
-    printf(s)
+void test2(string t) {
+    printf(t)
+    //gets()
+    double de = 2.4 + 3 - 4.2 + 5
 }
 
-void test2(string s) {
-    printf(s)
+boolean b = ((4 + 3) > (2.3 - 4.6)) && (3 > 4)
+boolean c = b && true
+boolean dee = c || false
+if (b) {
+    printf("B is true")
+    int x = 100
+    echoi(x)
+} else {
+    printf("B is false")
+    if (c) {
+        printf("C is true")
+    } else {
+        printf("C is false")
+    }
+}
+echob(!b)
+echob(c)
+echob(dee)
+echoi(-1)
+echod(-4.5)
+echob(true)
+echob(true != false)
+echoi(test(5.5))
+
+int xx = 0
+
+while (xx < 10) {
+    if ((xx % 2) == 0) {
+        printf("Prime")
+    } else {
+        printf("Not Prime")
+    }
+    xx = xx + 1
 }
 
-boolean compare(int x, int y) {
-    return (x == y) && (x > 4)
-}
+test2("Good bye")
+```
 
-if (2 > 3) {
-    printf("I am in")
-}
+The results of this code after compilation and execution.
 
-echoi(do_math(4))
-echoi(compare(5, 6))
-echod(2.6)
-echob(false)
-test()
-test2("Good bye World")
+```bash
+
+Generating code...
+Running code...
+B is false
+C is false
+True
+False
+False
+-1
+-4.500000
+True
+True
+The result is -98.000000
+0
+Prime
+Not Prime
+Prime
+Not Prime
+Prime
+Not Prime
+Prime
+Not Prime
+Prime
+Not Prime
+Good bye
 ```
 
 The project is taking the file inside the examples folder. This file is being passed in the arguments array. This value can be modified by going to the scheme and edit it. Just select the scheme -> Edit scheme -> Run -> Arguments.
 
-This is a version for recreational purposes, but later versions (until it's first release) will have more C stuff in it (while statements).  The final version will allow to pass the file name and either execute it or build a executable.
+This version is the first one with the basics of a good programming language that can explain, even a student with no previous experience, the notions of how a good structural programming language works. It does not have more intermediate stuff such as breaking and continuing in loops, switch statements, structs and classes. That's the job of a more elaborate language.
+
+**NOTE:** The developer can see the debug printout by going to the `main.cpp` file and uncomment the line `#define DEBUGPRINT`.
 
 ## References
 
