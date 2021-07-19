@@ -256,7 +256,7 @@ public:
     inline bool contains(std::function<bool(NStatement *)> function) {
         bool cont = false;
         for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
-            cont = function(*it);
+            cont |= function(*it);
         }
         return cont;
     }
@@ -311,6 +311,7 @@ public:
         this->expression.printString(spaces + 1);
         this->block.printString(spaces + 1);
     }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
     virtual bool validate(std::string& error, NBlock& currentBlock);
 };
 

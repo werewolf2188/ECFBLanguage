@@ -6,6 +6,8 @@
 //  Copyright © 2019 american airlines. All rights reserved.
 //
 
+// #define DEBUGPRINT
+
 #include <iostream>
 #include <stdio.h>
 #include "semantics_transformations.hpp"
@@ -44,7 +46,9 @@ int main(int argc, const char * argv[]) {
     programBlock->separateVariablesAndFunctions();
     std::string error;
     transform(*programBlock);
+#ifdef DEBUGPRINT
     programBlock->printString(0);
+#endif
     if (programBlock->validate(error, *programBlock)) {
         InitializeNativeTarget();
         InitializeNativeTargetAsmPrinter();

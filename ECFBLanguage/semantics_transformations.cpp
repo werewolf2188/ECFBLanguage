@@ -80,6 +80,10 @@ void transform(NBlock& block) {
         } else if (NWhileStatement *whileState = dynamic_cast<NWhileStatement *>(*it)) {
             NExpression * expr = transformVariableDeclaration(&whileState->expression, whileState->expression.resultType(block), block);
             // Add variables from old block to new block
+            for (VariableIterator it = variables.begin(); it != variables.end(); it++) {
+                whileState->block.addVariable(*it);
+            }
+            whileState->block.separateVariablesAndFunctions();
             transform(whileState->block);
             *it = new NWhileStatement(*expr, whileState->block);            
         }

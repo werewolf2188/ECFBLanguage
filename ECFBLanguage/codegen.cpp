@@ -29,10 +29,12 @@ void CodeGenContext::generateCode(NBlock &block) {
     
     /* Print the bytecode in a human-readable format to see if our program compiled properly
      */
+#ifdef DEBUGPRINT
     std::cout << "Code has been generated." << std::endl;
     legacy::PassManager pm;
     pm.add(createPrintModulePass(outs()));
     pm.run(*module);
+#endif
     
 }
 
@@ -75,19 +77,25 @@ Value * Node::codeGen(CodeGenContext &context) {
 
 Value * NInteger::codeGen(CodeGenContext& context) {
     this->generated = true;
+#ifdef DEBUGPRINT
     std::cout << "Creating integer: " << value << std::endl;
+#endif
     return ConstantInt::get(Type::getInt64Ty(ecfbContext), value, true);
 }
 
 Value * NDouble::codeGen(CodeGenContext& context) {
     this->generated = true;
+#ifdef DEBUGPRINT
     std::cout << "Creating double: " << value << std::endl;
+#endif
     return ConstantFP::get(Type::getDoubleTy(ecfbContext), value);
 }
 
 Value * NString::codeGen(CodeGenContext &context) {
     this->generated = true;
+#ifdef DEBUGPRINT
     std::cout << "Creating string: " << value << std::endl;
+#endif
     const char* cValue = value->c_str();
     size_t size = sizeof(cValue);
     
@@ -98,13 +106,17 @@ Value * NString::codeGen(CodeGenContext &context) {
 
 Value* NBoolean::codeGen(CodeGenContext& context) {
     this->generated = true;
+#ifdef DEBUGPRINT
     std::cout << "Creating boolean: " << value << std::endl;
+#endif
     return ConstantInt::get(Type::getInt1Ty(ecfbContext), (value ? 1 : 0));
 }
 
 Value * NIdentifier::codeGen(CodeGenContext& context) {
     this->generated = true;
+#ifdef DEBUGPRINT
     std::cout << "Creating identifier reference: " << name << std::endl;
+#endif
     if (context.locals().find(name) == context.locals().end()) {
         std::cerr << "undeclared variable " << name << std::endl;
         return NULL;
@@ -123,13 +135,17 @@ Value * NMethodCall::codeGen(CodeGenContext& context) {
         args.push_back((**it).codeGen(context));
     }
     CallInst *call = CallInst::Create(function, makeArrayRef(args), "", context.currentBlock());
+#ifdef DEBUGPRINT
     std::cout << "Creating method call: " << id.name << std::endl;
+#endif
     return call;
 }
 
 Value * NBinaryOperator::codeGen(CodeGenContext& context) {
     this->generated = true;
+#ifdef DEBUGPRINT
     std::cout << "Creating binary operation " << op << std::endl;
+#endif
     Instruction::BinaryOps instr;
     ICmpInst::Predicate cmpPred;
     FCmpInst::Predicate cmpFPred;
@@ -198,7 +214,9 @@ Value * NBinaryOperator::codeGen(CodeGenContext& context) {
 
 Value * NUnaryOperator::codeGen(CodeGenContext &context) {
     this->generated = true;
+#ifdef DEBUGPRINT
     std::cout << "Creating unary operation " << op << std::endl;
+#endif
     switch (op) {
         case TMINUS:
             if (this->resultingType == TDOUBLE) {
@@ -219,8 +237,9 @@ Value * NUnaryOperator::codeGen(CodeGenContext &context) {
 
 Value * NDataConversion::codeGen(CodeGenContext &context) {
     this->generated = true;
+#ifdef DEBUGPRINT
     std::cout << "Creating Data Conversion for " << type.name << std::endl;
-    
+#endif
     if (resultingType == TDOUBLE && previousType == TINTEGER) {
         return new SIToFPInst(rhs.codeGen(context), Type::getDoubleTy(ecfbContext), "conv", context.currentBlock());
     } else if (resultingType == TINTEGER && previousType == TDOUBLE) {        
@@ -232,7 +251,9 @@ Value * NDataConversion::codeGen(CodeGenContext &context) {
 
 Value * NAssignment::codeGen(CodeGenContext& context) {
     this->generated = true;
+#ifdef DEBUGPRINT
     std::cout << "Creating assignment for " << lhs.name << std::endl;
+#endif
     if (context.locals().find(lhs.name) == context.locals().end()) {
         std::cerr << "Undeclared variable" << lhs.name << std::endl;
         return NULL;
@@ -244,22 +265,32 @@ Value * NBlock::codeGen(CodeGenContext& context) {
     this->generated = true;
     Value *last = NULL;
     for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
+#ifdef DEBUGPRINT
         std::cout << "Generating code for " << typeid(**it).name() << std::endl;
-        last = (**it).codeGen(context);
+#endif
+        if (!(**it).wasGenerated()) {
+            last = (**it).codeGen(context);
+        }
     }
+#ifdef DEBUGPRINT
     std::cout << "Creating block" << std::endl;
+#endif
     return last;
 }
 
 Value * NExpressionStatement::codeGen(CodeGenContext& context) {
     this->generated = true;
+#ifdef DEBUGPRINT
     std::cout << "Generating code for " << typeid(expression).name() << std::endl;
+#endif
     return expression.codeGen(context);
 }
 
 Value* NReturnStatement::codeGen(CodeGenContext &context) {
     this->generated = true;
+#ifdef DEBUGPRINT
     std::cout << "Generating return code for " << typeid(expression).name() << std::endl;
+#endif
     Value *returnValue = expression.codeGen(context);
     context.setCurrentReturnValue(returnValue);
     return returnValue;
@@ -267,8 +298,9 @@ Value* NReturnStatement::codeGen(CodeGenContext &context) {
 
 Value * NVariableDeclaration::codeGen(CodeGenContext& context) {
     this->generated = true;
+#ifdef DEBUGPRINT
     std::cout << "Creating variable declaration " << type.name << " " << id.name << std::endl;
-    
+#endif
     if (context.isMain()) {
         GlobalVariable *variable = new GlobalVariable(*context.module,
                                                       typeOf(type),
@@ -321,7 +353,9 @@ Value * NFunctionDeclaration::codeGen(CodeGenContext& context) {
     ReturnInst::Create(ecfbContext, context.getCurrentReturnValue(), bblock);
 
     context.popBlock();
+#ifdef DEBUGPRINT
     std::cout << "Creating function: " << id.name << std::endl;
+#endif
     return function;
 }
 
@@ -355,14 +389,17 @@ Value * NIfStatement::codeGen(CodeGenContext& context) {
     
     BranchInst::Create(trueBlock, falseBlock, exp, context.currentBlock());
 
-    auto containsIf = [&](NStatement *state) {
-        return dynamic_cast<NIfStatement *>(state) != nullptr;
+    auto containsIfOrWhile = [&](NStatement *state) {
+        return dynamic_cast<NIfStatement *>(state) != nullptr ||
+                dynamic_cast<NWhileStatement *>(state) != nullptr;
     };
-    if (!this->block.contains(containsIf)) {
+    if (!this->block.contains(containsIfOrWhile)) {
         BranchInst::Create(endBlock, trueBlock);
     }
     if (this->elseBlock != nullptr &&
-        !this->elseBlock->contains(containsIf)) {
+        !this->elseBlock->contains(containsIfOrWhile)) {
+        BranchInst::Create(endBlock, falseBlock);
+    } else if (this->elseBlock == nullptr) {
         BranchInst::Create(endBlock, falseBlock);
     }
 
@@ -371,8 +408,46 @@ Value * NIfStatement::codeGen(CodeGenContext& context) {
     context.popBlock();
     context.pushBlock(endBlock, nblock);
     context.setCurrentLocals(locals);
-    
+#ifdef DEBUGPRINT
     std::cout << "Creating if statement with ID: " << id << std::endl;
+#endif
     
     return endBlock;
+}
+
+Value * NWhileStatement::codeGen(CodeGenContext& context) {
+    this->generated = true;
+    Value * exp = this->expression.codeGen(context);
+    uint id = rand();
+    std::stringstream trueWhileName;
+    trueWhileName << "trueWhileBlock." << id;
+    std::stringstream falseWhileName;
+    falseWhileName << "falseWhileBlock." << id;
+
+    BasicBlock *trueWhileBlock = BasicBlock::Create(ecfbContext, trueWhileName.str(), context.currentBlock()->getParent());
+    BasicBlock *falseWhileBlock = BasicBlock::Create(ecfbContext, falseWhileName.str(), context.currentBlock()->getParent());
+
+    BranchInst::Create(trueWhileBlock, falseWhileBlock, exp, context.currentBlock());
+
+    context.pushBlock(trueWhileBlock, &this->block);
+    this->block.codeGen(context);
+    exp = this->expression.codeGen(context);
+    BranchInst::Create(trueWhileBlock, falseWhileBlock, exp, context.currentBlock());
+    context.popBlock();
+
+    auto currentEndBlock = context.getCurrentEndBlock();
+    
+    NBlock *nblock = &context.currentNBlock().copy();
+    auto locals = context.locals();
+    context.popBlock();
+    context.pushBlock(falseWhileBlock, nblock);
+    context.setCurrentLocals(locals);
+    nblock->codeGen(context);
+    if (currentEndBlock) {
+        BranchInst::Create(currentEndBlock, falseWhileBlock);
+    }
+#ifdef DEBUGPRINT
+    std::cout << "Creating if statement with ID: " << id << std::endl;
+#endif
+    return falseWhileBlock;
 }
