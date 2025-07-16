@@ -23,6 +23,8 @@ To install it in Mac, just run these commands (I'm presumming the developer alre
 brew install flex
 which flex
 flex -V
+
+# used version for this project is 2.6.4
 ```
 
 I truly encourage the developer to run the command `flex --help` and see the different options the developer can use.
@@ -37,6 +39,8 @@ To install it in Mac, just run these commands.
 brew install bison
 which bison
 bison -V
+
+# used version for this project is 2.3
 ```
 Same as Flex, I truly encourage the developer to run  the command `bison --help` and see the different options the developer can use.
 
@@ -53,6 +57,10 @@ which llvm-config
 echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> ~/.zshrc
 export CPPFLAGS="-I/usr/local/opt/llvm/include"
 export LDFLAGS="-L/usr/local/opt/llvm/lib"
+
+llvm-config --version
+
+# used version for this project is 20.1.8
 ```
 
 > The exports here will be suggested at the end of installation. I truly recommend the developer to follow them
