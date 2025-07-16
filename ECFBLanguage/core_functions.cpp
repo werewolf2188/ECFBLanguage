@@ -17,7 +17,7 @@ extern NBlock* programBlock;
 
 llvm::Function* createGetSFunction(CodeGenContext& context) {
     std::vector<llvm::Type*> gets_arg_types;
-       gets_arg_types.push_back(llvm::Type::getInt8PtrTy(ecfbContext)); //char*
+    gets_arg_types.push_back(llvm::PointerType::getInt8Ty(ecfbContext)); //char*
 
        llvm::FunctionType* gets_type =
            llvm::FunctionType::get(
@@ -35,11 +35,11 @@ llvm::Function* createGetSFunction(CodeGenContext& context) {
 llvm::Function* createPrintfFunction(CodeGenContext& context)
 {
     std::vector<llvm::Type*> printf_arg_types;
-    printf_arg_types.push_back(llvm::Type::getInt8PtrTy(ecfbContext)); //char*
+    printf_arg_types.push_back(llvm::PointerType::getInt8Ty(ecfbContext)); //char*
 
     llvm::FunctionType* printf_type =
         llvm::FunctionType::get(
-            llvm::Type::getInt8PtrTy(ecfbContext), printf_arg_types, true);
+            llvm::PointerType::getInt8Ty(ecfbContext), printf_arg_types, true);
 
     llvm::Function *func = llvm::Function::Create(
                 printf_type, llvm::Function::ExternalLinkage,
@@ -109,7 +109,8 @@ void createEchoBooleanFunction(CodeGenContext& context, llvm::Function* printfFn
         false_var, indices);
     
     //Lets create the condition for the print
-    CmpInst* conditionInst = new ICmpInst(*bblock, ICmpInst::ICMP_EQ, toPrint,  ConstantInt::get(Type::getInt1Ty(ecfbContext), 1));
+    InsertPosition position(bblock);
+    CmpInst* conditionInst = new ICmpInst(position, ICmpInst::ICMP_EQ, toPrint,  ConstantInt::get(Type::getInt1Ty(ecfbContext), 1));
     // Block echob
     llvm::BasicBlock *trueBlock = llvm::BasicBlock::Create(ecfbContext, "trueBlock", func);
     // Block echob
@@ -118,13 +119,13 @@ void createEchoBooleanFunction(CodeGenContext& context, llvm::Function* printfFn
     
     std::vector<Value*> true_args;
     true_args.push_back(true_var_ref);
-    
-    CallInst *true_call = CallInst::Create(printfFn, makeArrayRef(true_args), "", trueBlock);
+
+    CallInst *true_call = CallInst::Create(printfFn, llvm::ArrayRef(true_args), "", trueBlock);
     ReturnInst::Create(ecfbContext, trueBlock);
     
     std::vector<Value*> false_args;
     false_args.push_back(false_var_ref);
-    CallInst *false_call = CallInst::Create(printfFn, makeArrayRef(false_args), "", falseBlock);
+    CallInst *false_call = CallInst::Create(printfFn, llvm::ArrayRef(false_args), "", falseBlock);
     ReturnInst::Create(ecfbContext, falseBlock);
     
     context.popBlock();
@@ -170,7 +171,7 @@ void createEchoFunction(CodeGenContext& context, llvm::Function* printfFn, const
     toPrint->setName("toPrint");
     args.push_back(toPrint);
     
-    CallInst *call = CallInst::Create(printfFn, makeArrayRef(args), "", bblock);
+    CallInst *call = CallInst::Create(printfFn, llvm::ArrayRef(args), "", bblock);
     ReturnInst::Create(ecfbContext, bblock);
     context.popBlock();
 }

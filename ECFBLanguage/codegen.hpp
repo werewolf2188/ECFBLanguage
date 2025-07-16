@@ -9,6 +9,7 @@
 #ifndef codegen_h
 #define codegen_h
 
+#include <llvm/Pass.h>
 #include <llvm/IR/Module.h>
 #include <llvm/IR/Function.h>
 #include <llvm/IR/Type.h>
@@ -26,6 +27,8 @@
 #include <llvm/ExecutionEngine/MCJIT.h>
 #include <llvm/ExecutionEngine/GenericValue.h>
 #include <llvm/Support/raw_ostream.h>
+#include <stack>
+#include <tuple>
 
 using namespace llvm;
 
@@ -39,7 +42,7 @@ public:
     BasicBlock *endBlock;
     NBlock* nBlock;
     Value *returnValue;
-    std::map<std::string, Value*> locals;
+    std::map<std::string, std::tuple<Value*, Type*>> locals;
 };
 
 class CodeGenContext {
@@ -57,7 +60,7 @@ public:
     void generateCode(NBlock& block);
     GenericValue runCode();
     
-    std::map<std::string, Value*>& locals() {
+    std::map<std::string, std::tuple<Value*, Type*>>& locals() {
         return blocks.top()->locals;
     }
     
@@ -71,7 +74,7 @@ public:
     
     void pushBlock(BasicBlock* block, NBlock* nBlock, BasicBlock * endBlock = nullptr) {
         if (blocks.size() > 0) {
-            std::map<std::string, Value*>& previousLocals = locals();
+            std::map<std::string, std::tuple<Value*, Type*>>& previousLocals = locals();
             blocks.push(new CodeGenBlock());
             blocks.top()->block = block;
             blocks.top()->nBlock = nBlock;
@@ -94,7 +97,7 @@ public:
         blocks.top()->returnValue = value;
     }
 
-    void setCurrentLocals(std::map<std::string, Value*>& value) {
+    void setCurrentLocals(std::map<std::string, std::tuple<Value*, Type*>>& value) {
         blocks.top()->locals = value;
     }
 

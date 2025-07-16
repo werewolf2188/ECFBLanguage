@@ -129,8 +129,8 @@ public:
         
         this->id.printString(spaces + 1);
         
-        for(ExpressionIterator it = this->arguments.begin(); it != this->arguments.end(); ++it) {
-            (*it)->printString(spaces + 1);
+        for(NExpression* it: this->arguments) {
+            it->printString(spaces + 1);
         }
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
@@ -221,22 +221,22 @@ public:
     inline void printString(int spaces) {
         std::cout << std::string(spaces, '\t') << "Block Expression: " << std::endl;
         
-        for(StatementIterator it = this->statements.begin(); it != this->statements.end(); ++it) {
-            (*it)->printString(spaces + 1);
+        for(NStatement* it: this->statements) {
+            it->printString(spaces + 1);
         }
     }
     virtual llvm::Value* codeGen(CodeGenContext& context);
     virtual bool validate(std::string& error, NBlock& currentBlock);
     inline void separateVariablesAndFunctions() {
         
-        for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
-            std::string name = typeid((**it)).name();
+        for(NStatement* it: statements) {
+            std::string name = typeid((*it)).name();
             if (name.find("NVariableDeclaration") != std::string::npos) {
-                variables.push_back((NVariableDeclaration *)(*it));
+                variables.push_back((NVariableDeclaration *)(it));
             }
             
             if (name.find("NFunctionDeclaration") != std::string::npos) {
-                functions.push_back((*it));
+                functions.push_back((it));
             }
         }
     }
@@ -245,9 +245,9 @@ public:
     inline StatementList getFunctions() { return functions; }
     inline NBlock& copy() {
         NBlock *newBlock = new NBlock();
-        for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
-            if (!(*it)->wasGenerated()) {
-                newBlock->statements.push_back(*it);
+        for(NStatement* it: statements) {
+            if (!it->wasGenerated()) {
+                newBlock->statements.push_back(it);
             }
         }
         newBlock->separateVariablesAndFunctions();
@@ -255,8 +255,8 @@ public:
     }
     inline bool contains(std::function<bool(NStatement *)> function) {
         bool cont = false;
-        for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
-            cont |= function(*it);
+        for(NStatement* it: statements) {
+            cont |= function(it);
         }
         return cont;
     }
@@ -365,14 +365,14 @@ public:
         type(type), id(id), arguments(arguments), block(block) {
             
             this->block.separateVariablesAndFunctions();
-            for(VariableIterator it = arguments.begin(); it != arguments.end(); it++) {
-                this->block.addVariable(*it);
+            for(NVariableDeclaration* it: arguments) {
+                this->block.addVariable(it);
             }
-            for (StatementIterator it = block.statements.begin(); it != block.statements.end(); it++) {
-                std::string name = typeid((**it)).name();
+            for(NStatement* it: block.statements) {
+                std::string name = typeid((*it)).name();
                 if (name.find("NReturnStatement") != std::string::npos) {
                     if (returnStatement == NULL)
-                        returnStatement = (NReturnStatement *)(*it);
+                        returnStatement = (NReturnStatement *)(it);
                     noOfReturns++;
                 }
             }
@@ -382,8 +382,8 @@ public:
         
         this->type.printString(spaces + 1);
         this->id.printString(spaces + 1);
-        for (VariableIterator it = this->arguments.begin(); it != this->arguments.end(); ++it) {
-            (*it)->printString(spaces + 1);
+        for(NVariableDeclaration* it: arguments) {
+            it->printString(spaces + 1);
         }
         this->block.printString(spaces + 1);
     }

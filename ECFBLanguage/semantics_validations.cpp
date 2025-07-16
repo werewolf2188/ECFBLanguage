@@ -87,25 +87,25 @@ bool NIdentifier::validate(std::string& error, NBlock& currentBlock) {
     StatementList functions = programBlock->getFunctions();
     
     // If the identifier is inside the block
-    for (VariableIterator it = vars.begin(); it != vars.end(); it++) {
+    for (NVariableDeclaration *it: vars) {
         
-        std::string vName = (**it).id.name;
+        std::string vName = (*it).id.name;
         if (vName.find(name) != std::string::npos) {
             exists = true;
         }
     }
     // If the identifier is inside the main block
-    for (VariableIterator it = globalVars.begin(); it != globalVars.end(); it++) {
+    for (NVariableDeclaration *it: globalVars) {
 
-        std::string vName = (**it).id.name;
+        std::string vName = (*it).id.name;
         if (vName.find(name) != std::string::npos) {
             exists = true;
         }
     }
     // If the identifier is inside the main block and its a function
-    for (StatementIterator it = functions.begin(); it != functions.end(); it++) {
+    for (NStatement *it: functions) {
 
-        std::string vName = ((NFunctionDeclaration *)(*it))->id.name;
+        std::string vName = ((NFunctionDeclaration *)(it))->id.name;
         if (vName.find(name) != std::string::npos) {
             exists = true;
         }
@@ -126,20 +126,20 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
     bool exists = false;
     NFunctionDeclaration *fRef = NULL;
     // Find declaration
-    for (StatementIterator it = currentBlock.getFunctions().begin(); it != currentBlock.getFunctions().end(); it++) {
-        std::string fName = ((NFunctionDeclaration *)(*it))->id.name;
+    for (NStatement* it: currentBlock.getFunctions()) {
+        std::string fName = ((NFunctionDeclaration *)(it))->id.name;
         if (fName.find(this->id.name) != std::string::npos) {
             exists = true;
-            fRef = (NFunctionDeclaration *)(*it);
+            fRef = (NFunctionDeclaration *)(it);
             break;
         }
     }
     
-    for (StatementIterator it = programBlock->getFunctions().begin(); it != programBlock->getFunctions().end(); it++) {
-        std::string fName = ((NFunctionDeclaration *)(*it))->id.name;
+    for (NStatement* it: programBlock->getFunctions()) {
+        std::string fName = ((NFunctionDeclaration *)(it))->id.name;
         if (fName.find(this->id.name) != std::string::npos) {
             exists = true;
-            fRef = (NFunctionDeclaration *)(*it);
+            fRef = (NFunctionDeclaration *)(it);
             break;
         }
     }
@@ -150,8 +150,9 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
         || this->id.name.find(echoi->id.name) != std::string::npos
         || this->id.name.find(currentBlock.gets) != std::string::npos
         || this->id.name.find(currentBlock.printf) != std::string::npos) {
-        for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
-            if (!(**it).validate(error, currentBlock)) {
+        for (NExpression* it: arguments) {
+            if (it == NULL) continue;
+            if (!(*it).validate(error, currentBlock)) {
                 return false;
             }
         }
@@ -185,8 +186,8 @@ bool NMethodCall::validate(std::string& error, NBlock& currentBlock) {
         } while(it1 != fRef->arguments.end() && it2 != this->arguments.end());
     }
     
-    for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
-        if (!(**it).validate(error, currentBlock)) {
+    for (NExpression* it: arguments) {
+        if (!(*it).validate(error, currentBlock)) {
             return false;
         }
     }
@@ -294,10 +295,10 @@ bool NDataConversion::validate(std::string &error, NBlock &currentBlock) {
 
 bool NAssignment::validate(std::string& error, NBlock& currentBlock) {
     NVariableDeclaration *variable = NULL;
-    for (VariableIterator it = currentBlock.getVariables().begin(); it != currentBlock.getVariables().end(); it++) {
-        std::string vName = (**it).id.name;
+    for (NVariableDeclaration* it: currentBlock.getVariables()) {
+        std::string vName = (*it).id.name;
         if (vName.find(lhs.name) != std::string::npos) {
-            variable = *it;
+            variable = it;
         }
     }
     // Variable does not exists
@@ -325,8 +326,8 @@ bool NAssignment::validate(std::string& error, NBlock& currentBlock) {
 }
 
 bool NBlock::validate(std::string& error, NBlock& currentBlock) {
-    for (StatementIterator it = statements.begin(); it != statements.end(); it++) {
-        if (!(**it).validate(error, *this)) {
+    for (NStatement* it: statements) {
+        if (!(*it).validate(error, *this)) {
             return false;
         }
     }
@@ -367,8 +368,8 @@ bool NVariableDeclaration::validate(std::string& error, NBlock& currentBlock) {
     
     int times = 0;
     VariableList variables = currentBlock.getVariables();
-    for (VariableIterator it = variables.begin(); it != variables.end(); it++) {
-        std::string fName = ((NVariableDeclaration*)(*it))->id.name;
+    for (NVariableDeclaration* it: variables) {
+        std::string fName = ((NVariableDeclaration*)(it))->id.name;
         if (fName.compare(this->id.name) == 0) {
             times++;
         }
@@ -422,8 +423,8 @@ bool NFunctionDeclaration::validate(std::string& error, NBlock& currentBlock) {
     
     int times = 0;
     StatementList functions = currentBlock.getFunctions();
-    for (StatementIterator it = functions.begin(); it != functions.end(); it++) {
-        std::string fName = ((NFunctionDeclaration*)(*it))->id.name;
+    for (NStatement* it: functions) {
+        std::string fName = ((NFunctionDeclaration*)(it))->id.name;
         if (fName.compare(this->id.name) == 0) {
             times++;
         }
@@ -441,12 +442,12 @@ bool NFunctionDeclaration::validate(std::string& error, NBlock& currentBlock) {
     }
     // Arguments are not supposed to have an assignment expression
     bool variables = true;
-    for (VariableIterator it = arguments.begin(); it != arguments.end(); it++) {
-        if ((*it)->assignmentExpr != NULL) {
+    for (NVariableDeclaration* it: arguments) {
+        if ((it)->assignmentExpr != NULL) {
             error = std::string("No functions arguments can have assignment expressions");
             return false;
         }
-        variables = variables && (*it)->validate(error, currentBlock);
+        variables = variables && (it)->validate(error, currentBlock);
     }
     
     if (type.resultType(currentBlock) != -1) {
@@ -511,10 +512,10 @@ int NIdentifier::resultType(NBlock& currentBlock) {
     } else if (name.compare("string") == 0) {
         return TSTRING;
     }else {
-        for (VariableIterator it = currentBlock.getVariables().begin(); it != currentBlock.getVariables().end(); it++) {
-            std::string vName = (**it).id.name;
+        for (NVariableDeclaration* it: currentBlock.getVariables()) {
+            std::string vName = (*it).id.name;
             if (vName.compare(name) == 0) {
-                return (*it)->type.resultType(currentBlock);
+                return it->type.resultType(currentBlock);
             }
         }
     }
@@ -561,20 +562,20 @@ int NDataConversion::resultType(NBlock &currentBlock) {
 int NMethodCall::resultType(NBlock& currentBlock) {
     NFunctionDeclaration *fRef = NULL;
     // Find declaration
-    for (StatementIterator it = currentBlock.getFunctions().begin(); it != currentBlock.getFunctions().end(); it++) {
-        std::string fName = ((NFunctionDeclaration *)(*it))->id.name;
+    for (NStatement* it: currentBlock.getFunctions()) {
+        std::string fName = ((NFunctionDeclaration *)(it))->id.name;
         if (fName.find(this->id.name) != std::string::npos) {
             
-            fRef = (NFunctionDeclaration *)(*it);
+            fRef = (NFunctionDeclaration *)(it);
             break;
         }
     }
     
-    for (StatementIterator it = programBlock->getFunctions().begin(); it != programBlock->getFunctions().end(); it++) {
-        std::string fName = ((NFunctionDeclaration *)(*it))->id.name;
+    for (NStatement* it: programBlock->getFunctions()) {
+        std::string fName = ((NFunctionDeclaration *)(it))->id.name;
         if (fName.find(this->id.name) != std::string::npos) {
             
-            fRef = (NFunctionDeclaration *)(*it);
+            fRef = (NFunctionDeclaration *)(it);
             break;
         }
     }

@@ -28,64 +28,64 @@ NMethodCall* transformMethodCallArguments(NMethodCall *methodCall, NBlock& block
 void transform(NBlock& block) {
     // We check the variables first
     VariableList variables = block.getVariables();
-    for (VariableIterator it = variables.begin(); it != variables.end(); it++) {
-        NVariableDeclaration *vd = (*it);
+    for (NVariableDeclaration *it: variables) {
+        NVariableDeclaration *vd = (it);
         transformVariableDeclaration(vd, block);
     }
     // Then we go to the functions as blocks
     StatementList functions = block.getFunctions();
-    for(StatementIterator it = functions.begin(); it != functions.end(); it++) {
-        NFunctionDeclaration *function = ((NFunctionDeclaration *)(*it));
+    for(NStatement* it: functions) {
+        NFunctionDeclaration *function = ((NFunctionDeclaration *)(it));
         // Add variables from old block to new block
-        for (VariableIterator it = variables.begin(); it != variables.end(); it++) {
-            function->block.addVariable(*it);
+        for (NVariableDeclaration* it: variables) {
+            function->block.addVariable(it);
         }
         transform(function->block);
     }
     
     // Then we check each of the assignments to see that everything's ok.
-    for(StatementIterator it = block.statements.begin(); it != block.statements.end(); it++) {
-        if (NExpressionStatement *exprSt = dynamic_cast<NExpressionStatement *>(*it)) {
+    for(NStatement* it: block.statements) {
+        if (NExpressionStatement *exprSt = dynamic_cast<NExpressionStatement *>(it)) {
             if (NAssignment *assign = dynamic_cast<NAssignment *>(&(exprSt->expression))) {
                 NExpression * nRHS = transformVariableDeclaration(&assign->rhs, assign->lhs.resultType(block), block);
                 NAssignment *nAssign = new NAssignment(assign->lhs, *nRHS);
                 NExpressionStatement * nExpressionStatement = new NExpressionStatement(*nAssign);
-                *it = nExpressionStatement;
+                it = nExpressionStatement;
             } else if(NMethodCall *methodCall = dynamic_cast<NMethodCall *>(&(exprSt->expression))) {
                 methodCall = transformMethodCallArguments(methodCall, block);
                 if (methodCall != NULL)
-                    *it = new NExpressionStatement(*methodCall);
+                    it = new NExpressionStatement(*methodCall);
             }
-        } else if (NIfStatement *ifState = dynamic_cast<NIfStatement *>(*it)) {
+        } else if (NIfStatement *ifState = dynamic_cast<NIfStatement *>(it)) {
             NExpression * expr = transformVariableDeclaration(&ifState->expression, ifState->expression.resultType(block), block);
             // Add variables from old block to new block
-            for (VariableIterator it = variables.begin(); it != variables.end(); it++) {
-                ifState->block.addVariable(*it);
+            for (NVariableDeclaration* it: variables) {
+                ifState->block.addVariable(it);
             }
             ifState->block.separateVariablesAndFunctions();
             transform(ifState->block);
             if (ifState->elseBlock != NULL) {
                 // Add variables from old block to new block
-                for (VariableIterator it = variables.begin(); it != variables.end(); it++) {
-                    ifState->elseBlock->addVariable(*it);
+                for (NVariableDeclaration* it: variables) {
+                    ifState->elseBlock->addVariable(it);
                 }
                 ifState->elseBlock->separateVariablesAndFunctions();
                 transform(*(ifState->elseBlock));
-                *it = new NIfStatement(*expr, ifState->block, ifState->elseBlock);
+                it = new NIfStatement(*expr, ifState->block, ifState->elseBlock);
             } else {
                 // Add variables from old block to new block
-                 *it = new NIfStatement(*expr, ifState->block);
+                 it = new NIfStatement(*expr, ifState->block);
             }
             
-        } else if (NWhileStatement *whileState = dynamic_cast<NWhileStatement *>(*it)) {
+        } else if (NWhileStatement *whileState = dynamic_cast<NWhileStatement *>(it)) {
             NExpression * expr = transformVariableDeclaration(&whileState->expression, whileState->expression.resultType(block), block);
             // Add variables from old block to new block
-            for (VariableIterator it = variables.begin(); it != variables.end(); it++) {
-                whileState->block.addVariable(*it);
+            for (NVariableDeclaration* it: variables) {
+                whileState->block.addVariable(it);
             }
             whileState->block.separateVariablesAndFunctions();
             transform(whileState->block);
-            *it = new NWhileStatement(*expr, whileState->block);            
+            it = new NWhileStatement(*expr, whileState->block);
         }
     }
 }
@@ -182,11 +182,11 @@ NMethodCall* transformMethodCallArguments(NMethodCall *methodCall, NBlock& block
     bool exists = false;
     NFunctionDeclaration *fRef = NULL;
     
-    for (StatementIterator it = programBlock->getFunctions().begin(); it != programBlock->getFunctions().end(); it++) {
-        std::string fName = ((NFunctionDeclaration *)(*it))->id.name;
+    for (NStatement* it: programBlock->getFunctions()) {
+        std::string fName = ((NFunctionDeclaration *)(it))->id.name;
         if (fName.find(methodCall->id.name) != std::string::npos) {
             exists = true;
-            fRef = (NFunctionDeclaration *)(*it);
+            fRef = (NFunctionDeclaration *)(it);
             break;
         }
     }
@@ -230,6 +230,7 @@ NMethodCall* transformMethodCallArguments(NMethodCall *methodCall, NBlock& block
             } while(it1 != fRef->arguments.end() && it2 != methodCall->arguments.end());
             return methodCall;
         }
+        return methodCall;
     }
     return NULL;
 }

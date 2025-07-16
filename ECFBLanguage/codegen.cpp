@@ -32,6 +32,7 @@ void CodeGenContext::generateCode(NBlock &block) {
 #ifdef DEBUGPRINT
     std::cout << "Code has been generated." << std::endl;
     legacy::PassManager pm;
+    
     pm.add(createPrintModulePass(outs()));
     pm.run(*module);
 #endif
@@ -121,7 +122,11 @@ Value * NIdentifier::codeGen(CodeGenContext& context) {
         std::cerr << "undeclared variable " << name << std::endl;
         return NULL;
     }
-    return new LoadInst(context.locals()[name], "", false, context.currentBlock());
+    std::tuple<Value*, Type*> local = context.locals()[name];
+    Value * value = std::get<0>(local);
+    Type * type = std::get<1>(local);
+    
+    return new LoadInst(type, value, "", false, context.currentBlock());
 }
 
 Value * NMethodCall::codeGen(CodeGenContext& context) {
@@ -131,10 +136,11 @@ Value * NMethodCall::codeGen(CodeGenContext& context) {
         std::cerr << "No such function " << id.name << std::endl;
     }
     std::vector<Value *> args;
-    for (ExpressionIterator it = arguments.begin(); it != arguments.end(); it++) {
-        args.push_back((**it).codeGen(context));
+    for (NExpression* it: arguments) {
+        if (it == NULL) continue;
+        args.push_back((*it).codeGen(context));
     }
-    CallInst *call = CallInst::Create(function, makeArrayRef(args), "", context.currentBlock());
+    CallInst *call = CallInst::Create(function, llvm::ArrayRef(args), "", context.currentBlock());
 #ifdef DEBUGPRINT
     std::cout << "Creating method call: " << id.name << std::endl;
 #endif
@@ -207,9 +213,9 @@ Value * NBinaryOperator::codeGen(CodeGenContext& context) {
     math:
     return BinaryOperator::Create(instr, lhs.codeGen(context), rhs.codeGen(context), "", context.currentBlock());
     compInt:
-    return new ICmpInst(*context.currentBlock(), cmpPred, lhs.codeGen(context), rhs.codeGen(context));
+    return new ICmpInst(InsertPosition(context.currentBlock()), cmpPred, lhs.codeGen(context), rhs.codeGen(context));
     compFlt:
-    return new FCmpInst(*context.currentBlock(), cmpFPred, lhs.codeGen(context), rhs.codeGen(context));
+    return new FCmpInst(InsertPosition(context.currentBlock()), cmpFPred, lhs.codeGen(context), rhs.codeGen(context));
 }
 
 Value * NUnaryOperator::codeGen(CodeGenContext &context) {
@@ -258,7 +264,9 @@ Value * NAssignment::codeGen(CodeGenContext& context) {
         std::cerr << "Undeclared variable" << lhs.name << std::endl;
         return NULL;
     }
-    return new StoreInst(rhs.codeGen(context), context.locals()[lhs.name], false, context.currentBlock());
+    std::tuple<Value*, Type*> local = context.locals()[lhs.name];
+    Value * value = std::get<0>(local);
+    return new StoreInst(rhs.codeGen(context), value, false, context.currentBlock());
 }
 
 Value * NBlock::codeGen(CodeGenContext& context) {
@@ -302,21 +310,23 @@ Value * NVariableDeclaration::codeGen(CodeGenContext& context) {
     std::cout << "Creating variable declaration " << type.name << " " << id.name << std::endl;
 #endif
     if (context.isMain()) {
+        Type* ttype = typeOf(type);
         GlobalVariable *variable = new GlobalVariable(*context.module,
-                                                      typeOf(type),
+                                                      ttype,
                                                       false,
                                                       GlobalValue::CommonLinkage,
                                                       Constant::getNullValue(typeOf(type)),
                                                       id.name.c_str());
-        context.locals()[id.name] = variable;
+        context.locals()[id.name] = std::make_tuple(variable, ttype);
         if (assignmentExpr != NULL) {
             NAssignment assn(id, *assignmentExpr);
             assn.codeGen(context);
         }
         return variable;
     } else {
-        AllocaInst *alloc = new AllocaInst(typeOf(type), 0 ,id.name.c_str(), context.currentBlock());
-        context.locals()[id.name] = alloc;
+        Type* ttype = typeOf(type);
+        AllocaInst *alloc = new AllocaInst(ttype, 0 ,id.name.c_str(), context.currentBlock());
+        context.locals()[id.name] = std::make_tuple(alloc, ttype);
         if (assignmentExpr != NULL) {
             NAssignment assn(id, *assignmentExpr);
             assn.codeGen(context);
@@ -332,7 +342,7 @@ Value * NFunctionDeclaration::codeGen(CodeGenContext& context) {
         argTypes.push_back(typeOf((**it).type));
     }
     
-    FunctionType* fType = FunctionType::get(typeOf(type), makeArrayRef(argTypes), false);
+    FunctionType* fType = FunctionType::get(typeOf(type), llvm::ArrayRef(argTypes), false);
     Function* function = Function::Create(fType, GlobalValue::InternalLinkage, id.name.c_str(), context.module);
     BasicBlock* bblock = BasicBlock::Create(ecfbContext, "entry", function, 0);
     
@@ -346,7 +356,8 @@ Value * NFunctionDeclaration::codeGen(CodeGenContext& context) {
         
         argumentValue = &*argsValues++;
         argumentValue->setName((*it)->id.name.c_str());
-        StoreInst *inst = new StoreInst(argumentValue, context.locals()[(*it)->id.name], false, bblock);
+        Value* value = std::get<0>(context.locals()[(*it)->id.name]);
+        StoreInst *inst = new StoreInst(argumentValue, value, false, bblock);
     }
     
     block.codeGen(context);
